@@ -60,7 +60,7 @@ const selectOptions =[
       />
       </div>
       <Title className="mb-5">Revenue</Title>
-      <ResponsiveContainer width="100%" height={280}>
+      <ResponsiveContainer width="100%" height={543}>
         <AreaChart data={data} syncId="anyId">
           <defs>
             <linearGradient id="colorAmt" x1="0" y1="0" x2="0" y2="1">

@@ -1,19 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap");
-
-body {
-  font-family: "Poppins", sans-serif;
-}
-
-table {
-  font-family: "Poppins", sans-serif;
-}
-
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-  font-family: "Poppins", sans-serif !important;
-}
 /* .ant-layout .ant-layout-has-sider{
   background-color: red !important;
 } */
@@ -24,10 +8,9 @@ table {
 .ant-menu {
   background-color: white !important;
   /* color: black !important; */
-
 }
 .ant-menu-title-content {
-  color: #4964C6 !important
+  color: #4964c6 !important;
 }
 
 .ant-menu-item {
@@ -37,19 +20,18 @@ table {
 /* .ant-layout .ant-layout-header {
   background-color: #F6F6F6 !important;
 } */
-.ant-layout-sider .ant-layout-sider-red .sidebar-menu{
+.ant-layout-sider .ant-layout-sider-red .sidebar-menu {
   background-color: red !important;
-  color: black !important
+  color: black !important;
 }
 .ant-layout-sider-children .ant-menu-item-selected {
-  background: #F2F5FC !important;
+  background: #f2f5fc !important;
   font-weight: bold;
-  color: #4964C6 !important;
- 
+  color: #4964c6 !important;
 }
 
 .ant-layout-content {
-  background-color:  #F6F6F6 !important;
+  background-color: #f6f6f6 !important;
 }
 
 span.ant-menu-title-content {
@@ -62,34 +44,32 @@ span.ant-menu-title-content {
   box-shadow: transparent !important;
 }
 .ant-select-selector:hover {
-  background-color: 'none' !important;
+  background-color: "none" !important;
   color: black !important;
   border-color: transparent !important;
-
 }
 .ant-select-outlined:not(.ant-select-customize-input) .ant-select-selector {
   border: transparent !important;
 }
-.ant-select .ant-select-outlined{ 
-border-color: transparent !important;
-border: transparent !important;
+.ant-select .ant-select-outlined {
+  border-color: transparent !important;
+  border: transparent !important;
 }
 .ant-select-selection-search {
   border: transparent !important;
   border-color: transparent !important;
 }
-.ant-select-selection-item{
-border: transparent !important;
-border-color: transparent !important;
+.ant-select-selection-item {
+  border: transparent !important;
+  border-color: transparent !important;
 }
-.ant-select-selection-search-input{
+.ant-select-selection-search-input {
   border: transparent !important;
   border-color: transparent !important;
 }
 
-
- /* css of ant design table style   */
- .ant-table-wrapper table {
+/* css of ant design table style   */
+.ant-table-wrapper table {
   background-color: #e9f4f3;
   border-radius: 0;
 }
@@ -104,7 +84,6 @@ border-color: transparent !important;
   /* background: #1f8d84; */
   color: white;
   /* text-align: center; */
-  
 }
 .ant-table-wrapper
   .ant-table-container
@@ -129,14 +108,11 @@ border-color: transparent !important;
   text-align: start;
 }
 
-
 /* data roe */
-.ant-table-wrapper .ant-table-tbody > tr > td
-{
+.ant-table-wrapper .ant-table-tbody > tr > td {
   border-bottom: none !important;
 }
 .ant-table-wrapper .ant-table-tbody > tr > td {
- 
   /* padding-left: 50px; */
 }
 .ant-table-wrapper
@@ -162,7 +138,6 @@ border-color: transparent !important;
 .ant-table-wrapper .ant-table-container table > tbody > tr {
   color: #4e4e4e;
 }
-
 
 :where(.css-dev-only-do-not-override-11xg00t).ant-menu-light
   .ant-menu-submenu-title,
@@ -195,7 +170,6 @@ border-color: transparent !important;
 }
 
 .ant-modal .ant-modal-content {
- 
   color: #fff;
 }
 
@@ -209,16 +183,13 @@ border-color: transparent !important;
   /* background: #2e2d2d !important; */
   /* color: wheat !important; */
   border: none !important;
-
 }
 
-
-.jodit-react-container .jodit-wysiwyg{
+.jodit-react-container .jodit-wysiwyg {
   min-height: 300px !important;
 }
 
-
-.auth-wrapper {
+/* .auth-wrapper {
   width: 100%;
   height: 100vh;
   background: linear-gradient(#2e2d2dc0, #2e2d2dd2), url("./assets/bg.png");
@@ -234,11 +205,22 @@ border-color: transparent !important;
 }
 ::placeholder {
   color: #a19e9e !important;
-}
+} */
 
 /* Faq */
 
-.ant-collapse-arrow{
+.ant-collapse-arrow {
   padding-top: 10px !important;
   /* margin-top: 50px !important; */
+}
+
+.ant-menu-title-content {
+  color: #3a3a3a !important;
+}
+.ant-menu-item .ant-menu-item-selected {
+  background-color: #fdfeee !important;
+}
+.ant-menu-item-selected .ant-menu-title-content {
+  color: #121212 !important;
+  width: 100%;
 }

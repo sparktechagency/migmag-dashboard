@@ -20,7 +20,7 @@ const ForgetPassword: React.FC = () => {
   return (
     <AuthWrapper>
       <div className="text-center mb-12">
-      <div className="flex py-8">
+        <div className="flex py-8">
           <div className="flex items-center mx-auto gap-2">
             <img src={logo} alt="Logo" className="w-20" />
             <h1 className="font-bold text-3xl">Choozy</h1>

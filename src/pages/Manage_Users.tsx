@@ -1,9 +1,10 @@
-import { Input, Table } from "antd";
+import { Avatar, Input, Table } from "antd";
 import { Pencil, Search, Trash } from "lucide-react";
 import React, { useState } from "react";
 import image from "../assets/Images/Notifications/Avatar.png";
 import ModalComponent from "../component/share/ModalComponent";
 import { Link } from "react-router-dom";
+import { EditOutlined } from '@ant-design/icons';
 
 const Manage_Users = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -14,63 +15,112 @@ const Manage_Users = () => {
 
   const pageSize = 10;
 
-  const data: UserData[] = [...Array(9).keys()].map((item, index) => ({
-    sId: index + 1,
-    image: <img src={image} className="w-9 h-9 rounded" alt="avatar" />,
-    name: "User " + (index + 1),
-    role: index % 2 === 0 ? "Admin" : "Member", // Dynamic role for each user
-    action: {
-      sId: index + 1,
-      image: <img src={image} className="w-9 h-9 rounded" alt="" />,
-      name: "User " + (index + 1),
-      dateOfBirth: "24-05-2024",
-      contact: "0521545861520",
-      role: index % 2 === 0 ? "Admin" : "Member", // Assign role dynamically
+  const dataSource = [
+    {
+      key: '1',
+      name: 'Samantha Rivers',
+      email: 'contact@newdomain.com',
+      status: 'Unbanned',
+      avatar: 'https://i.pravatar.cc/40?img=1',
     },
-  }));
-
+    {
+      key: '2',
+      name: 'Marcus Thompson',
+      email: 'support@anotherdomain.org',
+      status: 'Unbanned',
+      avatar: 'https://i.pravatar.cc/40?img=2',
+    },
+    {
+      key: '3',
+      name: 'Elena Martinez',
+      email: 'info@undiscovered.com',
+      status: 'Unbanned',
+      avatar: 'https://i.pravatar.cc/40?img=3',
+    },
+    {
+      key: '4',
+      name: 'Derek Johnson',
+      email: 'hello@verifiedmail.com',
+      status: 'Unbanned',
+      avatar: 'https://i.pravatar.cc/40?img=4',
+    },
+    {
+      key: '5',
+      name: 'Tina Chen',
+      email: 'admin@securemail.net',
+      status: 'Unbanned',
+      avatar: 'https://i.pravatar.cc/40?img=5',
+    },
+    {
+      key: '6',
+      name: 'Oliver Brown',
+      email: 'user@unknownmail.com',
+      status: 'Unbanned',
+      avatar: 'https://i.pravatar.cc/40?img=6',
+    },
+    {
+      key: '7',
+      name: 'Ava Patel',
+      email: 'team@trustedsource.com',
+      status: 'Unbanned',
+      avatar: 'https://i.pravatar.cc/40?img=7',
+    },
+    {
+      key: '8',
+      name: 'Liam Smith',
+      email: 'contact@reliablemail.com',
+      status: 'Unbanned',
+      avatar: 'https://i.pravatar.cc/40?img=8',
+    },
+    {
+      key: '9',
+      name: 'Zoe Kim',
+      email: 'support@verifiedservice.com',
+      status: 'Unbanned',
+      avatar: 'https://i.pravatar.cc/40?img=9',
+    },
+    {
+      key: '10',
+      name: 'Shila',
+      email: 'info@authenticmail.org',
+      status: 'Unbanned',
+      avatar: 'https://i.pravatar.cc/40?img=10',
+    },
+    {
+      key: '11',
+      name: 'Lorry Kim',
+      email: 'info@authenticmail.org',
+      status: 'Unbanned',
+      avatar: 'https://i.pravatar.cc/40?img=11',
+    },
+  ];
+  
   const columns = [
     {
-      title: "Users",
-      dataIndex: "image",
-      key: "image",
-      render: (_: any, record: UserData) => (
-        <div className="flex items-center">
-          {record.image}
-          <Link
-            to={`seller-profile/${record.sId}`}
-            className="ml-3 text-blue-500 hover:underline"
-          >
-            {record.name}
-          </Link>
+      title: 'Users',
+      dataIndex: 'name',
+      key: 'name',
+      render: (text, record) => (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <Avatar src={record.avatar} />
+          <h2>{text}</h2>
         </div>
       ),
     },
     {
-      title: "Role",
-      dataIndex: "role",
-      key: "role",
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
     },
     {
-      title: <div className="text-right">Action</div>,
-      dataIndex: "action",
-      key: "action",
-      render: (_: any, record: UserData) => (
-        <div className="flex items-center justify-end gap-3">
-          <button
-            onClick={() => handleUser(record.action)}
-            className="hover:bg-primary p-1 rounded bg-blue"
-          >
-            <Pencil />
-          </button>
-          <button
-            onClick={() => handleDelete(record.action)}
-            className="bg-secondary px-3 py-1 rounded hover:bg-primary"
-          >
-            <Trash />
-          </button>
-        </div>
-      ),
+      title: 'Profile status',
+      dataIndex: 'status',
+      key: 'status',
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: () => <EditOutlined style={{ color: '#1890ff', cursor: 'pointer' }} />,
     },
   ];
 
@@ -78,43 +128,33 @@ const Manage_Users = () => {
     setCurrentPage(page);
   };
 
-  const handleUser = (action: UserAction) => {
-    setUserData(action);
-    setRole(action.role); // Set the role dynamically based on user action data
-    setOpenModel(true);
-  };
-
-  const handleDelete = (action: UserAction) => {
-    setUserData(action);
-    setOpenDeleteModal(true);
-  };
-
-  const confirmApprove = () => {
-    console.log("Approved:", userData, role);
-    setOpenModel(false);
-    // Add your approve logic here
-  };
-
-  const confirmDelete = () => {
-    console.log("Deleted:", userData);
-    setOpenDeleteModal(false);
-    // Add your delete logic here
-  };
+ 
 
   return (
     <div>
-      <Input
-        prefix={<Search />}
-        className="w-full rounded-2xl h-12 bg-base border-0 text-primary placeholder:text-gray-200"
-        placeholder="Search for Listing"
-        style={{
-          backgroundColor: "#f0f0f0",
-          color: "#333333",
-        }}
-      />
+      <div className="bg-white p-6 rounded-2xl">
+        <div className="">
+          <h1 className="text-[#121212] text-[20px] font-semibold font-degular ">
+            Manage users
+          </h1>
+          <p className="font-degular font-normal text-sm pb-4 pt-2">
+            Manage the users of your website. You can ban or unban, whichever
+            you want.
+          </p>
+        </div>
+        <Input
+          prefix={<Search />}
+          className="w-full rounded-2xl h-12 bg-base border-0 text-primary placeholder:text-gray-200"
+          placeholder="Search for Listing"
+          style={{
+            backgroundColor: "#f0f0f0",
+            color: "#333333",
+          }}
+        />
+      </div>
       <div className="py-8">
         <Table
-          dataSource={data}
+          dataSource={dataSource}
           columns={columns}
           pagination={{
             pageSize,
@@ -123,33 +163,6 @@ const Manage_Users = () => {
             onChange: handlePage,
           }}
           rowClassName={() => "hover:bg-transparent"}
-        />
-        
-        {/* Approve Modal */}
-        <ModalComponent
-          openModel={openModel}
-          setOpenModel={setOpenModel}
-          title="User role"
-          subtitle="This is the current role of the selected user"
-          cancelLabel="Cancel"
-          role={role} // Pass the selected role
-          setRole={setRole} // Function to change the role
-          showRoleSelect={true} // Show the role select in this modal
-          confirmLabel="Save Changes"
-          onConfirm={confirmApprove}
-          value={userData} // Passing dynamic user data
-        />
-
-        {/* Delete Modal */}
-        <ModalComponent
-          openModel={openDeleteModal}
-          setOpenModel={setOpenDeleteModal}
-          title="Delete User"
-          subtitle="Are you sure you want to delete this item?"
-          confirmLabel="Delete"
-          cancelLabel="Cancel"
-          value={userData} // Passing dynamic user data
-          onConfirm={confirmDelete}
         />
       </div>
     </div>
