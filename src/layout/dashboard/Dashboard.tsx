@@ -149,7 +149,7 @@ const menuItems: MenuItem[] = [
     ),
   },
   {
-    path: "/love",
+    path: "/my_profile",
     title: "My Profile",
     icon: (
       <svg

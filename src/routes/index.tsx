@@ -15,6 +15,7 @@ import SetNewPassword from "../pages/SetNewPassword";
 import Seller_Profile from "../pages/Seller_Profile";
 import Manage_Song from "../pages/ManageSong";
 import Top_Artist from "../pages/Top_Artist";
+import MyProfile from "../pages/MyProfile";
 
 
 
@@ -53,8 +54,8 @@ const router = createBrowserRouter([
                 element: <Seller_Profile />,
             },
             {
-                path: "/love",
-                element: <Love />,
+                path: "/my_profile",
+                element: <MyProfile />,
             },
         ]
     },
