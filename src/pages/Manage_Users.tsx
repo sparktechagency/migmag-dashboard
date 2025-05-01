@@ -1,9 +1,6 @@
 import { Avatar, Input, Table } from "antd";
 import { Pencil, Search, Trash } from "lucide-react";
 import React, { useState } from "react";
-import image from "../assets/Images/Notifications/Avatar.png";
-import ModalComponent from "../component/share/ModalComponent";
-import { Link } from "react-router-dom";
 import { EditOutlined } from '@ant-design/icons';
 
 const Manage_Users = () => {

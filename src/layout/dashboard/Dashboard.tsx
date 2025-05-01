@@ -2,11 +2,12 @@ import React from "react";
 import { Avatar, Badge, Layout, Menu, Popover } from "antd";
 import { Bell, Lock, LogOut, User, User2Icon } from "lucide-react";
 import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
-import logo from "../../assets/Images/LogoAndTitle.svg";
+import headerHend from "../../assets/Images/dashboard/headerHend.png";
 import SubMenu from "antd/es/menu/SubMenu";
 import "./Styled_components.css";
 import { BiPieChartAlt2 } from "react-icons/bi";
 import { IoIosCard } from "react-icons/io";
+import { UserOutlined } from "@ant-design/icons";
 
 const { Header, Sider, Content } = Layout;
 
@@ -84,7 +85,7 @@ const menuItems: MenuItem[] = [
     ),
   },
   {
-    path: "/productListing",
+    path: "/manage_song",
     title: "Manage Song",
     icon: (
       <svg
@@ -116,7 +117,7 @@ const menuItems: MenuItem[] = [
     ),
   },
   {
-    path: "/category_management",
+    path: "/top_artist",
     title: "Top Artist",
     icon: (
       <svg
@@ -208,48 +209,6 @@ const Dashboard: React.FC = () => {
     navigate("/notifications");
   };
 
-  const getTitle = () => {
-    switch (location.pathname) {
-      case "/":
-        return (
-          <h1 className="text-[#333333] font-bold text-[24px]">
-            <span className="text-[#B0B0B0]">Hello,</span> Globetrotter 👋
-          </h1>
-        );
-      case "/productListing":
-        return (
-          <h1 className="text-[#333333] font-bold text-[24px]">
-            Manage Listings
-          </h1>
-        );
-      case "/category_management":
-        return (
-          <h1 className="text-[#333333] font-bold text-[24px]">
-            Manage Category
-          </h1>
-        );
-      case "/manage-users":
-        return (
-          <h1 className="text-[#333333] font-bold text-[24px]">Manage Users</h1>
-        );
-      case "/love":
-        return <h1 className="text-[#333333] font-bold text-[24px]">Love</h1>;
-      case "/transactions":
-        return (
-          <h1 className="text-[#333333] font-bold text-[24px]">Transactions</h1>
-        );
-      case "/settings":
-        return (
-          <h1 className="text-[#333333] font-bold text-[24px]">Settings</h1>
-        );
-      default:
-        return (
-          <h1 className="text-[#333333] font-bold text-[24px]">
-            <span className="text-[#B0B0B0]">Hello,</span> Globetrotter 👋
-          </h1>
-        );
-    }
-  };
   const getMenuIcon = (
     icon: React.ReactNode,
     activeIcon: React.ReactNode,
@@ -402,7 +361,7 @@ const Dashboard: React.FC = () => {
             width: "calc(100% - 300px)",
             top: 0,
             left: 300,
-            background: "#F6F6F6",
+            background: "linear-gradient(to right, #f2f7f1, #ecf7f5, #f0f7f6)",
             height: "80px",
             paddingTop: "20px",
             zIndex: 10,
@@ -412,15 +371,33 @@ const Dashboard: React.FC = () => {
           }}
         >
           <div className="w-full flex justify-between">
-            <div>{getTitle()}</div>
+            <div>
+              <h1 className="text-[#333333] font-bold text-[24px]">
+                <div className="flex items-center gap-3">
+                  <h4 className="text-[32px] font-bold font-degular text-[##121212]">Hi, Julian Mark</h4>
+                 <img className="object-cover h-9 w-9" src={headerHend} alt="" />          
+                </div>
+              </h1>
+            </div>
             <div
               onClick={handleNotifications}
-              className="cursor-pointer"
+              className="cursor-pointer flex items-center gap-4"
               style={{ zIndex: 11 }}
             >
-              <Badge count={5}>
-                <Bell size={30} color="gray" />
-              </Badge>
+              <svg
+                width="42"
+                height="42"
+                viewBox="0 0 42 42"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect width="42" height="42" rx="21" fill="#E7F056" />
+                <path
+                  d="M13 28V26H15V19C15 17.6167 15.4167 16.3877 16.25 15.313C17.0833 14.2383 18.1667 13.534 19.5 13.2V12.5C19.5 12.0833 19.646 11.7293 19.938 11.438C20.23 11.1467 20.584 11.0007 21 11C21.416 10.9993 21.7703 11.1453 22.063 11.438C22.3557 11.7307 22.5013 12.0847 22.5 12.5V13.2C23.8333 13.5333 24.9167 14.2377 25.75 15.313C26.5833 16.3883 27 17.6173 27 19V26H29V28H13ZM21 31C20.45 31 19.9793 30.8043 19.588 30.413C19.1967 30.0217 19.0007 29.5507 19 29H23C23 29.55 22.8043 30.021 22.413 30.413C22.0217 30.805 21.5507 31.0007 21 31Z"
+                  fill="#121212"
+                />
+              </svg>
+              <Avatar size={42} icon={<UserOutlined />} />
             </div>
           </div>
         </Header>
@@ -431,10 +408,11 @@ const Dashboard: React.FC = () => {
             padding: "20px",
             overflowY: "auto",
             height: `calc(100vh - 80px)`,
-            background: "#1e1e1ef7",
+            background: "linear-gradient(to right, #f2f7f1, #ecf7f5, #f0f7f6)",
           }}
         >
-          <div className="h-full m-2 rounded p-3">
+          <div className="h-full mp-2 rounded p-3 bg-gradient-to-r from-[#f2f7f1] via-[#ecf7f5] to-[#f0f7f6]"
+          >
             <Outlet />
           </div>
         </Content>

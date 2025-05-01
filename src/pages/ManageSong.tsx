@@ -1,0 +1,294 @@
+import { Avatar, Button, Input, Table } from "antd";
+import { Pencil, Search, Trash } from "lucide-react";
+import React, { useState } from "react";
+import { DownloadOutlined, EditOutlined } from "@ant-design/icons";
+
+const Manage_Song = () => {
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [openModel, setOpenModel] = useState<boolean>(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
+  const [userData, setUserData] = useState<UserAction | null>(null);
+  const [role, setRole] = useState<string>("");
+
+  const pageSize = 10;
+
+  const dataSource = [
+    {
+      key: "1",
+      name: "Samantha Rivers",
+      artist: "Charlie",
+      genre: "Slap house",
+      charlie: "Slap house",
+      bpm: "123",
+      keys: "C Major",
+      gender: "Male",
+      license: "Non-exclusive",
+      price: "€1,000",
+      avatar: "https://i.pravatar.cc/40?img=1",
+    },
+    {
+      key: "2",
+      name: "Marcus Thompson",
+      artist: "Charlie",
+      genre: "Slap house",
+      charlie: "Slap house",
+      bpm: "123",
+      keys: "C Major",
+      gender: "Male",
+      license: "Non-exclusive",
+      price: "€1,000",
+      avatar: "https://i.pravatar.cc/40?img=2",
+    },
+    {
+      key: "3",
+      name: "Elena Martinez",
+      artist: "Charlie",
+      genre: "Slap house",
+      charlie: "Slap house",
+      bpm: "123",
+      keys: "C Major",
+      gender: "Male",
+      license: "Non-exclusive",
+      price: "€1,000",
+      avatar: "https://i.pravatar.cc/40?img=3",
+    },
+    {
+      key: "4",
+      name: "Derek Johnson",
+      artist: "Charlie",
+      genre: "Slap house",
+      charlie: "Slap house",
+      bpm: "123",
+      keys: "C Major",
+      gender: "Male",
+      license: "Non-exclusive",
+      price: "€1,000",
+      avatar: "https://i.pravatar.cc/40?img=4",
+    },
+    {
+      key: "5",
+      name: "Tina Chen",
+      artist: "Charlie",
+      genre: "Slap house",
+      charlie: "Slap house",
+      bpm: "123",
+      keys: "C Major",
+      gender: "Male",
+      license: "Non-exclusive",
+      price: "€1,000",
+      avatar: "https://i.pravatar.cc/40?img=5",
+    },
+    {
+      key: "6",
+      name: "Oliver Brown",
+      artist: "Charlie",
+      genre: "Slap house",
+      charlie: "Slap house",
+      bpm: "123",
+      keys: "C Major",
+      gender: "Male",
+      license: "Non-exclusive",
+      price: "€1,000",
+      avatar: "https://i.pravatar.cc/40?img=6",
+    },
+    {
+      key: "7",
+      name: "Ava Patel",
+      artist: "Charlie",
+      genre: "Slap house",
+      charlie: "Slap house",
+      bpm: "123",
+      keys: "C Major",
+      gender: "Male",
+      license: "Non-exclusive",
+      price: "€1,000",
+      avatar: "https://i.pravatar.cc/40?img=7",
+    },
+    {
+      key: "8",
+      name: "Liam Smith",
+      artist: "Charlie",
+      genre: "Slap house",
+      charlie: "Slap house",
+      bpm: "123",
+      keys: "C Major",
+      gender: "Male",
+      license: "Non-exclusive",
+      price: "€1,000",
+      avatar: "https://i.pravatar.cc/40?img=8",
+    },
+    {
+      key: "9",
+      name: "Zoe Kim",
+      artist: "Charlie",
+      genre: "Slap house",
+      charlie: "Slap house",
+      bpm: "123",
+      keys: "C Major",
+      gender: "Male",
+      license: "Non-exclusive",
+      price: "€1,000",
+      avatar: "https://i.pravatar.cc/40?img=9",
+    },
+    {
+      key: "10",
+      name: "Shila",
+      artist: "Charlie",
+      genre: "Slap house",
+      charlie: "Slap house",
+      bpm: "123",
+      keys: "C Major",
+      gender: "Male",
+      license: "Non-exclusive",
+      price: "€1,000",
+      avatar: "https://i.pravatar.cc/40?img=10",
+    },
+    {
+      key: "11",
+      name: "Lorry Kim",
+      artist: "Charlie",
+      genre: "Slap house",
+      charlie: "Slap house",
+      bpm: "123",
+      keys: "C Major",
+      gender: "Male",
+      license: "Non-exclusive",
+      price: "€1,000",
+      avatar: "https://i.pravatar.cc/40?img=11",
+    },
+  ];
+
+  const columns = [
+    {
+      title: "Users",
+      dataIndex: "name",
+      key: "name",
+      render: (text, record) => (
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <Avatar src={record.avatar} />
+          <h2>{text}</h2>
+        </div>
+      ),
+    },
+
+    {
+      title: "Artist",
+      dataIndex: "artist",
+      key: "artist",
+    },
+    {
+      title: "Genre",
+      dataIndex: "genre",
+      key: "genre",
+    },
+    {
+      title: "BPM",
+      dataIndex: "bpm",
+      key: "bpm",
+    },
+    {
+      title: "keys",
+      dataIndex: "keys",
+      key: "keys",
+    },
+    {
+      title: "Gender",
+      dataIndex: "gender",
+      key: "gender",
+    },
+    {
+      title: "License",
+      dataIndex: "license",
+      key: "license",
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: () => (
+        <div className="flex gap-2">
+          <svg
+            width="20"
+            height="22"
+            viewBox="0 0 20 22"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 22V18H20V22H0ZM4 14H5.4L13.2 6.225L11.775 4.8L4 12.6V14ZM2 16V11.75L13.2 0.575C13.3833 0.391667 13.5958 0.25 13.8375 0.15C14.0792 0.05 14.3333 0 14.6 0C14.8667 0 15.125 0.05 15.375 0.15C15.625 0.25 15.85 0.4 16.05 0.6L17.425 2C17.625 2.18333 17.7708 2.4 17.8625 2.65C17.9542 2.9 18 3.15833 18 3.425C18 3.675 17.9542 3.92083 17.8625 4.1625C17.7708 4.40417 17.625 4.625 17.425 4.825L6.25 16H2Z"
+              fill="#49ADF4"
+            />
+          </svg>
+          <svg
+            width="16"
+            height="18"
+            viewBox="0 0 16 18"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M3 18C2.45 18 1.97917 17.8042 1.5875 17.4125C1.19583 17.0208 1 16.55 1 16V3H0V1H5V0H11V1H16V3H15V16C15 16.55 14.8042 17.0208 14.4125 17.4125C14.0208 17.8042 13.55 18 13 18H3ZM13 3H3V16H13V3ZM5 14H7V5H5V14ZM9 14H11V5H9V14Z"
+              fill="#E53E3E"
+            />
+          </svg>
+        </div>
+      ),
+    },
+  ];
+
+  const handlePage = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  return (
+    <div>
+      <div className="bg-white p-6 rounded-2xl">
+        <div className="flex justify-between">
+          <div className="">
+            <h1 className="text-[#121212] text-[20px] font-semibold font-degular ">
+              Manage Song
+            </h1>
+            <p className="font-degular font-normal text-sm pb-4 pt-2">
+              For adding a new song or edit existing song.
+            </p>
+          </div>
+          <Button
+            type="default"
+            className="bg-[#E7F056] p-4 border-none text-base text-[#3A3A3A] font-degular font-semibold"
+            shape="round"
+          >
+            Add new song
+          </Button>
+        </div>
+        <Input
+          prefix={<Search />}
+          className="w-full rounded-2xl h-12 bg-base border-0 text-primary placeholder:text-gray-200"
+          placeholder="Search for Listing"
+          style={{
+            backgroundColor: "#f0f0f0",
+            color: "#333333",
+          }}
+        />
+      </div>
+      <div className="py-8">
+        <Table
+          dataSource={dataSource}
+          columns={columns}
+          pagination={{
+            pageSize,
+            total: 50,
+            current: currentPage,
+            onChange: handlePage,
+          }}
+          rowClassName={() => "hover:bg-transparent"}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default Manage_Song;
