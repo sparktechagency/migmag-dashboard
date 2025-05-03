@@ -30,9 +30,9 @@ const VerifyEmail: React.FC = () => {
     <AuthWrapper className="container mx-auto ">
       <div className="flex justify-between items-center">
         {/* image  */}
-        <div className="m-6">
+        <div className="mt-6">
           <img
-            className="w-[828px] h-[1069px] object-cover "
+            className="w-[828px] h-[1069px] object-cover rounded-2xl "
             src={VerifyEmailImg}
             alt=""
           />

@@ -1,7 +1,16 @@
-import { Avatar, Button, Input, Table } from "antd";
+import {
+  Avatar,
+  Button,
+  Form,
+  Input,
+  Modal,
+  PopconfirmProps,
+  Table,
+} from "antd";
 import { Pencil, Search, Trash } from "lucide-react";
 import React, { useState } from "react";
 import { DownloadOutlined, EditOutlined } from "@ant-design/icons";
+import { message, Popconfirm } from "antd";
 
 const Manage_Song = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -9,6 +18,17 @@ const Manage_Song = () => {
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const [userData, setUserData] = useState<UserAction | null>(null);
   const [role, setRole] = useState<string>("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const confirm: PopconfirmProps["onConfirm"] = (e) => {
+    console.log(e);
+    message.success("Click on Yes");
+  };
+
+  const cancel: PopconfirmProps["onCancel"] = (e) => {
+    console.log(e);
+    message.error("Click on No");
+  };
 
   const pageSize = 10;
 
@@ -212,6 +232,7 @@ const Manage_Song = () => {
       render: () => (
         <div className="flex gap-2">
           <svg
+            onClick={showModal}
             width="20"
             height="22"
             viewBox="0 0 20 22"
@@ -223,18 +244,27 @@ const Manage_Song = () => {
               fill="#49ADF4"
             />
           </svg>
-          <svg
-            width="16"
-            height="18"
-            viewBox="0 0 16 18"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
+          <Popconfirm
+            title="Delete the task"
+            description="Are you sure to delete this task?"
+            onConfirm={confirm}
+            onCancel={cancel}
+            okText="Yes"
+            cancelText="No"
           >
-            <path
-              d="M3 18C2.45 18 1.97917 17.8042 1.5875 17.4125C1.19583 17.0208 1 16.55 1 16V3H0V1H5V0H11V1H16V3H15V16C15 16.55 14.8042 17.0208 14.4125 17.4125C14.0208 17.8042 13.55 18 13 18H3ZM13 3H3V16H13V3ZM5 14H7V5H5V14ZM9 14H11V5H9V14Z"
-              fill="#E53E3E"
-            />
-          </svg>
+            <svg
+              width="16"
+              height="18"
+              viewBox="0 0 16 18"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M3 18C2.45 18 1.97917 17.8042 1.5875 17.4125C1.19583 17.0208 1 16.55 1 16V3H0V1H5V0H11V1H16V3H15V16C15 16.55 14.8042 17.0208 14.4125 17.4125C14.0208 17.8042 13.55 18 13 18H3ZM13 3H3V16H13V3ZM5 14H7V5H5V14ZM9 14H11V5H9V14Z"
+                fill="#E53E3E"
+              />
+            </svg>
+          </Popconfirm>
         </div>
       ),
     },
@@ -242,6 +272,23 @@ const Manage_Song = () => {
 
   const handlePage = (page: number) => {
     setCurrentPage(page);
+  };
+
+  // edit modal
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const onFinish = (e) => {
+    console.log(e);
   };
 
   return (
@@ -286,6 +333,23 @@ const Manage_Song = () => {
           }}
           rowClassName={() => "hover:bg-transparent"}
         />
+        {/* edit modal */}
+        <Modal title="Basic Modal" className="!w-[650px]" open={isModalOpen} footer={false}>
+          <Form onFinish={onFinish}>
+            <div className="flex ">
+              <Button onClick={handleCancel} className="w-full  bg-[#fff5f4] text-[#FF3B30] border-none rounded-2xl p-5 font-bold font-degular text-xl">
+                Cancel
+              </Button>
+              <Button
+                htmlType="submit"
+                onClick={handleOk}
+                className="w-full bg-[#E7F056] border-none rounded-2xl p-5 font-bold font-degular text-xl"
+              >
+                Save changes
+              </Button>
+            </div>
+          </Form>
+        </Modal>
       </div>
     </div>
   );

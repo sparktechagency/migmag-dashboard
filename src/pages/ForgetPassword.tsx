@@ -40,7 +40,7 @@ const ForgetPassword: React.FC = () => {
       <div className="flex justify-between items-center">
         {/* image  */}
         <div className="m-6">
-          <img src={forGetImg} alt="" />
+          <img src={forGetImg} className=" rounded-lg" alt="" />
         </div>
         {/* forget password */}
         <div className=" flex bg-[#FFFFFF] p-16 rounded-2xl shadow-[_0px_30px_30px_30px_rgba(249,_250,_229,_20)]">

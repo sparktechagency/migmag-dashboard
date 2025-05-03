@@ -1,7 +1,7 @@
-import { Avatar, Input, Table } from "antd";
+import { Avatar, Button, Input, Modal, Radio, Table } from "antd";
 import { Pencil, Search, Trash } from "lucide-react";
 import React, { useState } from "react";
-import { EditOutlined } from '@ant-design/icons';
+import { EditOutlined } from "@ant-design/icons";
 
 const Manage_Users = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -9,115 +9,121 @@ const Manage_Users = () => {
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const [userData, setUserData] = useState<UserAction | null>(null);
   const [role, setRole] = useState<string>("");
+  const [radioGetValue, setRadioGetValue] = useState("Ban");
 
   const pageSize = 10;
 
   const dataSource = [
     {
-      key: '1',
-      name: 'Samantha Rivers',
-      email: 'contact@newdomain.com',
-      status: 'Unbanned',
-      avatar: 'https://i.pravatar.cc/40?img=1',
+      key: "1",
+      name: "Samantha Rivers",
+      email: "contact@newdomain.com",
+      status: "Unbanned",
+      avatar: "https://i.pravatar.cc/40?img=1",
     },
     {
-      key: '2',
-      name: 'Marcus Thompson',
-      email: 'support@anotherdomain.org',
-      status: 'Unbanned',
-      avatar: 'https://i.pravatar.cc/40?img=2',
+      key: "2",
+      name: "Marcus Thompson",
+      email: "support@anotherdomain.org",
+      status: "Unbanned",
+      avatar: "https://i.pravatar.cc/40?img=2",
     },
     {
-      key: '3',
-      name: 'Elena Martinez',
-      email: 'info@undiscovered.com',
-      status: 'Unbanned',
-      avatar: 'https://i.pravatar.cc/40?img=3',
+      key: "3",
+      name: "Elena Martinez",
+      email: "info@undiscovered.com",
+      status: "Unbanned",
+      avatar: "https://i.pravatar.cc/40?img=3",
     },
     {
-      key: '4',
-      name: 'Derek Johnson',
-      email: 'hello@verifiedmail.com',
-      status: 'Unbanned',
-      avatar: 'https://i.pravatar.cc/40?img=4',
+      key: "4",
+      name: "Derek Johnson",
+      email: "hello@verifiedmail.com",
+      status: "Unbanned",
+      avatar: "https://i.pravatar.cc/40?img=4",
     },
     {
-      key: '5',
-      name: 'Tina Chen',
-      email: 'admin@securemail.net',
-      status: 'Unbanned',
-      avatar: 'https://i.pravatar.cc/40?img=5',
+      key: "5",
+      name: "Tina Chen",
+      email: "admin@securemail.net",
+      status: "Unbanned",
+      avatar: "https://i.pravatar.cc/40?img=5",
     },
     {
-      key: '6',
-      name: 'Oliver Brown',
-      email: 'user@unknownmail.com',
-      status: 'Unbanned',
-      avatar: 'https://i.pravatar.cc/40?img=6',
+      key: "6",
+      name: "Oliver Brown",
+      email: "user@unknownmail.com",
+      status: "Unbanned",
+      avatar: "https://i.pravatar.cc/40?img=6",
     },
     {
-      key: '7',
-      name: 'Ava Patel',
-      email: 'team@trustedsource.com',
-      status: 'Unbanned',
-      avatar: 'https://i.pravatar.cc/40?img=7',
+      key: "7",
+      name: "Ava Patel",
+      email: "team@trustedsource.com",
+      status: "Unbanned",
+      avatar: "https://i.pravatar.cc/40?img=7",
     },
     {
-      key: '8',
-      name: 'Liam Smith',
-      email: 'contact@reliablemail.com',
-      status: 'Unbanned',
-      avatar: 'https://i.pravatar.cc/40?img=8',
+      key: "8",
+      name: "Liam Smith",
+      email: "contact@reliablemail.com",
+      status: "Unbanned",
+      avatar: "https://i.pravatar.cc/40?img=8",
     },
     {
-      key: '9',
-      name: 'Zoe Kim',
-      email: 'support@verifiedservice.com',
-      status: 'Unbanned',
-      avatar: 'https://i.pravatar.cc/40?img=9',
+      key: "9",
+      name: "Zoe Kim",
+      email: "support@verifiedservice.com",
+      status: "Unbanned",
+      avatar: "https://i.pravatar.cc/40?img=9",
     },
     {
-      key: '10',
-      name: 'Shila',
-      email: 'info@authenticmail.org',
-      status: 'Unbanned',
-      avatar: 'https://i.pravatar.cc/40?img=10',
+      key: "10",
+      name: "Shila",
+      email: "info@authenticmail.org",
+      status: "Unbanned",
+      avatar: "https://i.pravatar.cc/40?img=10",
     },
     {
-      key: '11',
-      name: 'Lorry Kim',
-      email: 'info@authenticmail.org',
-      status: 'Unbanned',
-      avatar: 'https://i.pravatar.cc/40?img=11',
+      key: "11",
+      name: "Lorry Kim",
+      email: "info@authenticmail.org",
+      status: "Unbanned",
+      avatar: "https://i.pravatar.cc/40?img=11",
     },
   ];
-  
+
   const columns = [
     {
-      title: 'Users',
-      dataIndex: 'name',
-      key: 'name',
+      title: "Users",
+      dataIndex: "name",
+      key: "name",
       render: (text, record) => (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <Avatar src={record.avatar} />
           <h2>{text}</h2>
         </div>
       ),
     },
     {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
     },
     {
-      title: 'Profile status',
-      dataIndex: 'status',
-      key: 'status',
+      title: "Profile status",
+      dataIndex: "status",
+      key: "status",
     },
     {
-      title: 'Action',
-      key: 'action',
-      render: () => <EditOutlined style={{ color: '#1890ff', cursor: 'pointer' }} />,
+      title: "Action",
+      key: "action",
+      render: () => (
+        <EditOutlined
+          style={{ color: "#1890ff", cursor: "pointer" }}
+          onClick={showModal}
+        />
+      ),
     },
   ];
 
@@ -125,7 +131,19 @@ const Manage_Users = () => {
     setCurrentPage(page);
   };
 
- 
+  // Change status modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+  const handleRadioValue = (e) => {
+    console.log(e.target.value);
+  };
 
   return (
     <div>
@@ -140,7 +158,7 @@ const Manage_Users = () => {
           </p>
         </div>
         <Input
-          prefix={<Search />}
+          prefix={<Search color="#888888"/>}
           className="w-full rounded-2xl h-12 bg-base border-0 text-primary placeholder:text-gray-200"
           placeholder="Search for Listing"
           style={{
@@ -161,6 +179,23 @@ const Manage_Users = () => {
           }}
           rowClassName={() => "hover:bg-transparent"}
         />
+        {/* Change status moudal */}
+        <Modal title="Change status" className="!w-[400px] " open={isModalOpen} footer={false}>
+          <Radio.Group
+            defaultValue={radioGetValue}
+            onChange={handleRadioValue}
+            className="flex flex-col gap-3 mt-7"
+          >
+            <Radio value="Ban">Ban</Radio>
+            <Radio value="Unban">Unban</Radio>
+            <Button
+              onClick={handleOk}
+              className="bg-[#E7F056] mt-7 p-5 font-semibold font-degular text-xl"
+            >
+              Done
+            </Button>
+          </Radio.Group>
+        </Modal>
       </div>
     </div>
   );
