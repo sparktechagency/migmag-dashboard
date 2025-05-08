@@ -5,10 +5,6 @@ import { EditOutlined } from "@ant-design/icons";
 
 const Manage_Users = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [openModel, setOpenModel] = useState<boolean>(false);
-  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
-  const [userData, setUserData] = useState<UserAction | null>(null);
-  const [role, setRole] = useState<string>("");
   const [radioGetValue, setRadioGetValue] = useState("Ban");
 
   const pageSize = 10;
@@ -141,6 +137,10 @@ const Manage_Users = () => {
   const handleOk = () => {
     setIsModalOpen(false);
   };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
   const handleRadioValue = (e) => {
     console.log(e.target.value);
   };
@@ -180,11 +180,12 @@ const Manage_Users = () => {
           rowClassName={() => "hover:bg-transparent"}
         />
         {/* Change status moudal */}
-        <Modal title="Change status" className="!w-[400px] " open={isModalOpen} footer={false}>
+        <Modal title="Change status" className="!w-[400px] "  onCancel={handleCancel} open={isModalOpen} footer={false}>
           <Radio.Group
             defaultValue={radioGetValue}
             onChange={handleRadioValue}
             className="flex flex-col gap-3 mt-7"
+            
           >
             <Radio value="Ban">Ban</Radio>
             <Radio value="Unban">Unban</Radio>
@@ -199,6 +200,7 @@ const Manage_Users = () => {
       </div>
     </div>
   );
-};
+};  
+        
 
 export default Manage_Users;

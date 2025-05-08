@@ -19,27 +19,42 @@ const SetNewPassword: React.FC = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 container mx-auto  md:grid-cols-2 w-full h-full ">
+    <div className="h-dvh grid grid-cols-2 border border-gray-700  ">
       {/* image  */}
-      <div className="m-6">
-        <img src={ArtistLibrary} alt="" />
+      <div className="flex items-center p-3  justify-center ">
+        <div
+          className="h-full w-full overflow-hidden rounded-xl"
+          style={{
+            backgroundImage: `url(${ArtistLibrary})`,
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "left",
+            backgroundSize: "cover",
+          }}
+        />
+
+        {/* <img src={forGetImg} className="my-auto  h-[95vh] w-full object-contain rounded-lg" alt="" /> */}
       </div>
-      {/* login form */}
-      <div className="flex justify-center items-center ">
-        <AuthWrapper className="rounded-2xl shadow-[_0px_30px_30px_30px_rgba(249,_250,_229,_20)] bg-white">
-          <div className="text-center mb-16">
-            <div className="mb-6">
-              <h1 className="text-4xl font-degular font-bold">
-                Create new password
-              </h1>
-            </div>
-            <p>You have to create a new password after reset</p>
+      {/* forget password */}
+      <div className="  justify-center items-center  flex    ">
+        <div className="h-[60vh] bg-white w-[536px]  shadow-[_0px_30px_30px_30px_rgba(249,_250,_229,_20)] p-16 rounded-2xl">
+          <div className="text-center pb-16">
+            <h1 className="font-semibold text-3xl font-degular text-[40px] mb-6">
+              Verify Email
+            </h1>
+            <p className="font-degular font-normal text-[#3A3A3A]">
+              You have to verify your email to get code.
+            </p>
           </div>
+
+          {/* Assuming `Input.OTP` is a custom component */}
+
           <Form<LoginFormValues> layout="vertical" onFinish={onFinish}>
             <Form.Item
               label="New Password"
               name="password"
-              rules={[{ required: true, message: "Please enter your New Password" }]}
+              rules={[
+                { required: true, message: "Please enter your New Password" },
+              ]}
               className="text-[#121212] font-degular font-semibold text-base"
             >
               <Input.Password
@@ -66,9 +81,7 @@ const SetNewPassword: React.FC = () => {
               label="Retype New Password"
               name="Retype New password"
               className="text-[#121212] font-degular font-semibold text-base"
-              rules={[
-                { required: true, message: "Retype New Password" },
-              ]}
+              rules={[{ required: true, message: "Retype New Password" }]}
             >
               <Input.Password
                 className="text-[#121212] font-degular font-semibold text-base"
@@ -99,7 +112,7 @@ const SetNewPassword: React.FC = () => {
               </Button>
             </Form.Item>
           </Form>
-        </AuthWrapper>
+        </div>
       </div>
     </div>
   );

@@ -1,4 +1,15 @@
-import { Avatar, Button, Input, Table } from "antd";
+import {
+  Avatar,
+  Button,
+  Form,
+  Input,
+  message,
+  Modal,
+  Popconfirm,
+  PopconfirmProps,
+  Select,
+  Table,
+} from "antd";
 import { Pencil, Search, Trash } from "lucide-react";
 import React, { useState } from "react";
 import { DownloadOutlined, EditOutlined } from "@ant-design/icons";
@@ -9,6 +20,7 @@ const Top_Artist = () => {
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const [userData, setUserData] = useState<UserAction | null>(null);
   const [role, setRole] = useState<string>("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const pageSize = 10;
 
@@ -158,6 +170,34 @@ const Top_Artist = () => {
     },
   ];
 
+  // delete
+  const confirm: PopconfirmProps["onConfirm"] = (e) => {
+    console.log(e);
+    message.success("Click on Yes");
+  };
+
+  const cancel: PopconfirmProps["onCancel"] = (e) => {
+    console.log(e);
+    message.error("Click on No");
+  };
+
+  // edit modal
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const onFinish = (values) => {
+    console.log("Form values:", values);
+  };
+
   const columns = [
     {
       title: "Artist",
@@ -180,18 +220,27 @@ const Top_Artist = () => {
       key: "action",
       render: () => (
         <div className="flex gap-2">
-          <svg
-            width="16"
-            height="18"
-            viewBox="0 0 16 18"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
+          <Popconfirm
+            title="Delete the task"
+            description="Are you sure to delete this task?"
+            onConfirm={confirm}
+            onCancel={cancel}
+            okText="Yes"
+            cancelText="No"
           >
-            <path
-              d="M3 18C2.45 18 1.97917 17.8042 1.5875 17.4125C1.19583 17.0208 1 16.55 1 16V3H0V1H5V0H11V1H16V3H15V16C15 16.55 14.8042 17.0208 14.4125 17.4125C14.0208 17.8042 13.55 18 13 18H3ZM13 3H3V16H13V3ZM5 14H7V5H5V14ZM9 14H11V5H9V14Z"
-              fill="#E53E3E"
-            />
-          </svg>
+            <svg
+              width="16"
+              height="18"
+              viewBox="0 0 16 18"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M3 18C2.45 18 1.97917 17.8042 1.5875 17.4125C1.19583 17.0208 1 16.55 1 16V3H0V1H5V0H11V1H16V3H15V16C15 16.55 14.8042 17.0208 14.4125 17.4125C14.0208 17.8042 13.55 18 13 18H3ZM13 3H3V16H13V3ZM5 14H7V5H5V14ZM9 14H11V5H9V14Z"
+                fill="#E53E3E"
+              />
+            </svg>
+          </Popconfirm>
         </div>
       ),
     },
@@ -215,6 +264,7 @@ const Top_Artist = () => {
           </div>
           <Button
             type="default"
+            onClick={showModal}
             className="bg-[#E7F056] p-4 border-none text-base text-[#3A3A3A] font-degular font-semibold"
             shape="round"
           >
@@ -243,6 +293,74 @@ const Top_Artist = () => {
           }}
           rowClassName={() => "hover:bg-transparent"}
         />
+        {/* modal */}
+        <Modal
+          title="Basic Modal"
+          className="!w-[650px] "
+          open={isModalOpen}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          footer={
+            <div className="flex gap-4 ">
+              <Button
+                onClick={handleCancel}
+                className="w-full  bg-[#fff5f4] text-[#FF3B30] border-none rounded-2xl p-5 font-bold font-degular text-xl"
+              >
+                Cancel
+              </Button>
+              <Button
+                htmlType="submit"
+                onClick={handleOk}
+                className="w-full bg-[#E7F056] border-none rounded-2xl p-5 font-bold font-degular text-xl"
+              >
+                Save changes
+              </Button>
+            </div>
+          }
+        >
+          <Form onFinish={onFinish} style={{ paddingBottom: "40px" }}>
+            {/* Artist name */}
+            <Form.Item label="Artist name" name="artistName" layout="vertical">
+              <Select
+                showSearch
+                className="w-full  bg-[#f5f5f5] h-[45px] font-degular font-normal text-base rounded-lg"
+                placeholder="Select the name from list"
+                optionFilterProp="label"
+                filterSort={(optionA, optionB) =>
+                  (optionA?.label ?? "")
+                    .toLowerCase()
+                    .localeCompare((optionB?.label ?? "").toLowerCase())
+                }
+                options={[
+                  {
+                    value: "1",
+                    label: "Not Identified",
+                  },
+                  {
+                    value: "2",
+                    label: "Closed",
+                  },
+                  {
+                    value: "3",
+                    label: "Communicated",
+                  },
+                  {
+                    value: "4",
+                    label: "Identified",
+                  },
+                  {
+                    value: "5",
+                    label: "Resolved",
+                  },
+                  {
+                    value: "6",
+                    label: "Cancelled",
+                  },
+                ]}
+              />
+            </Form.Item>
+          </Form>
+        </Modal>
       </div>
     </div>
   );

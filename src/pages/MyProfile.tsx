@@ -115,7 +115,9 @@ const MyProfile = () => {
           </div>
           <Form.Item
             name="Contact number"
-            rules={[{ required: true, message: "Please input your Contact number!" }]}
+            rules={[
+              { required: true, message: "Please input your Contact number!" },
+            ]}
           >
             <Input
               prefix={
@@ -160,8 +162,12 @@ const MyProfile = () => {
             />
           </Form.Item>
           <Form.Item>
-            <Button block type="primary" htmlType="submit">
-              Log in
+            <Button
+              block
+              className="bg-[#e7f056] font-bold text-xl font-degular py-5 rounded-full border-none"
+              htmlType="submit"
+            >
+              Update
             </Button>
           </Form.Item>
         </Form>

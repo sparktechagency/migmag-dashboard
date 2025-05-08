@@ -1,3 +1,9 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 /* .ant-layout .ant-layout-has-sider{
   background-color: red !important;
 } */
@@ -13,9 +19,9 @@
   color: #4964c6 !important;
 }
 
-.ant-menu-item {
-  /* color: #4964C6; */
-}
+/* .ant-menu-item {
+  color: #4964C6;
+} */
 
 /* .ant-layout .ant-layout-header {
   background-color: #F6F6F6 !important;
@@ -25,7 +31,7 @@
   color: black !important;
 }
 .ant-layout-sider-children .ant-menu-item-selected {
-  background: #f2f5fc !important;
+  /* background: #f2f5fc !important; */
   font-weight: bold;
   color: #4964c6 !important;
 }
@@ -217,11 +223,28 @@ span.ant-menu-title-content {
 .ant-menu-title-content {
   color: #3a3a3a !important;
 }
-.ant-menu-item .ant-menu-item-selected {
-  background-color: #fdfeee !important;
+.ant-menu-item .ant-menu-item-active .ant-menu-item-selected {
+  background-color: #eeff00 !important;
 }
 .ant-menu-item-selected .ant-menu-title-content {
   color: #121212 !important;
   width: 100%;
 }
 
+.ant-form-item .ant-form-item-row .ant-form-item-label label {
+  font-size: 16px;
+  font-weight: 600;
+  font-family: degularDisplay;
+  margin-top: 30px;
+}
+.ant-form-item-control-input-content .ant-input{
+  background-color: #F5F5F5;
+  font-family: degularDisplay;
+  color: #3A3A3A;
+  font-weight: 400;
+  font-size: 16px;
+  /* padding: 12px; */
+  height: 45px;
+  border: none;
+  
+}

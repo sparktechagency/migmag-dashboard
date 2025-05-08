@@ -19,9 +19,9 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 container mx-auto  md:grid-cols-2 w-full h-full ">
+    <div className="grid grid-cols-1 min-h-screen container mx-auto  md:grid-cols-2 w-full  ">
       {/* login left side  */}
-      <div className="bg-[#e1e95d] pl-24 pt-16 mt-6 mb-5 rounded-2xl">
+      <div className=" h-[95vh] bg-[#e1e95d] pl-24 pt-16 mt-6 mb-5 rounded-2xl">
         {/* logo */}
         <div className="mb-10">
           <svg
@@ -79,7 +79,12 @@ const Login: React.FC = () => {
           Monitor songs, manage purchases, and handle users with ease. Your
           complete toolkit to keep the music business running smoothly.
         </p>
-        <img src={ArtistLibrary} alt="" />
+        <div  className="h-[56.5vh] w-[35vw] object-cover" style={{
+         borderRadius : "0 0 15px 0",
+         backgroundOrigin : ArtistLibrary,
+         backgroundImage: `url(${ArtistLibrary})`,
+          
+        }}  />
       </div>
       {/* login form */}
       <div className="flex justify-center items-center ">
@@ -153,7 +158,7 @@ const Login: React.FC = () => {
                   <Checkbox>Remember me</Checkbox>
                 </Form.Item>
 
-                <Link className="login-form-forgot" to="/auth/forget-password">
+                <Link className="login-form-forgot" to="/auth/verify-email">
                   Forgot password
                 </Link>
               </div>

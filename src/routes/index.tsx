@@ -5,17 +5,15 @@ import DasboardHome from "../pages/DasboardHome";
 import ProductListing from "../pages/ManageSong";
 import Category_Management from "../pages/Category_Management";
 import Manage_Users from "../pages/Manage_Users";
-import Love from "../pages/Love";
-import Notifications from "../pages/Notifications";
 import Auth from './../layout/auth/Auth';
 import Login from "../pages/Login";
-import ForgetPassword from "../pages/ForgetPassword";
-import VerifyEmail from "../pages/VerifyEmail";
 import SetNewPassword from "../pages/SetNewPassword";
 import Seller_Profile from "../pages/Seller_Profile";
 import Manage_Song from "../pages/ManageSong";
 import Top_Artist from "../pages/Top_Artist";
 import MyProfile from "../pages/MyProfile";
+import Verify_Email from "../pages/Verify_Email";
+import ForgetPassword from "../pages/ForgetPassword";
 
 
 
@@ -36,10 +34,6 @@ const router = createBrowserRouter([
             {
                 path: "/manage-users",
                 element: <Manage_Users />,
-            },
-            {
-                path: "/notifications",
-                element: <Notifications />,
             },
             {
                 path: "/manage_song",
@@ -72,12 +66,12 @@ const router = createBrowserRouter([
             element: <Login />,
           },
           {
-            path: "/auth/forget-password",
-            element: <ForgetPassword />,
+            path: "/auth/verify-email",
+            element: <Verify_Email/>,
           },
           {
-            path: "/auth/verify",
-            element: <VerifyEmail />,
+            path: "/auth/forget-password",
+            element: <ForgetPassword />,
           },
           {
             path: "/auth/set-new-password",

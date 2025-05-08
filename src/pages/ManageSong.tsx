@@ -5,9 +5,11 @@ import {
   Input,
   Modal,
   PopconfirmProps,
+  Radio,
   Table,
+  Upload,
 } from "antd";
-import { Pencil, Search, Trash } from "lucide-react";
+import { Divide, Pencil, Search, Trash } from "lucide-react";
 import React, { useState } from "react";
 import { DownloadOutlined, EditOutlined } from "@ant-design/icons";
 import { message, Popconfirm } from "antd";
@@ -307,6 +309,7 @@ const Manage_Song = () => {
             type="default"
             className="bg-[#E7F056] p-4 border-none text-base text-[#3A3A3A] font-degular font-semibold"
             shape="round"
+            onClick={showModal}
           >
             Add new song
           </Button>
@@ -334,10 +337,18 @@ const Manage_Song = () => {
           rowClassName={() => "hover:bg-transparent"}
         />
         {/* edit modal */}
-        <Modal title="Basic Modal" className="!w-[650px]" open={isModalOpen} footer={false}>
-          <Form onFinish={onFinish}>
-            <div className="flex ">
-              <Button onClick={handleCancel} className="w-full  bg-[#fff5f4] text-[#FF3B30] border-none rounded-2xl p-5 font-bold font-degular text-xl">
+        <Modal
+          title="Basic Modal"
+          className="!w-[650px] "
+          open={isModalOpen}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          footer={
+            <div className="flex gap-4 ">
+              <Button
+                onClick={handleCancel}
+                className="w-full  bg-[#fff5f4] text-[#FF3B30] border-none rounded-2xl p-5 font-bold font-degular text-xl"
+              >
                 Cancel
               </Button>
               <Button
@@ -348,6 +359,91 @@ const Manage_Song = () => {
                 Save changes
               </Button>
             </div>
+          }
+        >
+          <Form onFinish={onFinish} style={{ paddingBottom: "100px" }}>
+            <Form.Item className="bg-[#f5f5f5]  border-dashed rounded-lg text-center py-4 ">
+              <Upload className="flex justify-center ">
+                <Button className="flex">
+                  <svg
+                    width="19"
+                    height="20"
+                    viewBox="0 0 19 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M5.5 6.99976V8.99976H2.5V17.9998H16.5V8.99976H13.5V6.99976H16.5C17.0304 6.99976 17.5391 7.21047 17.9142 7.58555C18.2893 7.96062 18.5 8.46933 18.5 8.99976V17.9998C18.5 18.5302 18.2893 19.0389 17.9142 19.414C17.5391 19.789 17.0304 19.9998 16.5 19.9998H2.5C1.96957 19.9998 1.46086 19.789 1.08579 19.414C0.710714 19.0389 0.5 18.5302 0.5 17.9998V8.99976C0.5 8.46933 0.710714 7.96062 1.08579 7.58555C1.46086 7.21047 1.96957 6.99976 2.5 6.99976H5.5ZM10.384 0.468761L13.743 3.82676C13.9306 4.0144 14.0361 4.2689 14.0361 4.53426C14.0361 4.79962 13.9306 5.05412 13.743 5.24176C13.5554 5.4294 13.3009 5.53482 13.0355 5.53482C12.7701 5.53482 12.5156 5.4294 12.328 5.24176L10.5 3.41276V12.9998C10.5 13.265 10.3946 13.5193 10.2071 13.7069C10.0196 13.8944 9.76522 13.9998 9.5 13.9998C9.23478 13.9998 8.98043 13.8944 8.79289 13.7069C8.60536 13.5193 8.5 13.265 8.5 12.9998V3.41276L6.672 5.24176C6.57909 5.33467 6.46879 5.40837 6.3474 5.45865C6.226 5.50894 6.0959 5.53482 5.9645 5.53482C5.83311 5.53482 5.703 5.50894 5.5816 5.45865C5.46021 5.40837 5.34991 5.33467 5.257 5.24176C5.16409 5.14885 5.09039 5.03855 5.04011 4.91716C4.98982 4.79576 4.96394 4.66566 4.96394 4.53426C4.96394 4.40287 4.98982 4.27276 5.04011 4.15136C5.09039 4.02997 5.16409 3.91967 5.257 3.82676L8.617 0.468761C8.85139 0.234575 9.16917 0.103027 9.5005 0.103027C9.83183 0.103027 10.1496 0.234575 10.384 0.468761Z"
+                      fill="black"
+                    />
+                  </svg>
+                </Button>
+                Upload
+              </Upload>
+            </Form.Item>
+            {/* Artist name */}
+            <Form.Item label="Artist name" name="artistName" layout="vertical">
+              <Input placeholder="Enter singer name" required></Input>
+            </Form.Item>
+            <div className="flex gap-3">
+              {/* Genre */}
+              <Form.Item
+                className="flex-1"
+                label="Genre"
+                name="genre"
+                layout="vertical"
+              >
+                <Input placeholder="Enter Genre" required></Input>
+              </Form.Item>
+
+              {/* BPM*/}
+              <Form.Item
+                className="flex-1"
+                label="BPM"
+                name="BPM"
+                layout="vertical"
+              >
+                <Input placeholder="Enter BPM value" required></Input>
+              </Form.Item>
+            </div>
+            {/* Key */}
+            <Form.Item label="Key" name="key" layout="vertical">
+              <Input placeholder="Enter main key chord" required></Input>
+            </Form.Item>
+
+            {/*Price */}
+            <Form.Item label="Price" name="price" layout="vertical">
+              <Input placeholder="Enter price of the song" required></Input>
+            </Form.Item>
+
+            {/*Gender */}
+            <Form.Item
+              label="Gender"
+              name="gender"
+              className="h-4 "
+              // layout="vertical"
+            >
+              <Radio.Group className="flex  gap-3 mt-9 ">
+                <Radio value="Male">Male</Radio>
+                <Radio value="Female">Female</Radio>
+              </Radio.Group>
+            </Form.Item>
+
+            {/*License */}
+            <Form.Item
+              label="License"
+              name="license"
+              className="!h-0"
+              // layout="vertical"
+            >
+              <Radio.Group className="flex  gap-3 mt-9">
+                <Radio value="Exclusive">Exclusive</Radio>
+                <Radio value="Non-exclusive">Non-exclusive</Radio>
+                <Radio value="Premium">Premium</Radio>
+              </Radio.Group>
+            </Form.Item>
+
+            {/* button  */}
           </Form>
         </Modal>
       </div>
