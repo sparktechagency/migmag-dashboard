@@ -12,6 +12,7 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Link, router } from "expo-router";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { ScrollView } from "react-native-gesture-handler";
+import AuthHeader from "@/components/AuthHeader";
 
 const forgotPassword = () => {
   const validate = (values: any) => {
@@ -27,20 +28,30 @@ const forgotPassword = () => {
 
   return (
     <KeyboardAvoidingView
-      style={tw`flex-1`}
+      style={tw`bg-primaryFF`}
       enabled={true}
       behavior={"padding"}
     >
-      <ScrollView contentContainerStyle={tw`flex-grow justify-center`}>
+      <View
+        style={tw`w-[36px] h-[36px] bg-primary200 m-4 rounded-md  flex items-center justify-center`}
+      >
+        <Link href="/auth/login">
+          <AntDesign name="left" size={24} color="black" />
+        </Link>
+      </View>
+      <ScrollView
+        contentContainerStyle={tw` flex-grow items-center h-full justify-center`}
+      >
         <View style={tw`flex-1 justify-center items-center bg-primaryFF`}>
-          <Image
-            style={tw`h-24 aspect-square`}
-            source={require("@/assets/images/logo.png")}
-          />
+          {/* logo and title reper */}
+          <AuthHeader title="Forgot your password ?" />
+          {/* logo and title reper end*/}
 
-          <Text style={tw`font-semibold text-2xl`}>Forgot your password ?</Text>
           <View style={tw` w-full p-4 rounded-t-[2rem] pt-8 pb-5`}>
-            <Text style={tw`font-normal text-sm mb-8`}>Enter your email here. We will send you a 6 digit OTP via your email address.</Text>
+            <Text style={tw`font-normal text-sm mb-8`}>
+              Enter your email here. We will send you a 6 digit OTP via your
+              email address.
+            </Text>
             <Formik
               initialValues={{ email: "" }}
               onSubmit={(values) => {
@@ -67,7 +78,7 @@ const forgotPassword = () => {
                       style={tw`mr-2`}
                     />
                     <TextInput
-                      // style={tw`border-2 border-red-100 w-full rounded-lg `}
+                      style={tw`placeholder:`}
                       placeholder="Enter your email"
                       // right={<MaterialIcons name="email" size={24} color="black" />}
                       value={values.email}
@@ -81,7 +92,7 @@ const forgotPassword = () => {
                     style={tw`bg-primaryBlack rounded-full`}
                     onPress={() => {
                       handleSubmit();
-                      router.replace("/retailer/home");
+                      router.replace("/auth/otp");
                     }}
                   >
                     <Text

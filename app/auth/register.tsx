@@ -18,6 +18,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import { ScrollView } from "react-native-gesture-handler";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import AuthHeader from "@/components/AuthHeader";
 
 const Register = () => {
   const [value, setValue] = useState(false);
@@ -44,13 +45,11 @@ const Register = () => {
     >
       <ScrollView contentContainerStyle={tw`flex-grow justify-center`}>
         <View style={tw`flex-1 justify-center items-center bg-primaryFF`}>
-          <Image
-            style={tw`h-24 aspect-square`}
-            source={require("@/assets/images/logo.png")}
-          />
+          {/* logo and title reper */}
+          <AuthHeader title="Register Your Account" />
+          {/* logo and title reper end*/}
 
-          <Text style={tw`font-semibold text-2xl`}>Register Your Account</Text>
-          <View style={tw`bg-primary w-full p-4 rounded-t-[2rem] pt-8 pb-5`}>
+          <View style={tw` w-full p-4 rounded-t-[2rem] pt-8 pb-5`}>
             <Formik
               initialValues={{
                 name: "",
@@ -60,7 +59,7 @@ const Register = () => {
                 confirmPassword: "",
               }}
               onSubmit={(values) => {
-                console.log(values , "all value");
+                console.log(values, "all value");
               }}
               validate={validate}
             >
@@ -172,7 +171,15 @@ const Register = () => {
                         onValueChange={setChecked}
                         color={isChecked ? "#4630EB" : undefined}
                       />
-                      <Text style={tw`font-medium text-deepGrey50 text-sm pr-5`}>By creating this account, you agree to the <Text style={tw`text-primaryBlack`}>terms of use & privacy policy</Text> .</Text>
+                      <Text
+                        style={tw`font-medium text-deepGrey50 text-sm pr-5`}
+                      >
+                        By creating this account, you agree to the{" "}
+                        <Text style={tw`text-primaryBlack`}>
+                          terms of use & privacy policy
+                        </Text>{" "}
+                        .
+                      </Text>
                     </View>
                     <Link href="/auth/forgot_password">
                       <Text
@@ -202,7 +209,7 @@ const Register = () => {
           </View>
           <View style={tw`  `}>
             <Text style={tw` w-full font-medium text-base  `}>
-             Already have an account ?
+              Already have an account ?
               <Link href="/auth/login">
                 {" "}
                 <Text style={tw`text-primaryBlack underline p-2`}>

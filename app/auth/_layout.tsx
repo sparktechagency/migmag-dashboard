@@ -9,6 +9,7 @@ const RootLayout = () => {
       <Stack.Screen name="forgot_password" />
       <Stack.Screen name="otp" />
       <Stack.Screen name="set_new_password" />
+      <Stack.Screen name="successfullMassge" />
     </Stack>
   );
 };

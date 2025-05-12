@@ -1,9 +1,7 @@
 import {
   View,
   Text,
-  Image,
   TextInput,
-  Button,
   TouchableOpacity,
   KeyboardAvoidingView,
 } from "react-native";
@@ -16,9 +14,9 @@ import Entypo from "@expo/vector-icons/Entypo";
 import Checkbox from "expo-checkbox";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { ScrollView } from "react-native-gesture-handler";
+import AuthHeader from "@/components/AuthHeader";
 
 const login = () => {
-  const [value, setValue] = useState(false);
   const [isChecked, setChecked] = useState(false);
   const validate = (values: any) => {
     const errors: any = {};
@@ -42,13 +40,10 @@ const login = () => {
     >
       <ScrollView contentContainerStyle={tw`flex-grow justify-center`}>
         <View style={tw`flex-1 justify-center items-center bg-primaryFF`}>
-          <Image
-            style={tw`h-24 aspect-square`}
-            source={require("@/assets/images/logo.png")}
-          />
-
-          <Text style={tw`font-semibold text-2xl`}>Login to your account</Text>
-          <View style={tw`bg-primary w-full p-4 rounded-t-[2rem] pt-8 pb-5`}>
+          {/* logo and title reper */}
+          <AuthHeader title="Login to your account" />
+          {/* logo and title reper end*/}
+          <View style={tw` w-full p-4 rounded-t-[2rem] pt-8 pb-5`}>
             <Formik
               initialValues={{ email: "", password: "" }}
               onSubmit={(values) => {
