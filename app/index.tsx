@@ -6,7 +6,7 @@ import { router } from "expo-router";
 const App = () => {
   React.useEffect(() => {
     setTimeout(() => {
-      router.replace("/choseRetailOrService/choseRetailOrService");
+      router.replace("/retailer/home");
       // router.replace("/auth/login");
     }, 1000);
   }, []);

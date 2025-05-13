@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+
   theme: {
     extend: {
       colors: {
@@ -9,10 +10,9 @@ module.exports = {
         deepGrey: "#888888",
         deepGrey50: "#505050",
         primaryBlack: "#121212",
-        deepGreen: "#6DA40A",
         deepGreen: "#00B047",
-
       },
     },
   },
+  plugins: [],
 };

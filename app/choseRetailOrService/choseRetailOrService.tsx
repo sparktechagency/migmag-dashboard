@@ -3,6 +3,7 @@ import React from "react";
 import tw from "@/lib/tailwind";
 import { SvgXml } from "react-native-svg";
 import { IconErow, IconFillHome } from "@/icons/icon";
+import { Link } from "expo-router";
 
 const choseRetailOrService = () => {
   return (
@@ -18,27 +19,35 @@ const choseRetailOrService = () => {
       {/* Retail navigation */}
       <View style={tw`mb-5 relative`}>
         <Image
-          style={tw` max-w-[370px] h-[130px] rounded-lg `}
+          style={tw` max-w-[370px] h-[130px] rounded-lg`}
           source={require("@/assets/images/choseRorS2.jpg")}
         />
         <TouchableOpacity
-          style={tw`bg-primaryFF flex-row gap-3 justify-center items-center w-[121px] rounded-lg py-1 absolute bottom-4 left-4`}
+          style={tw`bg-primaryFF flex-row  justify-center items-center w-[121px] rounded-lg py-1 absolute bottom-4 left-4`}
         >
-          <Text style={tw`font-medium text-lg`}>Retail</Text>
-          <SvgXml xml={IconErow} />
+          <Link href="/retailer/home" style={tw``}>
+            <Text style={tw`font-medium text-lg `}>Retail</Text>
+            <View style={tw`pl-5`}>
+              <SvgXml xml={IconErow} />
+            </View>
+          </Link>
         </TouchableOpacity>
       </View>
       {/* Service navigation */}
-       <View style={tw`mb-5 relative`}>
+      <View style={tw`mb-5 relative`}>
         <Image
           style={tw` max-w-[370px] h-[130px] rounded-lg `}
           source={require("@/assets/images/choseRorS3.png")}
         />
-         <TouchableOpacity
+        <TouchableOpacity
           style={tw`bg-primaryFF flex-row gap-3 justify-center items-center w-[121px] rounded-lg py-1 absolute bottom-4 left-4`}
         >
-          <Text style={tw`font-medium text-lg`}>Service</Text>
-          <SvgXml xml={IconErow} />
+          <Link href="/retailer/home" style={tw``}>
+            <Text style={tw`font-medium text-lg`}>Service</Text>
+            <View style={tw`pl-5`}>
+              <SvgXml xml={IconErow} />
+            </View>
+          </Link>
         </TouchableOpacity>
       </View>
     </View>

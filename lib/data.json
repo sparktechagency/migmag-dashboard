@@ -1,0 +1,92 @@
+[
+  {
+    "category": "Fashion Nova",
+    "productsCount": 120,
+    "products": [
+      {
+        "id": "1",
+        "name": "Wren Blazer",
+        "price": "$200",
+        "image": "https://example.com/images/wren-blazer.jpg"
+      },
+      {
+        "id": "2",
+        "name": "Tuxedo Blazer",
+        "price": "$200",
+        "image": "https://example.com/images/tuxedo-blazer.jpg"
+      }
+    ]
+  },
+  {
+    "category": "Corpe",
+    "productsCount": 100,
+    "products": [
+      {
+        "id": "3",
+        "name": "Pink Heels",
+        "price": "$200",
+        "image": "https://example.com/images/pink-heels.jpg"
+      },
+      {
+        "id": "4",
+        "name": "Floral Sneakers",
+        "price": "$200",
+        "image": "https://example.com/images/floral-sneakers.jpg"
+      }
+    ]
+  },
+  {
+    "category": "DMVITER",
+    "productsCount": 160,
+    "products": [
+      {
+        "id": "5",
+        "name": "Dorys Tote",
+        "price": "$200",
+        "image": "https://example.com/images/dorys-tote.jpg"
+      },
+      {
+        "id": "6",
+        "name": "Re-Nylon Bag",
+        "price": "$200",
+        "image": "https://example.com/images/re-nylon-bag.jpg"
+      }
+    ]
+  },
+  {
+    "category": "Fashion Nova",
+    "productsCount": 120,
+    "products": [
+      {
+        "id": "7",
+        "name": "Cotton T-shirt",
+        "price": "$200",
+        "image": "https://example.com/images/cotton-tshirt.jpg"
+      },
+      {
+        "id": "8",
+        "name": "Adult Tee",
+        "price": "$200",
+        "image": "https://example.com/images/adult-tee.jpg"
+      }
+    ]
+  },
+  {
+    "category": "Grocery",
+    "productsCount": 120,
+    "products": [
+      {
+        "id": "9",
+        "name": "Wren Blazer",
+        "price": "$200",
+        "image": "https://example.com/images/wren-blazer.jpg"
+      },
+      {
+        "id": "10",
+        "name": "Tuxedo Blazer",
+        "price": "$200",
+        "image": "https://example.com/images/tuxedo-blazer.jpg"
+      }
+    ]
+  }
+]
