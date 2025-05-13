@@ -118,7 +118,9 @@ const login = () => {
                     style={tw`bg-primaryBlack rounded-full`}
                     onPress={() => {
                       handleSubmit();
-                      router.replace("/retailer/home");
+                      router.replace(
+                        "/choseRetailOrService/choseRetailOrService"
+                      );
                     }}
                   >
                     <Text

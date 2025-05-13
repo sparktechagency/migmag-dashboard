@@ -6,7 +6,7 @@ import { router } from "expo-router";
 const App = () => {
   React.useEffect(() => {
     setTimeout(() => {
-      router.replace("/auth/otp");
+      router.replace("/choseRetailOrService/choseRetailOrService");
       // router.replace("/auth/login");
     }, 1000);
   }, []);
@@ -18,7 +18,6 @@ const App = () => {
           style={tw`h-80 aspect-square`}
           source={require("@/assets/images/logo.png")}
         />
-        
         <ActivityIndicator color={"red"} size={"large"} />
       </View>
     </View>

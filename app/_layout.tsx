@@ -22,6 +22,7 @@ export default function RootLayout() {
         }}
       >
         <Stack.Screen name="index" />
+        <Stack.Screen name="choseRetailOrService" />
         <Stack.Screen name="auth" />
         <Stack.Screen name="retailer" />
       </Stack>
