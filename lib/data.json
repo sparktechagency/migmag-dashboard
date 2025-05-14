@@ -2,90 +2,95 @@
   {
     "category": "Fashion Nova",
     "productsCount": 120,
+    "avater": "https://i.postimg.cc/Jnd442NG/3cc0455e40d68c31f3bfe5d0cc3c943be3563795.png",
     "products": [
       {
         "id": "1",
         "name": "Wren Blazer",
         "price": "$200",
-        "image": "https://example.com/images/wren-blazer.jpg"
+        "image": "https://i.postimg.cc/BbpwsT5Q/086ae891f01cef68ee865d9057a623402836b969.png"
       },
       {
         "id": "2",
         "name": "Tuxedo Blazer",
         "price": "$200",
-        "image": "https://example.com/images/tuxedo-blazer.jpg"
+        "image": "https://i.postimg.cc/bNYBg58G/0fa5ef672c39bc2238cd80aded0768f01b4cb229.png"
       }
     ]
   },
   {
     "category": "Corpe",
     "productsCount": 100,
+    "avater": "https://i.postimg.cc/qBbCzmJc/ab782393e27e981cbb1d35e36b2e27aee69b24d0.png",
     "products": [
       {
         "id": "3",
         "name": "Pink Heels",
         "price": "$200",
-        "image": "https://example.com/images/pink-heels.jpg"
+        "image": "https://i.postimg.cc/bN6FBRNm/2aaf0347f73a2de800eae90e698b9a61846384fa-1.png"
       },
       {
         "id": "4",
         "name": "Floral Sneakers",
         "price": "$200",
-        "image": "https://example.com/images/floral-sneakers.jpg"
+        "image": "https://i.postimg.cc/VsWhjwyQ/6f19034dedb14e8afae4d295a1c42264eb831d53.png"
       }
     ]
   },
   {
     "category": "DMVITER",
     "productsCount": 160,
+    "avater": "https://i.postimg.cc/TwQ5j0r6/e7ae8e4ca306b6f49114e695d56eb3b8f002eb89.png",
     "products": [
       {
         "id": "5",
         "name": "Dorys Tote",
         "price": "$200",
-        "image": "https://example.com/images/dorys-tote.jpg"
+        "image": "https://i.postimg.cc/sxs0t6hN/6fa98a87c88ac91b84e0bdf26814df84649af126.png"
       },
       {
         "id": "6",
         "name": "Re-Nylon Bag",
         "price": "$200",
-        "image": "https://example.com/images/re-nylon-bag.jpg"
+        "image": "https://i.postimg.cc/BbpwsT5Q/086ae891f01cef68ee865d9057a623402836b969.png"
       }
     ]
   },
   {
     "category": "Fashion Nova",
     "productsCount": 120,
+    "avater": "https://i.postimg.cc/qBbCzmJc/ab782393e27e981cbb1d35e36b2e27aee69b24d0.png",
     "products": [
       {
         "id": "7",
         "name": "Cotton T-shirt",
         "price": "$200",
-        "image": "https://example.com/images/cotton-tshirt.jpg"
+        "image": "https://i.postimg.cc/bNYBg58G/0fa5ef672c39bc2238cd80aded0768f01b4cb229.png"
       },
       {
         "id": "8",
         "name": "Adult Tee",
         "price": "$200",
-        "image": "https://example.com/images/adult-tee.jpg"
+        "image": "https://i.postimg.cc/bN6FBRNm/2aaf0347f73a2de800eae90e698b9a61846384fa-1.png"
       }
     ]
   },
   {
     "category": "Grocery",
     "productsCount": 120,
+    "avater": "https://i.postimg.cc/qBbCzmJc/ab782393e27e981cbb1d35e36b2e27aee69b24d0.png",
     "products": [
       {
         "id": "9",
         "name": "Wren Blazer",
         "price": "$200",
-        "image": "https://example.com/images/wren-blazer.jpg"
+        "image": "https://i.postimg.cc/VsWhjwyQ/6f19034dedb14e8afae4d295a1c42264eb831d53.png"
       },
       {
         "id": "10",
         "name": "Tuxedo Blazer",
         "price": "$200",
-        "image": "https://example.com/images/tuxedo-blazer.jpg"
+        "image": "https://i.postimg.cc/sxs0t6hN/6fa98a87c88ac91b84e0bdf26814df84649af126.png"
       }
     ]
   }

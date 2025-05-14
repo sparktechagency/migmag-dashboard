@@ -1,5 +1,12 @@
-import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
-import React from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  FlatList,
+} from "react-native";
+import React, { useEffect } from "react";
 
 import { useNavigation } from "@react-navigation/native";
 import { SvgXml } from "react-native-svg";
@@ -10,11 +17,13 @@ import {
   IconNotification,
   IconSearch,
   logo,
+  love,
 } from "@/icons/icon";
 import tw from "@/lib/tailwind";
 import { Formik } from "formik";
 import { ScrollView } from "react-native-gesture-handler";
 import data from "@/lib/data.json";
+import Card from "@/components/Card";
 
 const Page = () => {
   const navigation = useNavigation();
@@ -38,68 +47,37 @@ const Page = () => {
 
       {/* search bar */}
       <Formik
-        initialValues={{ email: "" }}
-        onSubmit={(values) => console.log(values)}
+        initialValues={{ searchText: "" }}
+        onSubmit={(values) => console.log("Submitted:", values)}
       >
-        {({ handleChange, handleBlur, handleSubmit, values }) => (
-          <View
-            style={tw`bg-primary my-7 rounded-full flex-row items-center pl-6`}
-          >
-            <SvgXml xml={IconSearch} />
-            <TextInput
-              style={tw`h-[60px] `}
-              placeholder="Search items"
-              onChangeText={handleChange("email")}
-              onBlur={handleBlur("email")}
-              value={values.email}
-            />
-          </View>
-        )}
-      </Formik>
-      {/* card view all */}
-      <View style={tw`flex-row justify-between`}>
-        <View style={tw`flex-row items-center gap-3`}>
-          <Image
-            style={tw`w-14 h-14`}
-            source={require("@/assets/images/FashionNava.png")}
-          ></Image>
-
-          <View>
-            <Text style={tw`font-semibold text-lg`}>Fashion Nova</Text>
-            <Text style={tw`font-normal text-base text-deepGrey`}>
-              120 products
-            </Text>
-          </View>
-        </View>
-        <TouchableOpacity
-          style={tw`py-[8px] px-[16px] border flex items-center justify-center rounded-full border-deepGrey w-[90px]`}
-        >
-          <Text style={tw`font-normal text-base`}>See all</Text>
-        </TouchableOpacity>
-      </View>
-      {/* card show  */}
-      <View style={tw`mt-[22px] `}>
-        {/* card */}
-        <View style={tw` bg-primary min-h-[219px] max-w-[188px] rounded-xl`}>
-          <View style={tw` `}>
-            <Image
-              style={tw`w-[180px] h-[144px] rounded-xl m-1`}
-              source={require("@/assets/images/CardImg.png")}
-            ></Image>
-
-            <View style={tw`flex-row items-center justify-between`}>
-              <View style={tw``}>
-                <Text style={tw`font-semibold text-lg`}>Wren Blazer</Text>
-                <Text style={tw`font-normal text-base text-deepGrey`}>
-                  $200
-                </Text>
-              </View>
-              <TouchableOpacity style={tw``}>
-                <SvgXml xml={IconErow} />
-              </TouchableOpacity>
+        {({ handleChange, handleBlur, values }) => {
+          if (values.searchText.length > 0) {
+            console.log("Searching for:", values.searchText);
+          }
+          return (
+            <View
+              style={tw`bg-primary mt-7 mb-2 rounded-full flex-row items-center pl-6`}
+            >
+              <SvgXml xml={IconSearch} />
+              <TextInput
+                style={tw`h-[60px] flex-1 pl-3`}
+                placeholder="Search items"
+                onChangeText={handleChange("searchText")}
+                onBlur={handleBlur("searchText")}
+                value={values.searchText}
+              />
             </View>
-          </View>
-        </View>
+          );
+        }}
+      </Formik>
+      <View style={tw` `}>
+        {/* card */}
+        <FlatList
+          scrollEnabled={false}
+          nestedScrollEnabled={true}
+          data={data}
+          renderItem={({ item }) => <Card item={item} />}
+        />
       </View>
     </ScrollView>
   );
