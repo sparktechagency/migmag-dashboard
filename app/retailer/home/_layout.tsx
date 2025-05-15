@@ -1,7 +1,6 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { Tabs } from "expo-router";
-import { HeaderTitle, PlatformPressable } from "@react-navigation/elements";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { useLinkBuilder, useTheme } from "@react-navigation/native";
 import AntDesign from "@expo/vector-icons/AntDesign";

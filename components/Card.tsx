@@ -5,7 +5,6 @@ import { IconErow, love } from "@/icons/icon";
 import { SvgXml } from "react-native-svg";
 
 const Card = ({ item }: any) => {
-
   return (
     <View>
       {/* card view all */}
@@ -13,7 +12,7 @@ const Card = ({ item }: any) => {
         <View style={tw`flex-row items-center gap-3`}>
           <Image
             style={tw`w-14 h-14 rounded-full`}
-            source={{uri: item.avater}}
+            source={{ uri: item.avater }}
           ></Image>
 
           <View>

@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Image,
-  FlatList,
-} from "react-native";
+import { View, TextInput, FlatList } from "react-native";
 import React, { useEffect } from "react";
 
 import { useNavigation } from "@react-navigation/native";
