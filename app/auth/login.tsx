@@ -16,7 +16,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import { ScrollView } from "react-native-gesture-handler";
 import AuthHeader from "@/components/AuthHeader";
 
-const login = () => {
+const Login = () => {
   const [isChecked, setChecked] = useState(false);
   const validate = (values: any) => {
     const errors: any = {};
@@ -149,4 +149,4 @@ const login = () => {
   );
 };
 
-export default login;
+export default Login;

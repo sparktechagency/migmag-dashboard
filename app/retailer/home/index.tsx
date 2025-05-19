@@ -21,7 +21,11 @@ import Card from "@/components/Card";
 const Page = () => {
   const navigation = useNavigation();
   return (
-    <ScrollView style={tw`bg-primaryFF h-full p-5`}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      style={tw`bg-primaryFF h-full `}
+      contentContainerStyle={tw`px-4 pt-3 pb-30`}
+    >
       <View style={tw` flex-row justify-between  items-center`}>
         {/* togle btn */}
         <View>

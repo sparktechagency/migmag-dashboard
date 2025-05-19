@@ -3,6 +3,7 @@ import React from "react";
 import tw from "@/lib/tailwind";
 import { IconErow, love } from "@/icons/icon";
 import { SvgXml } from "react-native-svg";
+import { router } from "expo-router";
 
 const Card = ({ item }: any) => {
   return (
@@ -32,7 +33,10 @@ const Card = ({ item }: any) => {
 
       <View style={tw`flex-row gap-3 pb-3 justify-between items-center`}>
         {item.products.map((cardItem: any) => (
-          <View
+          <TouchableOpacity
+            onPress={() => {
+              router.push(`/product_details/${item?.id}`);
+            }}
             key={cardItem.id}
             style={tw`bg-primary  max-w-[180px] rounded-3xl relative`}
           >
@@ -57,12 +61,15 @@ const Card = ({ item }: any) => {
                 </Text>
               </View>
               <TouchableOpacity
+                onPress={() => {
+                  router.push(`/product_details/${item?.id}`);
+                }}
                 style={tw`bg-primaryFF w-10 h-10 justify-center items-center rounded-xl`}
               >
                 <SvgXml xml={IconErow} />
               </TouchableOpacity>
             </View>
-          </View>
+          </TouchableOpacity>
         ))}
       </View>
     </View>

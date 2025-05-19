@@ -1,0 +1,478 @@
+[
+  {
+    "id": 1,
+    "name": "Mens",
+    "image": "https://images.unsplash.com/photo-1520367445093-50dc08a59d9d",
+    "product": [
+      {
+        "id": 1,
+        "image": "https://images.unsplash.com/photo-1591047139829-d91aecb6caea",
+        "title": "Tuxedo Blazer",
+        "brandName": "Fashion Nova",
+        "price": "$200"
+      },
+      {
+        "id": 2,
+        "image": "https://images.unsplash.com/photo-1539533018447-63fcce2678e4",
+        "title": "Blazer",
+        "brandName": "Fashion Nova",
+        "price": "$200.10"
+      },
+      {
+        "id": 3,
+        "image": "https://images.unsplash.com/photo-1598033129183-c4f50c736f10",
+        "title": "Blazer",
+        "brandName": "Fashion Nova",
+        "price": "$200"
+      },
+      {
+        "id": 4,
+        "image": "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633",
+        "title": "Blazer",
+        "brandName": "Fashion Nova",
+        "price": "$200.10"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Womens",
+    "image": "https://images.unsplash.com/photo-1483985988355-763728e1935b",
+    "product": [
+      {
+        "id": 1,
+        "image": "https://images.unsplash.com/photo-1581044777550-4cfa60707c03",
+        "title": "Tuxedo Blazer",
+        "brandName": "Fashion Nova",
+        "price": "$200"
+      },
+      {
+        "id": 2,
+        "image": "https://images.unsplash.com/photo-1542272604-787c3835535d",
+        "title": "Mia Skort",
+        "brandName": "Fashion Nova",
+        "price": "$200.10"
+      },
+      {
+        "id": 3,
+        "image": "https://images.unsplash.com/photo-1585487000160-6ebcfceb0d03",
+        "title": "Mia Skort",
+        "brandName": "Fashion Nova",
+        "price": "$200.10"
+      },
+      {
+        "id": 4,
+        "image": "https://images.unsplash.com/photo-1581044777550-4cfa60707c03",
+        "title": "Tuxedo Blazer",
+        "brandName": "Fashion Nova",
+        "price": "$200"
+      },
+      {
+        "id": 5,
+        "image": "https://images.unsplash.com/photo-1542272604-787c3835535d",
+        "title": "Tuxedo Blazer",
+        "brandName": "Fashion Nova",
+        "price": "$200"
+      },
+      {
+        "id": 6,
+        "image": "https://images.unsplash.com/photo-1585487000160-6ebcfceb0d03",
+        "title": "Tuxedo Blazer",
+        "brandName": "Fashion Nova",
+        "price": "$200"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Jewelry",
+    "image": "https://images.unsplash.com/photo-1605100804763-247f67b3557e",
+    "product": [
+      {
+        "id": 1,
+        "image": "https://images.unsplash.com/photo-1603974372035-9d5cbf3f5a19",
+        "title": "Gold Necklace",
+        "brandName": "Elegant Gems",
+        "price": "$150"
+      },
+      {
+        "id": 2,
+        "image": "https://images.unsplash.com/photo-1602173574767-37ac01994b2a",
+        "title": "Diamond Ring",
+        "brandName": "Sparkle Co.",
+        "price": "$300"
+      },
+      {
+        "id": 3,
+        "image": "https://images.unsplash.com/photo-1605100804763-247f67b3557e",
+        "title": "Silver Bracelet",
+        "brandName": "Shiny Things",
+        "price": "$120"
+      },
+      {
+        "id": 4,
+        "image": "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f",
+        "title": "Pearl Earrings",
+        "brandName": "Classic Pearls",
+        "price": "$180"
+      },
+      {
+        "id": 5,
+        "image": "https://images.unsplash.com/photo-1611591437281-460914d0f587",
+        "title": "Pearl Earrings",
+        "brandName": "Classic Pearls",
+        "price": "$180"
+      },
+      {
+        "id": 6,
+        "image": "https://images.unsplash.com/photo-1611591437281-460914d0f587",
+        "title": "Pearl Earrings",
+        "brandName": "Classic Pearls",
+        "price": "$180"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Home",
+    "image": "https://images.unsplash.com/photo-1556911220-bff31c812dba",
+    "product": [
+      {
+        "id": 1,
+        "image": "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6",
+        "title": "Cushion Set",
+        "brandName": "Comfort Living",
+        "price": "$60"
+      },
+      {
+        "id": 2,
+        "image": "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace",
+        "title": "Wall Art",
+        "brandName": "Decor Plus",
+        "price": "$80"
+      },
+      {
+        "id": 3,
+        "image": "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c",
+        "title": "Table Lamp",
+        "brandName": "Light House",
+        "price": "$45"
+      },
+      {
+        "id": 4,
+        "image": "https://images.unsplash.com/photo-1583845112203-454c6bc47e7a",
+        "title": "Curtain Set",
+        "brandName": "Home Style",
+        "price": "$70"
+      },
+      {
+        "id": 5,
+        "image": "https://images.unsplash.com/photo-1565538810643-b5bdb714032a",
+        "title": "Curtain Set",
+        "brandName": "Home Style",
+        "price": "$70"
+      },
+      {
+        "id": 6,
+        "image": "https://images.unsplash.com/photo-1565538810643-b5bdb714032a",
+        "title": "Curtain Set",
+        "brandName": "Home Style",
+        "price": "$70"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Food",
+    "image": "https://images.unsplash.com/photo-1490645935967-10de6ba17061",
+    "product": [
+      {
+        "id": 1,
+        "image": "https://images.unsplash.com/photo-1586201375761-83865001e1ef",
+        "title": "Organic Honey",
+        "brandName": "Nature's Best",
+        "price": "$15"
+      },
+      {
+        "id": 2,
+        "image": "https://images.unsplash.com/photo-1623843979962-7a7b7c1ed89d",
+        "title": "Almond Butter",
+        "brandName": "Healthy Eats",
+        "price": "$12"
+      },
+      {
+        "id": 3,
+        "image": "https://images.unsplash.com/photo-1608190003443-86a8cd7f754c",
+        "title": "Granola Bars",
+        "brandName": "Snack Time",
+        "price": "$8"
+      },
+      {
+        "id": 4,
+        "image": "https://images.unsplash.com/photo-1558160074-4d7d8bdf4256",
+        "title": "Green Tea",
+        "brandName": "Zen Drinks",
+        "price": "$10"
+      },
+      {
+        "id": 5,
+        "image": "https://images.unsplash.com/photo-1560343090-f0409e92791a",
+        "title": "Green Tea",
+        "brandName": "Zen Drinks",
+        "price": "$10"
+      },
+      {
+        "id": 6,
+        "image": "https://images.unsplash.com/photo-1560343090-f0409e92791a",
+        "title": "Green Tea",
+        "brandName": "Zen Drinks",
+        "price": "$10"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Travel",
+    "image": "https://images.unsplash.com/photo-1503220317375-aaad61436b1b",
+    "product": [
+      {
+        "id": 1,
+        "image": "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91",
+        "title": "Travel Backpack",
+        "brandName": "Wanderlust",
+        "price": "$100"
+      },
+      {
+        "id": 2,
+        "image": "https://images.unsplash.com/photo-1558140275-312515f28cbb",
+        "title": "Luggage Set",
+        "brandName": "Globe Trotter",
+        "price": "$250"
+      },
+      {
+        "id": 3,
+        "image": "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91",
+        "title": "Neck Pillow",
+        "brandName": "Comfort Travel",
+        "price": "$20"
+      },
+      {
+        "id": 4,
+        "image": "https://images.unsplash.com/photo-1598301257983-0c2a0a5d0a5a",
+        "title": "Travel Organizer",
+        "brandName": "PackSmart",
+        "price": "$35"
+      },
+      {
+        "id": 5,
+        "image": "https://images.unsplash.com/photo-1598301257983-0c2a0a5d0a5a",
+        "title": "Travel Organizer",
+        "brandName": "PackSmart",
+        "price": "$35"
+      },
+      {
+        "id": 6,
+        "image": "https://images.unsplash.com/photo-1598301257983-0c2a0a5d0a5a",
+        "title": "Travel Organizer",
+        "brandName": "PackSmart",
+        "price": "$35"
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "Beauty",
+    "image": "https://images.unsplash.com/photo-1596462502278-27bfdc403348",
+    "product": [
+      {
+        "id": 1,
+        "image": "https://images.unsplash.com/photo-1625772452859-1c03d5bf1137",
+        "title": "Lipstick Set",
+        "brandName": "Glamour Beauty",
+        "price": "$50"
+      },
+      {
+        "id": 2,
+        "image": "https://images.unsplash.com/photo-1571781926291-c477ebfd024b",
+        "title": "Foundation",
+        "brandName": "Smooth Skin",
+        "price": "$40"
+      },
+      {
+        "id": 3,
+        "image": "https://images.unsplash.com/photo-1625772452859-1c03d5bf1137",
+        "title": "Mascara",
+        "brandName": "Eye Enhance",
+        "price": "$30"
+      },
+      {
+        "id": 4,
+        "image": "https://images.unsplash.com/photo-1572635148818-ef6fd45eb394",
+        "title": "Blush Palette",
+        "brandName": "Color Glow",
+        "price": "$45"
+      },
+      {
+        "id": 5,
+        "image": "https://images.unsplash.com/photo-1572635148818-ef6fd45eb394",
+        "title": "Blush Palette",
+        "brandName": "Color Glow",
+        "price": "$45"
+      },
+      {
+        "id": 6,
+        "image": "https://images.unsplash.com/photo-1572635148818-ef6fd45eb394",
+        "title": "Blush Palette",
+        "brandName": "Color Glow",
+        "price": "$45"
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "name": "Electronics",
+    "image": "https://images.unsplash.com/photo-1518770660439-4636190af475",
+    "product": [
+      {
+        "id": 1,
+        "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e",
+        "title": "Wireless Headphones",
+        "brandName": "SoundMax",
+        "price": "$120"
+      },
+      {
+        "id": 2,
+        "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30",
+        "title": "Smart Watch",
+        "brandName": "TechTime",
+        "price": "$200"
+      },
+      {
+        "id": 3,
+        "image": "https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb",
+        "title": "Bluetooth Speaker",
+        "brandName": "BeatBox",
+        "price": "$90"
+      },
+      {
+        "id": 4,
+        "image": "https://images.unsplash.com/photo-1585771724684-38269d6639fd",
+        "title": "Portable Charger",
+        "brandName": "ChargeUp",
+        "price": "$25"
+      },
+      {
+        "id": 5,
+        "image": "https://images.unsplash.com/photo-1585771724684-38269d6639fd",
+        "title": "Portable Charger",
+        "brandName": "ChargeUp",
+        "price": "$25"
+      },
+      {
+        "id": 6,
+        "image": "https://images.unsplash.com/photo-1585771724684-38269d6639fd",
+        "title": "Portable Charger",
+        "brandName": "ChargeUp",
+        "price": "$25"
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "name": "Kids",
+    "image": "https://images.unsplash.com/photo-1594789010681-6ab88d5aa927",
+    "product": [
+      {
+        "id": 1,
+        "image": "https://images.unsplash.com/photo-1596464716127-f2a82984de30",
+        "title": "Toy Car Set",
+        "brandName": "Fun Wheels",
+        "price": "$30"
+      },
+      {
+        "id": 2,
+        "image": "https://images.unsplash.com/photo-1596462502278-27bfdc403348",
+        "title": "Building Blocks",
+        "brandName": "Creative Minds",
+        "price": "$25"
+      },
+      {
+        "id": 3,
+        "image": "https://images.unsplash.com/photo-1594789010681-6ab88d5aa927",
+        "title": "Doll House",
+        "brandName": "Little Homes",
+        "price": "$45"
+      },
+      {
+        "id": 4,
+        "image": "https://images.unsplash.com/photo-1589254065878-42c9da997008",
+        "title": "Puzzle Game",
+        "brandName": "Brain Teasers",
+        "price": "$20"
+      },
+      {
+        "id": 5,
+        "image": "https://images.unsplash.com/photo-1589254065878-42c9da997008",
+        "title": "Puzzle Game",
+        "brandName": "Brain Teasers",
+        "price": "$20"
+      },
+      {
+        "id": 6,
+        "image": "https://images.unsplash.com/photo-1589254065878-42c9da997008",
+        "title": "Puzzle Game",
+        "brandName": "Brain Teasers",
+        "price": "$20"
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "name": "Outdoors",
+    "image": "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4",
+    "product": [
+      {
+        "id": 1,
+        "image": "https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7",
+        "title": "Camping Tent",
+        "brandName": "Adventure Gear",
+        "price": "$150"
+      },
+      {
+        "id": 2,
+        "image": "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91",
+        "title": "Hiking Backpack",
+        "brandName": "Trail Masters",
+        "price": "$100"
+      },
+      {
+        "id": 3,
+        "image": "https://images.unsplash.com/photo-1537905569824-f89f14b2f0b7",
+        "title": "Sleeping Bag",
+        "brandName": "Cozy Camp",
+        "price": "$80"
+      },
+      {
+        "id": 4,
+        "image": "https://images.unsplash.com/photo-1600132806608-4463d0c611b1",
+        "title": "Portable Grill",
+        "brandName": "BBQ Buddy",
+        "price": "$60"
+      },
+      {
+        "id": 5,
+        "image": "https://images.unsplash.com/photo-1600132806608-4463d0c611b1",
+        "title": "Portable Grill",
+        "brandName": "BBQ Buddy",
+        "price": "$60"
+      },
+      {
+        "id": 6,
+        "image": "https://images.unsplash.com/photo-1600132806608-4463d0c611b1",
+        "title": "Portable Grill",
+        "brandName": "BBQ Buddy",
+        "price": "$60"
+      }
+    ]
+  }
+]

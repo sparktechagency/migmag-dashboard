@@ -25,7 +25,7 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
 
   return (
     <View
-      style={tw`flex-row bottom-16 absolute  mx-6  shadow-black shadow-md rounded-full justify-between items-center bg-[#fff] `}
+      style={tw`flex-row bottom-5 absolute  mx-6  shadow-black shadow-md rounded-full justify-between items-center bg-[#fff] `}
     >
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
@@ -85,7 +85,7 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
 }
 
 const Tablayout = () => {
-  return ( 
+  return (
     <Tabs
       screenOptions={{ headerShown: false }}
       tabBar={(props) => <TabBar {...props} />}
