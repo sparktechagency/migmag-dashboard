@@ -6,6 +6,8 @@ import {
   Modal,
   PopconfirmProps,
   Radio,
+  RadioChangeEvent,
+  Select,
   Table,
   Upload,
 } from "antd";
@@ -13,14 +15,12 @@ import { Divide, Pencil, Search, Trash } from "lucide-react";
 import React, { useState } from "react";
 import { DownloadOutlined, EditOutlined } from "@ant-design/icons";
 import { message, Popconfirm } from "antd";
+import { SelectCommonPlacement } from "antd/es/_util/motion";
 
 const Manage_Song = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [openModel, setOpenModel] = useState<boolean>(false);
-  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
-  const [userData, setUserData] = useState<UserAction | null>(null);
-  const [role, setRole] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [form] = Form.useForm();
 
   const confirm: PopconfirmProps["onConfirm"] = (e) => {
     console.log(e);
@@ -282,15 +282,29 @@ const Manage_Song = () => {
   };
 
   const handleOk = () => {
-    setIsModalOpen(false);
+    form.submit();
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
+    form.resetFields();
   };
 
-  const onFinish = (e) => {
-    console.log(e);
+  const onFinish = (values: any) => {
+    console.log("Form Values:", values);
+    console.log("Artist Name:", values.artistName);
+    console.log("Genre:", values.genre);
+    console.log("BPM:", values.BPM);
+    console.log("Key:", values.key);
+    console.log("Type:", values.type);
+    console.log("Price:", values.price);
+    console.log("License:", values.License);
+    console.log("Gender:", values.gender);
+
+    // Handle form submission logic here
+    setIsModalOpen(false);
+    form.resetFields();
+    message.success("Song saved successfully!");
   };
 
   return (
@@ -361,10 +375,24 @@ const Manage_Song = () => {
             </div>
           }
         >
-          <Form onFinish={onFinish} style={{ paddingBottom: "100px" }}>
-            <Form.Item className="bg-[#f5f5f5]  border-dashed rounded-lg text-center py-4 ">
-              <Upload className="flex justify-center ">
-                <Button className="flex">
+          <Form
+            form={form}
+            onFinish={onFinish}
+            style={{ paddingBottom: "100px" }}
+          >
+            <Form.Item className="bg-[#f5f5f5] border-dashed rounded-lg text-center py-4">
+              <Upload
+                accept="audio/*"
+                showUploadList={true}
+                beforeUpload={(file) => {
+                  const isAudio = file.type.startsWith("audio/");
+                  if (!isAudio) {
+                    message.error("You can only upload audio files!");
+                  }
+                  return isAudio || Upload.LIST_IGNORE;
+                }}
+              >
+                <Button className="flex items-center gap-2">
                   <svg
                     width="19"
                     height="20"
@@ -377,13 +405,33 @@ const Manage_Song = () => {
                       fill="black"
                     />
                   </svg>
+                  Upload Audio
                 </Button>
-                Upload
               </Upload>
             </Form.Item>
             {/* Artist name */}
             <Form.Item label="Artist name" name="artistName" layout="vertical">
-              <Input placeholder="Enter singer name" required></Input>
+              <Select
+                className="bg-[#f5f5f5] h-12 rounded-lg"
+                defaultValue="Samantha Rivers"
+                style={{ width: "100%" }}
+                popupMatchSelectWidth={false}
+                placement={"bottomLeft"}
+                options={[
+                  {
+                    value: "Samantha Rivers",
+                    label: "Samantha Rivers",
+                  },
+                  {
+                    value: "Marcus Thompson",
+                    label: "Marcus Thompson",
+                  },
+                  {
+                    value: "Elena Martinez",
+                    label: "Elena Martinez",
+                  },
+                ]}
+              />
             </Form.Item>
             <div className="flex gap-3">
               {/* Genre */}
@@ -393,7 +441,27 @@ const Manage_Song = () => {
                 name="genre"
                 layout="vertical"
               >
-                <Input placeholder="Enter Genre" required></Input>
+                <Select
+                  className="bg-[#f5f5f5] h-12 rounded-lg"
+                  defaultValue="Slap house"
+                  style={{ width: "100%" }}
+                  popupMatchSelectWidth={false}
+                  placement={"bottomLeft"}
+                  options={[
+                    {
+                      value: "Slap house",
+                      label: "Slap house",
+                    },
+                    {
+                      value: "Pop",
+                      label: "Pop",
+                    },
+                    {
+                      value: "Rock",
+                      label: "Rock",
+                    },
+                  ]}
+                />
               </Form.Item>
 
               {/* BPM*/}
@@ -403,47 +471,138 @@ const Manage_Song = () => {
                 name="BPM"
                 layout="vertical"
               >
-                <Input placeholder="Enter BPM value" required></Input>
+                <Select
+                  className="bg-[#f5f5f5] h-12 rounded-lg"
+                  defaultValue="120"
+                  style={{ width: "100%" }}
+                  popupMatchSelectWidth={false}
+                  placement={"bottomLeft"}
+                  options={[
+                    {
+                      value: "120",
+                      label: "120",
+                    },
+                    {
+                      value: "123",
+                      label: "123",
+                    },
+                    {
+                      value: "130",
+                      label: "130",
+                    },
+                  ]}
+                />
               </Form.Item>
             </div>
             {/* Key */}
-            <Form.Item label="Key" name="key" layout="vertical">
-              <Input placeholder="Enter main key chord" required></Input>
-            </Form.Item>
+            <div className="flex gap-3">
+              <Form.Item
+                className="flex-1"
+                label="Key"
+                name="key"
+                layout="vertical"
+              >
+                <Select
+                  className="bg-[#f5f5f5] h-12 rounded-lg"
+                  defaultValue="C Major"
+                  style={{ width: "100%" }}
+                  popupMatchSelectWidth={false}
+                  placement={"bottomLeft"}
+                  options={[
+                    {
+                      value: "C Major",
+                      label: "C Major",
+                    },
+                    {
+                      value: "D Major",
+                      label: "D Major",
+                    },
+                    {
+                      value: "E Major",
+                      label: "E Major",
+                    },
+                  ]}
+                />
+              </Form.Item>
 
-            {/*Price */}
-            <Form.Item label="Price" name="price" layout="vertical">
-              <Input placeholder="Enter price of the song" required></Input>
-            </Form.Item>
+              <Form.Item
+                className="flex-1"
+                label="Type"
+                name="type"
+                layout="vertical"
+              >
+                <Select
+                  className="bg-[#f5f5f5] h-12 rounded-lg"
+                  defaultValue="Instrumental"
+                  style={{ width: "100%" }}
+                  popupMatchSelectWidth={false}
+                  placement={"bottomLeft"}
+                  options={[
+                    {
+                      value: "Instrumental",
+                      label: "Instrumental",
+                    },
+                    {
+                      value: "Vocal",
+                      label: "Vocal",
+                    },
+                    {
+                      value: "Mixed",
+                      label: "Mixed",
+                    },
+                  ]}
+                />
+              </Form.Item>
+            </div>
+            {/* Key */}
+            <div className="flex gap-3">
+              {/*Price */}
+              <Form.Item
+                className="flex-1"
+                label="Price"
+                name="price"
+                layout="vertical"
+              >
+                <Input placeholder="Enter price of the song" required></Input>
+              </Form.Item>
+
+              <Form.Item
+                className="flex-1"
+                label="License"
+                name="License"
+                layout="vertical"
+              >
+                <Select
+                  className="bg-[#f5f5f5] h-12 rounded-lg"
+                  defaultValue="Non-exclusive"
+                  style={{ width: "100%" }}
+                  popupMatchSelectWidth={false}
+                  placement={"bottomLeft"}
+                  options={[
+                    {
+                      value: "Non-exclusive",
+                      label: "Non-exclusive",
+                    },
+                    {
+                      value: "Exclusive",
+                      label: "Exclusive",
+                    },
+                    {
+                      value: "Premium",
+                      label: "Premium",
+                    },
+                  ]}
+                />
+              </Form.Item>
+            </div>
 
             {/*Gender */}
-            <Form.Item
-              label="Gender"
-              name="gender"
-              className="h-4 "
-              // layout="vertical"
-            >
-              <Radio.Group className="flex  gap-3 mt-9 ">
+            <Form.Item label="Gender" name="gender" className="h-4">
+              <Radio.Group className="flex gap-3 mt-9">
                 <Radio value="Male">Male</Radio>
                 <Radio value="Female">Female</Radio>
               </Radio.Group>
             </Form.Item>
-
-            {/*License */}
-            <Form.Item
-              label="License"
-              name="license"
-              className="!h-0"
-              // layout="vertical"
-            >
-              <Radio.Group className="flex  gap-3 mt-9">
-                <Radio value="Exclusive">Exclusive</Radio>
-                <Radio value="Non-exclusive">Non-exclusive</Radio>
-                <Radio value="Premium">Premium</Radio>
-              </Radio.Group>
-            </Form.Item>
-
-            {/* button  */}
           </Form>
         </Modal>
       </div>

@@ -5,7 +5,7 @@ import DasboardHome from "../pages/DasboardHome";
 import ProductListing from "../pages/ManageSong";
 import Category_Management from "../pages/Category_Management";
 import Manage_Users from "../pages/Manage_Users";
-import Auth from './../layout/auth/Auth';
+import Auth from "./../layout/auth/Auth";
 import Login from "../pages/Login";
 import SetNewPassword from "../pages/SetNewPassword";
 import Seller_Profile from "../pages/Seller_Profile";
@@ -14,72 +14,84 @@ import Top_Artist from "../pages/Top_Artist";
 import MyProfile from "../pages/MyProfile";
 import Verify_Email from "../pages/Verify_Email";
 import ForgetPassword from "../pages/ForgetPassword";
-
-
+import Hero from "../pages/Hero";
+import Transactions from "../pages/Transactions";
+import Categories from "../pages/Categories";
 
 const handleNotifications = (event: React.MouseEvent<HTMLDivElement>) => {
-    console.log("16++++++++++++++Notification clicked!");
-    // Add your notification handling logic here
+  console.log("16++++++++++++++Notification clicked!");
+  // Add your notification handling logic here
 };
 
 const router = createBrowserRouter([
-    {
+  {
+    path: "/",
+    element: <Dashboard handleNotifications={handleNotifications} />,
+    children: [
+      {
         path: "/",
-        element: <Dashboard handleNotifications={handleNotifications} />,
-        children: [
-            {
-                path: "/",
-                element: <DasboardHome />,
-            },
-            {
-                path: "/manage-users",
-                element: <Manage_Users />,
-            },
-            {
-                path: "/manage_song",
-                element: <Manage_Song/>,
-            },
-            {
-                path: "/top_artist",
-                element: <Top_Artist />,
-            },
-            {
-                path: "/manage-users/seller-profile/:id",
-                element: <Seller_Profile />,
-            },
-            {
-                path: "/my_profile",
-                element: <MyProfile />,
-            },
-        ]
-    },
-    {
-        path: "/auth",
-        element: <Auth />,
-        children: [
-          {
-            path: "/auth",
-            element: <Login />,
-          },
-          {
-            path: "/auth/login",
-            element: <Login />,
-          },
-          {
-            path: "/auth/verify-email",
-            element: <Verify_Email/>,
-          },
-          {
-            path: "/auth/forget-password",
-            element: <ForgetPassword />,
-          },
-          {
-            path: "/auth/set-new-password",
-            element: <SetNewPassword />,
-          },
-                 
-        ],
+        element: <DasboardHome />,
       },
-])
+      {
+        path: "/manage-users",
+        element: <Manage_Users />,
+      },
+      {
+        path: "/categories",
+        element: <Categories />,
+      },
+      {
+        path: "/manage_song",
+        element: <Manage_Song />,
+      },
+      {
+        path: "/top_artist",
+        element: <Top_Artist />,
+      },
+      {
+        path: "/manage-users/seller-profile/:id",
+        element: <Seller_Profile />,
+      },
+      {
+        path: "/transactions",
+        element: <Transactions />,
+      },
+      {
+        path: "/hero",
+        element: <Hero />,
+      },
+      {
+        path: "/my_profile",
+        element: <MyProfile />,
+      },
+    ],
+  },
+  {
+    path: "/auth",
+    element: <Auth />,
+    children: [
+      {
+        path: "/auth",
+        element: <Login />,
+      },
+      {
+        path: "/auth/login",
+        element: <Login />,
+      },
+      {
+        path: "/auth/verify-email",
+        element: <Verify_Email />,
+      },
+      {
+        path: "/auth/forget-password",
+        element: <ForgetPassword />,
+      },
+      {
+        path: "/auth/set-new-password",
+        element: <SetNewPassword />,
+      },
+    ],
+  },
+]);
 
 export default router;

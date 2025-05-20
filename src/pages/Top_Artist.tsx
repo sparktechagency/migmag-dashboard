@@ -9,17 +9,15 @@ import {
   PopconfirmProps,
   Select,
   Table,
+  Upload,
 } from "antd";
 import { Pencil, Search, Trash } from "lucide-react";
 import React, { useState } from "react";
 import { DownloadOutlined, EditOutlined } from "@ant-design/icons";
+import TextArea from "antd/es/input/TextArea";
 
 const Top_Artist = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [openModel, setOpenModel] = useState<boolean>(false);
-  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
-  const [userData, setUserData] = useState<UserAction | null>(null);
-  const [role, setRole] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const pageSize = 10;
@@ -220,6 +218,19 @@ const Top_Artist = () => {
       key: "action",
       render: () => (
         <div className="flex gap-2">
+          <svg
+            onClick={showModal}
+            width="20"
+            height="22"
+            viewBox="0 0 20 22"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 22V18H20V22H0ZM4 14H5.4L13.2 6.225L11.775 4.8L4 12.6V14ZM2 16V11.75L13.2 0.575C13.3833 0.391667 13.5958 0.25 13.8375 0.15C14.0792 0.05 14.3333 0 14.6 0C14.8667 0 15.125 0.05 15.375 0.15C15.625 0.25 15.85 0.4 16.05 0.6L17.425 2C17.625 2.18333 17.7708 2.4 17.8625 2.65C17.9542 2.9 18 3.15833 18 3.425C18 3.675 17.9542 3.92083 17.8625 4.1625C17.7708 4.40417 17.625 4.625 17.425 4.825L6.25 16H2Z"
+              fill="#49ADF4"
+            />
+          </svg>
           <Popconfirm
             title="Delete the task"
             description="Are you sure to delete this task?"
@@ -271,15 +282,6 @@ const Top_Artist = () => {
             Add new song
           </Button>
         </div>
-        {/* <Input
-          prefix={<Search />}
-          className="w-full rounded-2xl h-12 bg-base border-0 text-primary placeholder:text-gray-200"
-          placeholder="Search for Listing"
-          style={{
-            backgroundColor: "#f0f0f0",
-            color: "#333333",
-          }}
-        /> */}
       </div>
       <div className="py-8">
         <Table
@@ -318,46 +320,32 @@ const Top_Artist = () => {
             </div>
           }
         >
-          <Form onFinish={onFinish} style={{ paddingBottom: "40px" }}>
+          <Form onFinish={onFinish} style={{ paddingBottom: "100px" }}>
+            <Form.Item className="bg-[#f5f5f5]  border-dashed rounded-lg text-center py-4 ">
+              <Upload className="flex justify-center ">
+                <Button className="flex">
+                  <svg
+                    width="19"
+                    height="20"
+                    viewBox="0 0 19 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M5.5 6.99976V8.99976H2.5V17.9998H16.5V8.99976H13.5V6.99976H16.5C17.0304 6.99976 17.5391 7.21047 17.9142 7.58555C18.2893 7.96062 18.5 8.46933 18.5 8.99976V17.9998C18.5 18.5302 18.2893 19.0389 17.9142 19.414C17.5391 19.789 17.0304 19.9998 16.5 19.9998H2.5C1.96957 19.9998 1.46086 19.789 1.08579 19.414C0.710714 19.0389 0.5 18.5302 0.5 17.9998V8.99976C0.5 8.46933 0.710714 7.96062 1.08579 7.58555C1.46086 7.21047 1.96957 6.99976 2.5 6.99976H5.5ZM10.384 0.468761L13.743 3.82676C13.9306 4.0144 14.0361 4.2689 14.0361 4.53426C14.0361 4.79962 13.9306 5.05412 13.743 5.24176C13.5554 5.4294 13.3009 5.53482 13.0355 5.53482C12.7701 5.53482 12.5156 5.4294 12.328 5.24176L10.5 3.41276V12.9998C10.5 13.265 10.3946 13.5193 10.2071 13.7069C10.0196 13.8944 9.76522 13.9998 9.5 13.9998C9.23478 13.9998 8.98043 13.8944 8.79289 13.7069C8.60536 13.5193 8.5 13.265 8.5 12.9998V3.41276L6.672 5.24176C6.57909 5.33467 6.46879 5.40837 6.3474 5.45865C6.226 5.50894 6.0959 5.53482 5.9645 5.53482C5.83311 5.53482 5.703 5.50894 5.5816 5.45865C5.46021 5.40837 5.34991 5.33467 5.257 5.24176C5.16409 5.14885 5.09039 5.03855 5.04011 4.91716C4.98982 4.79576 4.96394 4.66566 4.96394 4.53426C4.96394 4.40287 4.98982 4.27276 5.04011 4.15136C5.09039 4.02997 5.16409 3.91967 5.257 3.82676L8.617 0.468761C8.85139 0.234575 9.16917 0.103027 9.5005 0.103027C9.83183 0.103027 10.1496 0.234575 10.384 0.468761Z"
+                      fill="black"
+                    />
+                  </svg>
+                </Button>
+                Upload
+              </Upload>
+            </Form.Item>
             {/* Artist name */}
             <Form.Item label="Artist name" name="artistName" layout="vertical">
-              <Select
-                showSearch
-                className="w-full  bg-[#f5f5f5] h-[45px] font-degular font-normal text-base rounded-lg"
-                placeholder="Select the name from list"
-                optionFilterProp="label"
-                filterSort={(optionA, optionB) =>
-                  (optionA?.label ?? "")
-                    .toLowerCase()
-                    .localeCompare((optionB?.label ?? "").toLowerCase())
-                }
-                options={[
-                  {
-                    value: "1",
-                    label: "Not Identified",
-                  },
-                  {
-                    value: "2",
-                    label: "Closed",
-                  },
-                  {
-                    value: "3",
-                    label: "Communicated",
-                  },
-                  {
-                    value: "4",
-                    label: "Identified",
-                  },
-                  {
-                    value: "5",
-                    label: "Resolved",
-                  },
-                  {
-                    value: "6",
-                    label: "Cancelled",
-                  },
-                ]}
-              />
+              <Input placeholder="Enter singer name" required></Input>
+            </Form.Item>
+            <Form.Item label="Description" name="description" layout="vertical">
+              <TextArea placeholder="Enter singer name" required></TextArea>
             </Form.Item>
           </Form>
         </Modal>
