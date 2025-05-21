@@ -20,7 +20,6 @@ import { SelectCommonPlacement } from "antd/es/_util/motion";
 const Manage_Song = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [form] = Form.useForm();
 
   const confirm: PopconfirmProps["onConfirm"] = (e) => {
     console.log(e);
@@ -282,29 +281,15 @@ const Manage_Song = () => {
   };
 
   const handleOk = () => {
-    form.submit();
+    setIsModalOpen(false);
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
-    form.resetFields();
   };
 
   const onFinish = (values: any) => {
     console.log("Form Values:", values);
-    console.log("Artist Name:", values.artistName);
-    console.log("Genre:", values.genre);
-    console.log("BPM:", values.BPM);
-    console.log("Key:", values.key);
-    console.log("Type:", values.type);
-    console.log("Price:", values.price);
-    console.log("License:", values.License);
-    console.log("Gender:", values.gender);
-
-    // Handle form submission logic here
-    setIsModalOpen(false);
-    form.resetFields();
-    message.success("Song saved successfully!");
   };
 
   return (
@@ -375,21 +360,17 @@ const Manage_Song = () => {
             </div>
           }
         >
-          <Form
-            form={form}
-            onFinish={onFinish}
-            style={{ paddingBottom: "100px" }}
-          >
+          <Form onFinish={onFinish} style={{ paddingBottom: "100px" }}>
             <Form.Item className="bg-[#f5f5f5] border-dashed rounded-lg text-center py-4">
               <Upload
                 accept="audio/*"
-                showUploadList={true}
+                showUploadList={true} // set to false if you don't want to show the uploaded file name
                 beforeUpload={(file) => {
                   const isAudio = file.type.startsWith("audio/");
                   if (!isAudio) {
                     message.error("You can only upload audio files!");
                   }
-                  return isAudio || Upload.LIST_IGNORE;
+                  return isAudio || Upload.LIST_IGNORE; // prevents upload if not audio
                 }}
               >
                 <Button className="flex items-center gap-2">
@@ -423,12 +404,12 @@ const Manage_Song = () => {
                     label: "Samantha Rivers",
                   },
                   {
-                    value: "Marcus Thompson",
-                    label: "Marcus Thompson",
+                    value: "Samantha Rivers",
+                    label: "Samantha Rivers",
                   },
                   {
-                    value: "Elena Martinez",
-                    label: "Elena Martinez",
+                    value: "Samantha Rivers",
+                    label: "Samantha Rivers",
                   },
                 ]}
               />
@@ -443,22 +424,22 @@ const Manage_Song = () => {
               >
                 <Select
                   className="bg-[#f5f5f5] h-12 rounded-lg"
-                  defaultValue="Slap house"
+                  defaultValue="Samantha Rivers"
                   style={{ width: "100%" }}
                   popupMatchSelectWidth={false}
                   placement={"bottomLeft"}
                   options={[
                     {
-                      value: "Slap house",
-                      label: "Slap house",
+                      value: "Samantha Rivers",
+                      label: "Samantha Rivers",
                     },
                     {
-                      value: "Pop",
-                      label: "Pop",
+                      value: "Samantha Rivers",
+                      label: "Samantha Rivers",
                     },
                     {
-                      value: "Rock",
-                      label: "Rock",
+                      value: "Samantha Rivers",
+                      label: "Samantha Rivers",
                     },
                   ]}
                 />
@@ -473,22 +454,22 @@ const Manage_Song = () => {
               >
                 <Select
                   className="bg-[#f5f5f5] h-12 rounded-lg"
-                  defaultValue="120"
+                  defaultValue="Samantha Rivers"
                   style={{ width: "100%" }}
                   popupMatchSelectWidth={false}
                   placement={"bottomLeft"}
                   options={[
                     {
-                      value: "120",
-                      label: "120",
+                      value: "Samantha Rivers",
+                      label: "Samantha Rivers",
                     },
                     {
-                      value: "123",
-                      label: "123",
+                      value: "Samantha Rivers",
+                      label: "Samantha Rivers",
                     },
                     {
-                      value: "130",
-                      label: "130",
+                      value: "Samantha Rivers",
+                      label: "Samantha Rivers",
                     },
                   ]}
                 />
@@ -504,22 +485,22 @@ const Manage_Song = () => {
               >
                 <Select
                   className="bg-[#f5f5f5] h-12 rounded-lg"
-                  defaultValue="C Major"
+                  defaultValue="Samantha Rivers"
                   style={{ width: "100%" }}
                   popupMatchSelectWidth={false}
                   placement={"bottomLeft"}
                   options={[
                     {
-                      value: "C Major",
-                      label: "C Major",
+                      value: "Samantha Rivers",
+                      label: "Samantha Rivers",
                     },
                     {
-                      value: "D Major",
-                      label: "D Major",
+                      value: "Samantha Rivers",
+                      label: "Samantha Rivers",
                     },
                     {
-                      value: "E Major",
-                      label: "E Major",
+                      value: "Samantha Rivers",
+                      label: "Samantha Rivers",
                     },
                   ]}
                 />
@@ -533,22 +514,22 @@ const Manage_Song = () => {
               >
                 <Select
                   className="bg-[#f5f5f5] h-12 rounded-lg"
-                  defaultValue="Instrumental"
+                  defaultValue="Samantha Rivers"
                   style={{ width: "100%" }}
                   popupMatchSelectWidth={false}
                   placement={"bottomLeft"}
                   options={[
                     {
-                      value: "Instrumental",
-                      label: "Instrumental",
+                      value: "Samantha Rivers",
+                      label: "Samantha Rivers",
                     },
                     {
-                      value: "Vocal",
-                      label: "Vocal",
+                      value: "Samantha Rivers",
+                      label: "Samantha Rivers",
                     },
                     {
-                      value: "Mixed",
-                      label: "Mixed",
+                      value: "Samantha Rivers",
+                      label: "Samantha Rivers",
                     },
                   ]}
                 />
@@ -574,35 +555,46 @@ const Manage_Song = () => {
               >
                 <Select
                   className="bg-[#f5f5f5] h-12 rounded-lg"
-                  defaultValue="Non-exclusive"
+                  defaultValue="Samantha Rivers"
                   style={{ width: "100%" }}
                   popupMatchSelectWidth={false}
                   placement={"bottomLeft"}
                   options={[
                     {
-                      value: "Non-exclusive",
-                      label: "Non-exclusive",
+                      value: "Samantha Rivers",
+                      label: "Samantha Rivers",
                     },
                     {
-                      value: "Exclusive",
-                      label: "Exclusive",
+                      value: "Samantha Rivers",
+                      label: "Samantha Rivers",
                     },
                     {
-                      value: "Premium",
-                      label: "Premium",
+                      value: "Samantha Rivers",
+                      label: "Samantha Rivers",
                     },
                   ]}
                 />
               </Form.Item>
             </div>
+            {/*Price */}
+            <Form.Item label="Price" name="price" layout="vertical">
+              <Input placeholder="Enter price of the song" required></Input>
+            </Form.Item>
 
             {/*Gender */}
-            <Form.Item label="Gender" name="gender" className="h-4">
-              <Radio.Group className="flex gap-3 mt-9">
+            <Form.Item
+              label="Gender"
+              name="gender"
+              className="h-4 "
+              // layout="vertical"
+            >
+              <Radio.Group className="flex  gap-3 mt-9 ">
                 <Radio value="Male">Male</Radio>
                 <Radio value="Female">Female</Radio>
               </Radio.Group>
             </Form.Item>
+
+            {/* button  */}
           </Form>
         </Modal>
       </div>

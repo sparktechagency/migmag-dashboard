@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Tags from "../component/share/Tags";
+import Tags from "../../src/component/share/Tags";
 
 interface Props {}
 
