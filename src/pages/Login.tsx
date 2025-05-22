@@ -31,7 +31,7 @@ const Login: React.FC = () => {
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <g clip-path="url(#clip0_7_2534)">
+            <g clipPath="url(#clip0_7_2534)">
               <path
                 d="M76.7531 9.06711H68.8931V21.7687H64.7485V9.06711H56.9004V5.57202H76.7531V9.06711Z"
                 fill="black"
@@ -79,12 +79,14 @@ const Login: React.FC = () => {
           Monitor songs, manage purchases, and handle users with ease. Your
           complete toolkit to keep the music business running smoothly.
         </p>
-        <div  className="h-[56.5vh] w-[35vw] object-cover" style={{
-         borderRadius : "0 0 15px 0",
-         backgroundOrigin : ArtistLibrary,
-         backgroundImage: `url(${ArtistLibrary})`,
-          
-        }}  />
+        <div
+          className="h-[56.5vh] w-[35vw] object-cover"
+          style={{
+            borderRadius: "0 0 15px 0",
+            backgroundOrigin: ArtistLibrary,
+            backgroundImage: `url(${ArtistLibrary})`,
+          }}
+        />
       </div>
       {/* login form */}
       <div className="flex justify-center items-center ">
@@ -127,7 +129,7 @@ const Login: React.FC = () => {
             <Form.Item
               label="Password"
               name="password"
-                 className="text-[#121212] font-degular font-semibold text-base"
+              className="text-[#121212] font-degular font-semibold text-base"
               rules={[
                 { required: true, message: "Please enter your password" },
               ]}

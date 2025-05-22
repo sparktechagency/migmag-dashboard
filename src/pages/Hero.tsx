@@ -4,8 +4,13 @@ import type { GetProp, UploadFile, UploadProps } from "antd";
 import ImgCrop from "antd-img-crop";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
+import { useGetPostQuery } from "../redux/features/baseApi";
 
 const Hero = () => {
+  const { data: post, isError, error } = useGetPostQuery();
+  console.log("====================================");
+  console.log(post);
+  console.log("====================================");
   // upload img functionality
   const [fileList, setFileList] = useState<UploadFile[]>([
     {

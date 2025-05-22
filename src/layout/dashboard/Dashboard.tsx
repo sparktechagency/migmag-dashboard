@@ -388,7 +388,7 @@ const Dashboard: React.FC = () => {
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <g clip-path="url(#clip0_201_8689)">
+              <g clipPath="url(#clip0_201_8689)">
                 <path
                   d="M76.7531 9.06686H68.8931V21.7684H64.7485V9.06686H56.9004V5.57178H76.7531V9.06686Z"
                   fill="black"
