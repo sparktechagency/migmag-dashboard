@@ -3,19 +3,55 @@ import AuthWrapper from "../component/share/AuthWrapper";
 import { Button, Checkbox, Form, Input } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import ArtistLibrary from "../assets/Images/dashboard/Artist Library@4x 1.png";
+import { usePostLoginInfoMutation } from "../redux/dashboardFeatures/user/userApiSlices";
+import toast from "react-hot-toast";
+import Swal from "sweetalert2";
 
 interface LoginFormValues {
   email: string;
   password: string;
-  remember?: boolean;
+  // remember?: boolean;
 }
 
 const Login: React.FC = () => {
+  const [postLoginInfo, { isLoading, isError, isSuccess }] =
+    usePostLoginInfoMutation();
+
   const navigate = useNavigate();
 
-  const onFinish = (values: LoginFormValues) => {
-    console.log(values);
-    navigate("/");
+  const onFinish = async (values: LoginFormValues) => {
+    console.log(values, "login daty");
+    const loginInfo = {
+      email: values.email,
+      password: values.password,
+    };
+    try {
+      const res = await postLoginInfo(loginInfo).unwrap();
+      const token = res.data?.token;
+      console.log(res);
+      if (token) {
+        toast.success(res?.message);
+        localStorage.setItem("admin_token", token);
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: res?.message,
+        });
+        navigate("/");
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: res?.message,
+        });
+      }
+    } catch (errors) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: errors?.message,
+      });
+    }
   };
 
   return (
@@ -156,7 +192,7 @@ const Login: React.FC = () => {
             </Form.Item>
             <Form.Item>
               <div className="flex justify-between items-center">
-                <Form.Item name="remember" valuePropName="checked" noStyle>
+                <Form.Item valuePropName="checked" noStyle>
                   <Checkbox>Remember me</Checkbox>
                 </Form.Item>
 
@@ -174,6 +210,15 @@ const Login: React.FC = () => {
               </Button>
             </Form.Item>
           </Form>
+          <p className="font-degular font-normal text-sm text-center">
+            Don’t have an account?{" "}
+            <Link
+              to={"/auth/register"}
+              className="font-degular text-base font-bold"
+            >
+              Register
+            </Link>
+          </p>
         </AuthWrapper>
       </div>
     </div>

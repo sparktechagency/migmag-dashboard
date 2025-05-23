@@ -7,11 +7,6 @@ import TextArea from "antd/es/input/TextArea";
 import { useGetPostQuery } from "../redux/features/baseApi";
 
 const Hero = () => {
-  const { data: post, isError, error } = useGetPostQuery();
-  console.log("====================================");
-  console.log(post);
-  console.log("====================================");
-  // upload img functionality
   const [fileList, setFileList] = useState<UploadFile[]>([
     {
       uid: "-1",
@@ -20,24 +15,10 @@ const Hero = () => {
       url: "",
     },
   ]);
+  console.log(fileList);
 
   const onChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
     setFileList(newFileList);
-  };
-
-  const onPreview = async (file: UploadFile) => {
-    let src = file.url as string;
-    if (!src) {
-      src = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file.originFileObj as FileType);
-        reader.onload = () => resolve(reader.result as string);
-      });
-    }
-    const image = new Image();
-    image.src = src;
-    const imgWindow = window.open(src);
-    imgWindow?.document.write(image.outerHTML);
   };
   // input from functionality
   const onFinish = (values: any) => {
@@ -71,7 +52,7 @@ const Hero = () => {
               listType="picture-card"
               fileList={fileList}
               onChange={onChange}
-              onPreview={onPreview}
+              // onPreview={onPreview}
             >
               {fileList.length < 1 && (
                 <svg

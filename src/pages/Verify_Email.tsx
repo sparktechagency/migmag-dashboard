@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import AuthWrapper from "../component/share/AuthWrapper";
 import { Button, Form, Input } from "antd";
 import { useNavigate } from "react-router-dom";
-import VerifyEmailImg from "../assets/Images/dashboard/VerifyEmailImg.png"
+import VerifyEmailImg from "../assets/Images/dashboard/VerifyEmailImg.png";
+import { useVerifyEmailMutation } from "../redux/dashboardFeatures/user/userApiSlices";
+import Swal from "sweetalert2";
 
 // Assuming `Input.OTP` is a custom input component
 interface OTPInputProps {
@@ -19,6 +21,7 @@ interface ForgetPasswordFormValues {
 }
 
 const Verify_Email: React.FC = () => {
+  const [VerifyEmail] = useVerifyEmailMutation();
   const navigate = useNavigate();
 
   // Define the `onChange` handler with the correct type
@@ -26,18 +29,41 @@ const Verify_Email: React.FC = () => {
     console.log("onChange:", text);
   };
 
-  const handleVerify = () => {
-    navigate("/auth/forget-password");
-  }
+  // const handleVerify = () => {
+
+  // };
 
   const handleVerifyBack = () => {
     navigate("/auth/login");
   };
-  
 
-  const onFinish = (values: ForgetPasswordFormValues) => {
-    console.log(values);
-    navigate("/auth/forget-password");
+  const onFinish = async (values: ForgetPasswordFormValues) => {
+    try {
+      const res = await VerifyEmail(values).unwrap();
+      console.log(res);
+      if (res.success) {
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: res?.message,
+        });
+        navigate(`/auth/forget-password?email=${res.data.email}`);
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: res?.message,
+        });
+      }
+    } catch (errors) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: errors?.message,
+      });
+    }
+
+    // navigate("/auth/forget-password");
   };
 
   return (
@@ -80,20 +106,22 @@ const Verify_Email: React.FC = () => {
                 className="h-[50px] mt-3 mb-0"
               />
             </Form.Item>
+            <Form.Item>
+              <Button
+                className="bg-[#E7F056] h-12 mb-5  text-xl w-full mt-5 font-bold rounded-2xl border-none font-degular text-[#121212]"
+                // onClick={handleVerify}
+                htmlType="submit"
+              >
+                Send
+              </Button>
+            </Form.Item>
+            <Button
+              className=" h-12 text-xl w-full font-bold rounded-2xl border-[#8D8D8D] font-degular text-[#121212]"
+              onClick={handleVerifyBack}
+            >
+              Back
+            </Button>
           </Form>
-
-          <Button
-            className="bg-[#E7F056] h-12 mb-5  text-xl w-full mt-5 font-bold rounded-2xl border-none font-degular text-[#121212]"
-            onClick={handleVerify}
-          >
-            Send
-          </Button>
-          <Button
-            className=" h-12 text-xl w-full font-bold rounded-2xl border-[#8D8D8D] font-degular text-[#121212]"
-            onClick={handleVerifyBack}
-          >
-            Back
-          </Button>
 
           <p className="text-center mt-10">
             You have not received the email?

@@ -1,8 +1,10 @@
 import React from "react";
 import AuthWrapper from "../component/share/AuthWrapper";
-import { Button, Input } from "antd";
-import { useNavigate } from "react-router-dom";
+import { Button, Form, Input } from "antd";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import forGetImg from "../assets/Images/dashboard/forgetPAssword.png";
+import { usePostOtpMutation } from "../redux/dashboardFeatures/user/userApiSlices";
+import Swal from "sweetalert2";
 
 // Assuming `Input.OTP` is a custom input component
 interface OTPInputProps {
@@ -15,16 +17,43 @@ interface OTPInputProps {
 }
 
 const ForgetPassword: React.FC = () => {
+  const [searchParams] = useSearchParams();
+  const email = searchParams.get("email");
+
   const navigate = useNavigate();
+  const [postOtp] = usePostOtpMutation();
 
-  // Define the `onChange` handler with the correct type
-  const onChange = (text: string) => {
-    console.log("onChange:", text);
+  const onFinish = async (values) => {
+    const otpInfo = {
+      otp: values.otp,
+      email: email,
+    };
+    try {
+      const res = await postOtp(otpInfo).unwrap();
+      if (res?.success) {
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: res?.message,
+        });
+        navigate("/auth/set-new-password");
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: res?.message,
+        });
+      }
+    } catch (errors) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: errors?.message,
+      });
+    }
   };
 
-  const handleVerify = () => {
-    navigate("/auth/set-new-password");
-  };
+  const handleVerify = () => {};
   const handleVerifyBack = () => {
     navigate("/auth/verify-email");
   };
@@ -42,8 +71,6 @@ const ForgetPassword: React.FC = () => {
             backgroundSize: "cover",
           }}
         />
-
-        {/* <img src={forGetImg} className="my-auto  h-[95vh] w-full object-contain rounded-lg" alt="" /> */}
       </div>
       {/* forget password */}
       <div className="  justify-center items-center  flex    ">
@@ -59,34 +86,40 @@ const ForgetPassword: React.FC = () => {
             </div>
 
             {/* Assuming `Input.OTP` is a custom component */}
-            <Input.OTP
-              size="small"
-              className="otp-input"
-              style={{ width: "100%", height: "10px" }}
-              length={5}
-              formatter={(str: string) => str.toUpperCase()}
-              onChange={onChange}
-            />
-
-            <Button
-              className="bg-[#E7F056] h-12 mb-5  text-xl w-full mt-14 font-bold rounded-2xl border-none font-degular text-[#121212]"
-              onClick={handleVerify}
-            >
-              Submit
-            </Button>
-            <Button
-              className=" h-12 text-xl w-full font-bold rounded-2xl border-[#8D8D8D] font-degular text-[#121212]"
-              onClick={handleVerifyBack}
-            >
-              Back
-            </Button>
-
-            <p className="text-center mt-10">
-              You have not received the email?
-              <Button className="pl-0" type="link">
-                Resend
+            <Form layout="vertical" onFinish={onFinish}>
+              <Form.Item name="otp">
+                <Input.OTP
+                  size="small"
+                  className="otp-input"
+                  style={{ width: "100%", height: "5px" }}
+                  length={6}
+                  formatter={(str: string) => str.toUpperCase()}
+                  // onChange={onChange}
+                />
+              </Form.Item>
+              {/* <Form.Item> */}
+              <Button
+                className="bg-[#E7F056] h-12 mb-5  text-xl w-full mt-14 font-bold rounded-2xl border-none font-degular text-[#121212]"
+                onClick={handleVerify}
+                htmlType="submit"
+              >
+                Submit
               </Button>
-            </p>
+              {/* </Form.Item> */}
+              <Button
+                className=" h-12 text-xl w-full font-bold rounded-2xl border-[#8D8D8D] font-degular text-[#121212]"
+                onClick={handleVerifyBack}
+              >
+                Back
+              </Button>
+
+              <p className="text-center mt-10">
+                You have not received the email?
+                <Button className="pl-0" type="link">
+                  Resend
+                </Button>
+              </p>
+            </Form>
           </div>
         </div>
         ;

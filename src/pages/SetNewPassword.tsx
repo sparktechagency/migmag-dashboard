@@ -1,23 +1,51 @@
 import React from "react";
 import AuthWrapper from "../component/share/AuthWrapper";
 import { Button, Checkbox, Form, Input } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ArtistLibrary from "../assets/Images/dashboard/setNewPassImg.png";
+import { useSetNewPassMutation } from "../redux/dashboardFeatures/user/userApiSlices";
+import Swal from "sweetalert2";
 
 interface SetNewPasswordFormValues {
-  email: string;
   password: string;
-  remember?: boolean;
+  passwordConfirmation: string;
 }
 
 const SetNewPassword: React.FC = () => {
+  const [setNewPass] = useSetNewPassMutation();
   const navigate = useNavigate();
 
-  const onFinish = (values: SetNewPasswordFormValues) => {
-    console.log(values);
+  const onFinish = async (values: SetNewPasswordFormValues) => {
+    const setPassInfo = {
+      password: values.password,
+      password_confirmation: values.passwordConfirmation,
+    };
+    try {
+      const res = await setNewPass(setPassInfo).unwrap();
+      if (res.success) {
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: res?.message,
+        });
+        navigate(`/auth/forget-password?email=${res.data.email}`);
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: res?.message,
+        });
+      }
+    } catch (errors) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: errors?.message,
+      });
+    }
+
     navigate("/auth/login");
   };
-
   return (
     <div className="h-dvh grid grid-cols-2 border border-gray-700  ">
       {/* image  */}
@@ -48,7 +76,7 @@ const SetNewPassword: React.FC = () => {
 
           {/* Assuming `Input.OTP` is a custom component */}
 
-          <Form<LoginFormValues> layout="vertical" onFinish={onFinish}>
+          <Form<SetNewPasswordFormValues> layout="vertical" onFinish={onFinish}>
             <Form.Item
               label="New Password"
               name="password"
@@ -79,7 +107,7 @@ const SetNewPassword: React.FC = () => {
             </Form.Item>
             <Form.Item
               label="Retype New Password"
-              name="Retype New password"
+              name="passwordConfirmation"
               className="text-[#121212] font-degular font-semibold text-base"
               rules={[{ required: true, message: "Retype New Password" }]}
             >

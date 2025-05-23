@@ -18,9 +18,9 @@ import { message, Popconfirm } from "antd";
 import { SelectCommonPlacement } from "antd/es/_util/motion";
 
 const Manage_Song = () => {
+  const [form] = Form.useForm();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const confirm: PopconfirmProps["onConfirm"] = (e) => {
     console.log(e);
     message.success("Click on Yes");
@@ -292,6 +292,42 @@ const Manage_Song = () => {
     console.log("Form Values:", values);
   };
 
+  const artistOptions = [
+    { value: "samantha_rivers", label: "Samantha Rivers" },
+    { value: "alex_jones", label: "Alex Jones" },
+    { value: "jessica_smith", label: "Jessica Smith" },
+  ];
+
+  const genreOptions = [
+    { value: "hiphop", label: "Hip-Hop" },
+    { value: "pop", label: "Pop" },
+    { value: "rock", label: "Rock" },
+  ];
+
+  const bpmOptions = [
+    { value: "60", label: "60 BPM" },
+    { value: "90", label: "90 BPM" },
+    { value: "120", label: "120 BPM" },
+  ];
+
+  const keyOptions = [
+    { value: "C", label: "C" },
+    { value: "D", label: "D" },
+    { value: "E", label: "E" },
+  ];
+
+  const typeOptions = [
+    { value: "instrumental", label: "Instrumental" },
+    { value: "vocal", label: "Vocal" },
+    { value: "remix", label: "Remix" },
+  ];
+
+  const licenseOptions = [
+    { value: "free", label: "Free" },
+    { value: "standard", label: "Standard" },
+    { value: "premium", label: "Premium" },
+  ];
+
   return (
     <div>
       <div className="bg-white p-6 rounded-2xl">
@@ -342,25 +378,9 @@ const Manage_Song = () => {
           open={isModalOpen}
           onOk={handleOk}
           onCancel={handleCancel}
-          footer={
-            <div className="flex gap-4 ">
-              <Button
-                onClick={handleCancel}
-                className="w-full  bg-[#fff5f4] text-[#FF3B30] border-none rounded-2xl p-5 font-bold font-degular text-xl"
-              >
-                Cancel
-              </Button>
-              <Button
-                htmlType="submit"
-                onClick={handleOk}
-                className="w-full bg-[#E7F056] border-none rounded-2xl p-5 font-bold font-degular text-xl"
-              >
-                Save changes
-              </Button>
-            </div>
-          }
+          footer={false}
         >
-          <Form onFinish={onFinish} style={{ paddingBottom: "100px" }}>
+          <Form form={form} onFinish={onFinish} style={{ paddingBottom: "" }}>
             <Form.Item className="bg-[#f5f5f5] border-dashed rounded-lg text-center py-4">
               <Upload
                 accept="audio/*"
@@ -398,21 +418,13 @@ const Manage_Song = () => {
                 style={{ width: "100%" }}
                 popupMatchSelectWidth={false}
                 placement={"bottomLeft"}
-                options={[
-                  {
-                    value: "Samantha Rivers",
-                    label: "Samantha Rivers",
-                  },
-                  {
-                    value: "Samantha Rivers",
-                    label: "Samantha Rivers",
-                  },
-                  {
-                    value: "Samantha Rivers",
-                    label: "Samantha Rivers",
-                  },
-                ]}
-              />
+              >
+                {artistOptions.map((item, ind) => (
+                  <Select.Option key={ind} value={item.value}>
+                    {item.label}
+                  </Select.Option>
+                ))}
+              </Select>
             </Form.Item>
             <div className="flex gap-3">
               {/* Genre */}
@@ -428,21 +440,13 @@ const Manage_Song = () => {
                   style={{ width: "100%" }}
                   popupMatchSelectWidth={false}
                   placement={"bottomLeft"}
-                  options={[
-                    {
-                      value: "Samantha Rivers",
-                      label: "Samantha Rivers",
-                    },
-                    {
-                      value: "Samantha Rivers",
-                      label: "Samantha Rivers",
-                    },
-                    {
-                      value: "Samantha Rivers",
-                      label: "Samantha Rivers",
-                    },
-                  ]}
-                />
+                >
+                  {genreOptions.map((item, ind) => (
+                    <Select.Option key={ind} value={item.value}>
+                      {item.label}
+                    </Select.Option>
+                  ))}
+                </Select>
               </Form.Item>
 
               {/* BPM*/}
@@ -458,21 +462,13 @@ const Manage_Song = () => {
                   style={{ width: "100%" }}
                   popupMatchSelectWidth={false}
                   placement={"bottomLeft"}
-                  options={[
-                    {
-                      value: "Samantha Rivers",
-                      label: "Samantha Rivers",
-                    },
-                    {
-                      value: "Samantha Rivers",
-                      label: "Samantha Rivers",
-                    },
-                    {
-                      value: "Samantha Rivers",
-                      label: "Samantha Rivers",
-                    },
-                  ]}
-                />
+                >
+                  {bpmOptions.map((item, ind) => (
+                    <Select.Option key={ind} value={item.value}>
+                      {item.label}
+                    </Select.Option>
+                  ))}
+                </Select>
               </Form.Item>
             </div>
             {/* Key */}
@@ -489,21 +485,13 @@ const Manage_Song = () => {
                   style={{ width: "100%" }}
                   popupMatchSelectWidth={false}
                   placement={"bottomLeft"}
-                  options={[
-                    {
-                      value: "Samantha Rivers",
-                      label: "Samantha Rivers",
-                    },
-                    {
-                      value: "Samantha Rivers",
-                      label: "Samantha Rivers",
-                    },
-                    {
-                      value: "Samantha Rivers",
-                      label: "Samantha Rivers",
-                    },
-                  ]}
-                />
+                >
+                  {keyOptions.map((item, ind) => (
+                    <Select.Option key={ind} value={item.value}>
+                      {item.label}
+                    </Select.Option>
+                  ))}
+                </Select>
               </Form.Item>
 
               <Form.Item
@@ -518,21 +506,13 @@ const Manage_Song = () => {
                   style={{ width: "100%" }}
                   popupMatchSelectWidth={false}
                   placement={"bottomLeft"}
-                  options={[
-                    {
-                      value: "Samantha Rivers",
-                      label: "Samantha Rivers",
-                    },
-                    {
-                      value: "Samantha Rivers",
-                      label: "Samantha Rivers",
-                    },
-                    {
-                      value: "Samantha Rivers",
-                      label: "Samantha Rivers",
-                    },
-                  ]}
-                />
+                >
+                  {typeOptions.map((item, ind) => (
+                    <Select.Option key={ind} value={item.value}>
+                      {item.label}
+                    </Select.Option>
+                  ))}
+                </Select>
               </Form.Item>
             </div>
             {/* Key */}
@@ -559,21 +539,13 @@ const Manage_Song = () => {
                   style={{ width: "100%" }}
                   popupMatchSelectWidth={false}
                   placement={"bottomLeft"}
-                  options={[
-                    {
-                      value: "Samantha Rivers",
-                      label: "Samantha Rivers",
-                    },
-                    {
-                      value: "Samantha Rivers",
-                      label: "Samantha Rivers",
-                    },
-                    {
-                      value: "Samantha Rivers",
-                      label: "Samantha Rivers",
-                    },
-                  ]}
-                />
+                >
+                  {licenseOptions.map((item, ind) => (
+                    <Select.Option key={ind} value={item.value}>
+                      {item.label}
+                    </Select.Option>
+                  ))}
+                </Select>
               </Form.Item>
             </div>
             {/*Price */}
@@ -585,7 +557,7 @@ const Manage_Song = () => {
             <Form.Item
               label="Gender"
               name="gender"
-              className="h-4 "
+              className=""
               // layout="vertical"
             >
               <Radio.Group className="flex  gap-3 mt-9 ">
@@ -595,6 +567,23 @@ const Manage_Song = () => {
             </Form.Item>
 
             {/* button  */}
+            <Form.Item>
+              <div className="flex gap-4  w-full mt-8">
+                <Button
+                  onClick={handleCancel}
+                  className="flex-1  bg-[#fff5f4] text-[#FF3B30] border-none rounded-2xl p-5 font-bold font-degular text-xl"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  htmlType="submit"
+                  onClick={handleOk}
+                  className="w-full flex-1 bg-[#E7F056] border-none rounded-2xl p-5 font-bold font-degular text-xl"
+                >
+                  Save changes
+                </Button>
+              </div>
+            </Form.Item>
           </Form>
         </Modal>
       </div>
