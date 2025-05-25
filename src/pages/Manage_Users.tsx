@@ -2,11 +2,15 @@ import { Avatar, Button, Input, Modal, Radio, Table } from "antd";
 import { Pencil, Search, Trash } from "lucide-react";
 import React, { useState } from "react";
 import { EditOutlined } from "@ant-design/icons";
+import {
+  useSearchUserMutation,
+  useSearchUserQuery,
+} from "../redux/dashboardFeatures/manage_user/manageUserSlice";
+import { data } from "autoprefixer";
 
 const Manage_Users = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [radioGetValue, setRadioGetValue] = useState("Ban");
-
   const pageSize = 10;
 
   const dataSource = [
@@ -144,6 +148,21 @@ const Manage_Users = () => {
   const handleRadioValue = (e) => {
     console.log(e.target.value);
   };
+  const [searchValue, setSearchValue] = useState("");
+
+  const {
+    data: UsersData,
+    isLoading,
+    isError,
+  } = useSearchUserQuery({
+    search: searchValue,
+  });
+
+  const handleSearchChange = (e) => {
+    setSearchValue(e.target.value);
+  };
+
+  console.log(UsersData, "UsersData");
 
   return (
     <div>
@@ -158,7 +177,8 @@ const Manage_Users = () => {
           </p>
         </div>
         <Input
-          prefix={<Search color="#888888"/>}
+          prefix={<Search color="#888888" />}
+          onChange={handleSearchChange}
           className="w-full rounded-2xl h-12 bg-base border-0 text-primary placeholder:text-gray-200"
           placeholder="Search for Listing"
           style={{
@@ -180,12 +200,17 @@ const Manage_Users = () => {
           rowClassName={() => "hover:bg-transparent"}
         />
         {/* Change status moudal */}
-        <Modal title="Change status" className="!w-[400px] "  onCancel={handleCancel} open={isModalOpen} footer={false}>
+        <Modal
+          title="Change status"
+          className="!w-[400px] "
+          onCancel={handleCancel}
+          open={isModalOpen}
+          footer={false}
+        >
           <Radio.Group
             defaultValue={radioGetValue}
             onChange={handleRadioValue}
             className="flex flex-col gap-3 mt-7"
-            
           >
             <Radio value="Ban">Ban</Radio>
             <Radio value="Unban">Unban</Radio>
@@ -200,7 +225,6 @@ const Manage_Users = () => {
       </div>
     </div>
   );
-};  
-        
+};
 
 export default Manage_Users;
