@@ -10,12 +10,15 @@ import {
   Select,
   Table,
   Upload,
+  UploadFile,
+  UploadProps,
 } from "antd";
 import { Divide, Pencil, Search, Trash } from "lucide-react";
 import React, { useState } from "react";
 import { DownloadOutlined, EditOutlined } from "@ant-design/icons";
 import { message, Popconfirm } from "antd";
 import { SelectCommonPlacement } from "antd/es/_util/motion";
+import ImgCrop from "antd-img-crop";
 
 const Manage_Song = () => {
   const [form] = Form.useForm();
@@ -32,6 +35,19 @@ const Manage_Song = () => {
   };
 
   const pageSize = 10;
+
+  const [fileList, setFileList] = useState<UploadFile[]>([
+    {
+      uid: "-1",
+      name: "image.png",
+      status: "done",
+      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+    },
+  ]);
+
+  const onChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+  };
 
   const dataSource = [
     {
@@ -381,7 +397,7 @@ const Manage_Song = () => {
           footer={false}
         >
           <Form form={form} onFinish={onFinish} style={{ paddingBottom: "" }}>
-            <Form.Item className="bg-[#f5f5f5] border-dashed rounded-lg text-center py-4">
+            <Form.Item className="bg-[#f5f5f5] border-dashed rounded-lg text-center py-4 ">
               <Upload
                 accept="audio/*"
                 showUploadList={true} // set to false if you don't want to show the uploaded file name
@@ -410,13 +426,57 @@ const Manage_Song = () => {
                 </Button>
               </Upload>
             </Form.Item>
+            <Form.Item className="w-full">
+              <h2 className="font-degular text-base font-semibold">
+                Thumbnail
+              </h2>
+              <div className="flex flex-col items-center gap-2 w-full">
+                <p className="text-gray-600 text-sm text-center">
+                  Upload an image thumbnail for your music (1 file only)
+                </p>
+
+                <div className="bg-[#f5f5f5] border border-dashed border-gray-300 rounded-lg w-full py-6 flex justify-center">
+                  <ImgCrop rotationSlider>
+                    <Upload
+                      action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+                      listType="picture-card"
+                      fileList={fileList}
+                      onChange={onChange}
+                      maxCount={1}
+                      className="text-center"
+                    >
+                      {fileList.length < 1 && (
+                        <div className="flex flex-col items-center justify-center text-gray-500">
+                          <svg
+                            width="40"
+                            height="40"
+                            viewBox="0 0 54 54"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M36.3339 12.0667H40.0672M53.1339 34.4423L41.9339 23.2496L30.7339 34.4423L15.8005 15.7878L0.867188 34.4667M4.60052 0.866699H49.4005C51.4624 0.866699 53.1339 2.53817 53.1339 4.60003V49.4C53.1339 51.4619 51.4624 53.1334 49.4005 53.1334H4.60052C2.53866 53.1334 0.867188 51.4619 0.867188 49.4V4.60003C0.867188 2.53817 2.53866 0.866699 4.60052 0.866699Z"
+                              stroke="#5D5D5D"
+                            />
+                          </svg>
+                          <p className="mt-2 text-sm">
+                            Click or drag file to upload
+                          </p>
+                        </div>
+                      )}
+                    </Upload>
+                  </ImgCrop>
+                </div>
+              </div>
+            </Form.Item>
+
             {/* Artist name */}
             <Form.Item label="Artist name" name="artistName" layout="vertical">
               <Select
                 className="bg-[#f5f5f5] h-12 rounded-lg"
                 defaultValue="Samantha Rivers"
                 style={{ width: "100%" }}
-                popupMatchSelectWidth={false}
+                // popupMatchSelectWidth={false}
                 placement={"bottomLeft"}
               >
                 {artistOptions.map((item, ind) => (
@@ -548,10 +608,6 @@ const Manage_Song = () => {
                 </Select>
               </Form.Item>
             </div>
-            {/*Price */}
-            <Form.Item label="Price" name="price" layout="vertical">
-              <Input placeholder="Enter price of the song" required></Input>
-            </Form.Item>
 
             {/*Gender */}
             <Form.Item

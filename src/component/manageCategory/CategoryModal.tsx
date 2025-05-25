@@ -10,14 +10,13 @@ interface CategoryModalProps {
 const CategoryModal: React.FC<CategoryModalProps> = ({
   inputVisible,
   setInputVisible,
-  handleAddNewCategory,
 }) => {
   const [form] = Form.useForm();
 
-  const onFinish = (data: { category: string }) => {
-    handleAddNewCategory(data?.category);
-    setInputVisible(false);
-    form.resetFields();
+  const onFinish = (data) => {
+    console.log("====================================");
+    console.log(data);
+    console.log("====================================");
   };
 
   const handleCancel = () => {
@@ -50,7 +49,7 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
           <div className="flex gap-5">
             <Form.Item className="flex-1 ">
               <Button
-                className="w-full  mt-4 py-6 bg-[#fff5f4] text-red-500  text-white font-degular"
+                className="w-full  mt-4 py-6 bg-[#fff5f4] text-red-500   font-degular"
                 type="default"
                 onClick={handleCancel}
               >

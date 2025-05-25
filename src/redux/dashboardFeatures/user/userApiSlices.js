@@ -1,4 +1,3 @@
-import { data } from "autoprefixer";
 import { baseApi } from "../../features/baseApi";
 
 const authSlice = baseApi.injectEndpoints({
