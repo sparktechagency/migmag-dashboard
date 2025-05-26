@@ -1,96 +1,60 @@
-import { Avatar, Button, Input, Modal, Radio, Table } from "antd";
+import { Avatar, Button, Form, Input, Modal, Radio, Table } from "antd";
 import { Pencil, Search, Trash } from "lucide-react";
 import React, { useState } from "react";
 import { EditOutlined } from "@ant-design/icons";
-import { useSearchUserQuery } from "../redux/dashboardFeatures/manage_user/manageUserSlice";
-import { data } from "autoprefixer";
+import {
+  useBannedPatchMutation,
+  useSearchUserQuery,
+} from "../redux/dashboardFeatures/manage_user/manageUserSlice";
+import { useForm } from "antd/es/form/Form";
 
 const Manage_Users = () => {
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [radioGetValue, setRadioGetValue] = useState("Ban");
-  const pageSize = 10;
+  const [formOne] = useForm();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectId, setSelectId] = useState("");
   const [page, setPage] = useState(1);
   const [per_page, setPerPage] = useState(7);
+  const [searchValue, setSearchValue] = useState("");
 
-  const dataSource = [
-    {
-      key: "1",
-      name: "Samantha Rivers",
-      email: "contact@newdomain.com",
-      status: "Unbanned",
-      avatar: "https://i.pravatar.cc/40?img=1",
-    },
-    {
-      key: "2",
-      name: "Marcus Thompson",
-      email: "support@anotherdomain.org",
-      status: "Unbanned",
-      avatar: "https://i.pravatar.cc/40?img=2",
-    },
-    {
-      key: "3",
-      name: "Elena Martinez",
-      email: "info@undiscovered.com",
-      status: "Unbanned",
-      avatar: "https://i.pravatar.cc/40?img=3",
-    },
-    {
-      key: "4",
-      name: "Derek Johnson",
-      email: "hello@verifiedmail.com",
-      status: "Unbanned",
-      avatar: "https://i.pravatar.cc/40?img=4",
-    },
-    {
-      key: "5",
-      name: "Tina Chen",
-      email: "admin@securemail.net",
-      status: "Unbanned",
-      avatar: "https://i.pravatar.cc/40?img=5",
-    },
-    {
-      key: "6",
-      name: "Oliver Brown",
-      email: "user@unknownmail.com",
-      status: "Unbanned",
-      avatar: "https://i.pravatar.cc/40?img=6",
-    },
-    {
-      key: "7",
-      name: "Ava Patel",
-      email: "team@trustedsource.com",
-      status: "Unbanned",
-      avatar: "https://i.pravatar.cc/40?img=7",
-    },
-    {
-      key: "8",
-      name: "Liam Smith",
-      email: "contact@reliablemail.com",
-      status: "Unbanned",
-      avatar: "https://i.pravatar.cc/40?img=8",
-    },
-    {
-      key: "9",
-      name: "Zoe Kim",
-      email: "support@verifiedservice.com",
-      status: "Unbanned",
-      avatar: "https://i.pravatar.cc/40?img=9",
-    },
-    {
-      key: "10",
-      name: "Shila",
-      email: "info@authenticmail.org",
-      status: "Unbanned",
-      avatar: "https://i.pravatar.cc/40?img=10",
-    },
-    {
-      key: "11",
-      name: "Lorry Kim",
-      email: "info@authenticmail.org",
-      status: "Unbanned",
-      avatar: "https://i.pravatar.cc/40?img=11",
-    },
-  ];
+  const {
+    data: UsersData,
+    isFetching,
+    isLoading,
+  } = useSearchUserQuery({
+    search: searchValue,
+    page: page,
+    per_page: per_page,
+  });
+  const [bannedPatch] = useBannedPatchMutation();
+
+  const onfinishOne = async (values) => {
+    try {
+      const res = await bannedPatch({
+        id: selectId,
+        is_banned: values.radio,
+      }).unwrap();
+      console.log(res);
+    } catch (errors) {
+      console.log(errors);
+    }
+  };
+
+  const showModal = (record) => {
+    setSelectId(record.id);
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    formOne.submit();
+    setIsModalOpen(false);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchValue(e.target.value);
+  };
 
   const columns = [
     {
@@ -122,53 +86,11 @@ const Manage_Users = () => {
     {
       title: "Action",
       key: "action",
-      render: () => (
-        <EditOutlined
-          style={{ color: "#1890ff", cursor: "pointer" }}
-          onClick={showModal}
-        />
-      ),
+      render: (_, record: object) => {
+        return <EditOutlined onClick={() => showModal(record)} />;
+      },
     },
   ];
-
-  const handlePage = (page: number) => {
-    setCurrentPage(page);
-  };
-
-  // Change status modal
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleRadioValue = (e) => {
-    console.log(e.target.value);
-  };
-  const [searchValue, setSearchValue] = useState("");
-
-  const {
-    data: UsersData,
-    isFetching,
-    isLoading,
-  } = useSearchUserQuery({
-    search: searchValue,
-    page: page,
-    per_page: per_page,
-  });
-
-  const handleSearchChange = (e) => {
-    setSearchValue(e.target.value);
-  };
-
-  console.log(UsersData, "UsersData");
 
   return (
     <div>
@@ -215,20 +137,20 @@ const Manage_Users = () => {
           open={isModalOpen}
           footer={false}
         >
-          <Radio.Group
-            defaultValue={radioGetValue}
-            onChange={handleRadioValue}
-            className="flex flex-col gap-3 mt-7"
-          >
-            <Radio value="Ban">Ban</Radio>
-            <Radio value="Unban">Unban</Radio>
-            <Button
-              onClick={handleOk}
-              className="bg-[#E7F056] mt-7 p-5 font-semibold font-degular text-xl"
-            >
-              Done
-            </Button>
-          </Radio.Group>
+          <Form form={formOne} onFinish={onfinishOne}>
+            <Form.Item name="radio">
+              <Radio.Group className="flex flex-col gap-3 mt-7">
+                <Radio value="1">Ban</Radio>
+                <Radio value="0">Unban</Radio>
+                <Button
+                  onClick={handleOk}
+                  className="bg-[#E7F056] mt-7 p-5 font-semibold font-degular text-xl"
+                >
+                  Done
+                </Button>
+              </Radio.Group>
+            </Form.Item>
+          </Form>
         </Modal>
       </div>
     </div>

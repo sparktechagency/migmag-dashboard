@@ -13,13 +13,24 @@ import {
 } from "antd";
 import { Pencil, Search, Trash } from "lucide-react";
 import React, { useState } from "react";
-import { DownloadOutlined, EditOutlined } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
+import { useArtistGetQuery } from "../redux/dashboardFeatures/Artist/artistApiSlice";
 
 const Top_Artist = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [searchValue, setSearchValue] = useState("");
+  const [page, setPage] = useState(1);
+  const [per_page, setPerPage] = useState(7);
+  const {
+    data: artistData,
+    isFetching,
+    isLoading,
+  } = useArtistGetQuery({
+    search: searchValue,
+    page: page,
+    per_page: per_page,
+  });
   const pageSize = 10;
 
   const dataSource = [
@@ -167,6 +178,7 @@ const Top_Artist = () => {
       avatar: "https://i.pravatar.cc/40?img=11",
     },
   ];
+  // get data
 
   // delete
   const confirm: PopconfirmProps["onConfirm"] = (e) => {
@@ -194,6 +206,10 @@ const Top_Artist = () => {
 
   const onFinish = (values) => {
     console.log("Form values:", values);
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchValue(e.target.value);
   };
 
   const columns = [
@@ -256,11 +272,9 @@ const Top_Artist = () => {
       ),
     },
   ];
-
-  const handlePage = (page: number) => {
-    setCurrentPage(page);
-  };
-
+  console.log("====================================");
+  console.log(artistData);
+  console.log("====================================");
   return (
     <div>
       <div className="bg-white p-6 rounded-2xl">
@@ -282,16 +296,27 @@ const Top_Artist = () => {
             Add new song
           </Button>
         </div>
+        <Input
+          prefix={<Search color="#888888" />}
+          onChange={handleSearchChange}
+          className="w-full rounded-2xl h-12 bg-base border-0 text-primary placeholder:text-gray-200"
+          placeholder="Search for Listing"
+          style={{
+            backgroundColor: "#f0f0f0",
+            color: "#333333",
+          }}
+        />
       </div>
       <div className="py-8">
         <Table
-          dataSource={dataSource}
+          loading={isFetching || isLoading}
+          dataSource={artistData?.data?.data}
           columns={columns}
           pagination={{
-            pageSize,
-            total: 50,
-            current: currentPage,
-            onChange: handlePage,
+            current: page,
+            pageSize: per_page,
+            total: artistData?.data?.total,
+            onChange: (page) => setPage(page),
           }}
           rowClassName={() => "hover:bg-transparent"}
         />

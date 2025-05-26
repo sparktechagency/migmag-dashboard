@@ -9,7 +9,14 @@ const manageUserSlice = baseApi.injectEndpoints({
       }),
       providesTags: ["user"],
     }),
+    bannedPatch: builder.mutation({
+      query: ({ id, is_banned }) => ({
+        url: `/update-banned-status/${id}?is_banned=${is_banned}`,
+        method: "PATCH",
+      }),
+      providesTags: ["user"],
+    }),
   }),
 });
 
-export const { useSearchUserQuery } = manageUserSlice;
+export const { useSearchUserQuery, useBannedPatchMutation } = manageUserSlice;
