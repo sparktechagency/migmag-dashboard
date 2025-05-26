@@ -2,16 +2,15 @@ import { Avatar, Button, Input, Modal, Radio, Table } from "antd";
 import { Pencil, Search, Trash } from "lucide-react";
 import React, { useState } from "react";
 import { EditOutlined } from "@ant-design/icons";
-import {
-  useSearchUserMutation,
-  useSearchUserQuery,
-} from "../redux/dashboardFeatures/manage_user/manageUserSlice";
+import { useSearchUserQuery } from "../redux/dashboardFeatures/manage_user/manageUserSlice";
 import { data } from "autoprefixer";
 
 const Manage_Users = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [radioGetValue, setRadioGetValue] = useState("Ban");
   const pageSize = 10;
+  const [page, setPage] = useState(1);
+  const [per_page, setPerPage] = useState(7);
 
   const dataSource = [
     {
@@ -96,12 +95,12 @@ const Manage_Users = () => {
   const columns = [
     {
       title: "Users",
-      dataIndex: "name",
-      key: "name",
-      render: (text, record) => (
+      dataIndex: "first_name",
+      key: "first_name",
+      render: (name, record) => (
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <Avatar src={record.avatar} />
-          <h2>{text}</h2>
+          <h2>{name}</h2>
         </div>
       ),
     },
@@ -112,8 +111,13 @@ const Manage_Users = () => {
     },
     {
       title: "Profile status",
-      dataIndex: "status",
+      dataIndex: "role",
       key: "status",
+    },
+    {
+      title: "Location",
+      dataIndex: "location",
+      key: "location",
     },
     {
       title: "Action",
@@ -152,10 +156,12 @@ const Manage_Users = () => {
 
   const {
     data: UsersData,
+    isFetching,
     isLoading,
-    isError,
   } = useSearchUserQuery({
     search: searchValue,
+    page: page,
+    per_page: per_page,
   });
 
   const handleSearchChange = (e) => {
@@ -189,13 +195,15 @@ const Manage_Users = () => {
       </div>
       <div className="py-8">
         <Table
-          dataSource={dataSource}
+          loading={isFetching || isLoading}
+          // dataSource={dataSource}
+          dataSource={UsersData?.data.data}
           columns={columns}
           pagination={{
-            pageSize,
-            total: 50,
-            current: currentPage,
-            onChange: handlePage,
+            current: page,
+            pageSize: per_page,
+            total: UsersData?.data?.total,
+            onChange: (page) => setPage(page),
           }}
           rowClassName={() => "hover:bg-transparent"}
         />
