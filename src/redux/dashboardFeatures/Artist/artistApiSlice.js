@@ -10,11 +10,16 @@ const artistApiSlice = baseApi.injectEndpoints({
       providesTags: ["artist"],
     }),
     artistPost: builder.mutation({
-      query: (formData) => ({
-        url: `/create-artist`,
-        method: "POST",
-        body: formData,
-      }),
+      query: (data) => {
+        return {
+          url: "/create-artist",
+          method: "POST",
+          body: data,
+          headers: {
+            Accept: "application/json",
+          },
+        };
+      },
       invalidatesTags: ["artist"],
     }),
   }),

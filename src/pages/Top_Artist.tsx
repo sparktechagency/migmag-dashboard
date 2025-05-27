@@ -7,23 +7,29 @@ import {
   Modal,
   Popconfirm,
   PopconfirmProps,
-  Select,
+  Radio,
   Table,
   Upload,
 } from "antd";
-import { Pencil, Search, Trash } from "lucide-react";
+import { CloudCog, Pencil, Search, Trash } from "lucide-react";
 import React, { useState } from "react";
 import TextArea from "antd/es/input/TextArea";
+import { Tag } from "antd";
+import { Checkbox } from 'antd';
+import type { CheckboxOptionType, GetProp } from 'antd';
+
 import { useArtistGetQuery } from "../redux/dashboardFeatures/Artist/artistApiSlice";
+import { useArtistPostMutation } from "../redux/dashboardFeatures/Artist/artistApiSlice";
 
 const Top_Artist = () => {
-  const [currentPage, setCurrentPage] = useState<number>(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [page, setPage] = useState(1);
   const [per_page, setPerPage] = useState(7);
+  const [checkedValues, setCheckedValues] = useState({})
   const [form] = Form.useForm();
   const [file, setFile] = useState<File | null>(null);
+
   const {
     data: artistData,
     isFetching,
@@ -35,152 +41,7 @@ const Top_Artist = () => {
   });
   const pageSize = 10;
 
-  const dataSource = [
-    {
-      key: "1",
-      name: "Samantha Rivers",
-      artist: "Charlie",
-      genre: "Slap house",
-      charlie: "Slap house",
-      bpm: "123",
-      keys: "C Major",
-      gender: "Male",
-      license: "Non-exclusive",
-      price: "€1,000",
-      avatar: "https://i.pravatar.cc/40?img=1",
-    },
-    {
-      key: "2",
-      name: "Marcus Thompson",
-      artist: "Charlie",
-      genre: "Slap house",
-      charlie: "Slap house",
-      bpm: "123",
-      keys: "C Major",
-      gender: "Male",
-      license: "Non-exclusive",
-      price: "€1,000",
-      avatar: "https://i.pravatar.cc/40?img=2",
-    },
-    {
-      key: "3",
-      name: "Elena Martinez",
-      artist: "Charlie",
-      genre: "Slap house",
-      charlie: "Slap house",
-      bpm: "123",
-      keys: "C Major",
-      gender: "Male",
-      license: "Non-exclusive",
-      price: "€1,000",
-      avatar: "https://i.pravatar.cc/40?img=3",
-    },
-    {
-      key: "4",
-      name: "Derek Johnson",
-      artist: "Charlie",
-      genre: "Slap house",
-      charlie: "Slap house",
-      bpm: "123",
-      keys: "C Major",
-      gender: "Male",
-      license: "Non-exclusive",
-      price: "€1,000",
-      avatar: "https://i.pravatar.cc/40?img=4",
-    },
-    {
-      key: "5",
-      name: "Tina Chen",
-      artist: "Charlie",
-      genre: "Slap house",
-      charlie: "Slap house",
-      bpm: "123",
-      keys: "C Major",
-      gender: "Male",
-      license: "Non-exclusive",
-      price: "€1,000",
-      avatar: "https://i.pravatar.cc/40?img=5",
-    },
-    {
-      key: "6",
-      name: "Oliver Brown",
-      artist: "Charlie",
-      genre: "Slap house",
-      charlie: "Slap house",
-      bpm: "123",
-      keys: "C Major",
-      gender: "Male",
-      license: "Non-exclusive",
-      price: "€1,000",
-      avatar: "https://i.pravatar.cc/40?img=6",
-    },
-    {
-      key: "7",
-      name: "Ava Patel",
-      artist: "Charlie",
-      genre: "Slap house",
-      charlie: "Slap house",
-      bpm: "123",
-      keys: "C Major",
-      gender: "Male",
-      license: "Non-exclusive",
-      price: "€1,000",
-      avatar: "https://i.pravatar.cc/40?img=7",
-    },
-    {
-      key: "8",
-      name: "Liam Smith",
-      artist: "Charlie",
-      genre: "Slap house",
-      charlie: "Slap house",
-      bpm: "123",
-      keys: "C Major",
-      gender: "Male",
-      license: "Non-exclusive",
-      price: "€1,000",
-      avatar: "https://i.pravatar.cc/40?img=8",
-    },
-    {
-      key: "9",
-      name: "Zoe Kim",
-      artist: "Charlie",
-      genre: "Slap house",
-      charlie: "Slap house",
-      bpm: "123",
-      keys: "C Major",
-      gender: "Male",
-      license: "Non-exclusive",
-      price: "€1,000",
-      avatar: "https://i.pravatar.cc/40?img=9",
-    },
-    {
-      key: "10",
-      name: "Shila",
-      artist: "Charlie",
-      genre: "Slap house",
-      charlie: "Slap house",
-      bpm: "123",
-      keys: "C Major",
-      gender: "Male",
-      license: "Non-exclusive",
-      price: "€1,000",
-      avatar: "https://i.pravatar.cc/40?img=10",
-    },
-    {
-      key: "11",
-      name: "Lorry Kim",
-      artist: "Charlie",
-      genre: "Slap house",
-      charlie: "Slap house",
-      bpm: "123",
-      keys: "C Major",
-      gender: "Male",
-      license: "Non-exclusive",
-      price: "€1,000",
-      avatar: "https://i.pravatar.cc/40?img=11",
-    },
-  ];
-  // get data
+  const [artistPost] = useArtistPostMutation()
 
   // delete
   const confirm: PopconfirmProps["onConfirm"] = (e) => {
@@ -206,20 +67,40 @@ const Top_Artist = () => {
     setIsModalOpen(false);
   };
 
-  const onFinish = (values) => {
-    const formData = new FormData();
-    formData.append("artistName", values.artistName);
-    formData.append("description", values.description);
+  const onFinish = async (values) => {
+    console.log(values.name,values.gender,values.description);
+    
 
-    if (file) {
-      formData.append("image", file);
+    const formData = new FormData();
+    formData.append("name", values.name);
+    formData.append("description", values.description);
+    formData.append("location", values.location);
+    formData.append("gender", values.gender);
+    formData.append("description", values.description);
+    if (checkedValues?.length > 1) {
+      formData.append("singer", checkedValues[0]);
+      formData.append("singer_writer", checkedValues[1]);
     }
 
-    console.log(
-      formData.forEach((value, key) => {
-        console.log(key, value);
-      })
-    );
+    if (file) {
+      formData.append("profile", file);
+    }
+   
+
+
+    
+
+
+    try {
+      const res = await artistPost(formData).unwrap();
+      console.log("Success:", res);
+    } catch (error) {
+      console.error("Post failed:", error);
+      if (error.data) {
+        console.log("Raw response:", error);
+      }
+    }
+
   };
 
   const handleBeforeUpload = (file: File) => {
@@ -238,16 +119,43 @@ const Top_Artist = () => {
       key: "name",
       render: (text, record) => (
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <Avatar src={record.avatar} />
+          <Avatar src={record.profile} />
           <h2>{text}</h2>
         </div>
       ),
     },
     {
+      title: "Singer Info",
+      key: "singer_info",
+      render: (_, record) => (
+        <div>
+          {record.singer && record.singer_writer ?
+            <div className="flex flex-row items-center gap-2">
+              <Tag color="blue">{record.singer}</Tag>
+              <Tag color="green">{record.singer_writer}</Tag>
+            </div>
+
+            : <Tag color="green"> {record.singer} {record.singer_writer} </Tag>}
+        </div>
+      )
+    },
+
+    {
       title: "Gender",
       dataIndex: "gender",
       key: "gender",
     },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+    },
+    {
+      title: "Location",
+      dataIndex: "location",
+      key: "location",
+    },
+
     {
       title: "Action",
       key: "action",
@@ -291,9 +199,16 @@ const Top_Artist = () => {
       ),
     },
   ];
-  console.log("====================================");
-  console.log(artistData);
-  console.log("====================================");
+
+  const optionsWithDisabled = [
+    { label: 'singer', value: 'singer' },
+    { label: 'singer_writer', value: 'singer_writer' },
+  ];
+
+  const onChange = (checkedValues) => {
+    console.log('Checked values: ', checkedValues);
+    setCheckedValues(checkedValues)
+  };
   return (
     <div>
       <div className="bg-white p-6 rounded-2xl">
@@ -353,9 +268,9 @@ const Top_Artist = () => {
               <Upload.Dragger
                 name="file"
                 beforeUpload={handleBeforeUpload}
-                className=" rounded-md"
+                className="rounded-md"
                 showUploadList={false}
-                // fileList={fileList}
+              // fileList={fileList}
               >
                 <Button className="flex">
                   <svg
@@ -375,12 +290,35 @@ const Top_Artist = () => {
               </Upload.Dragger>
             </Form.Item>
             {/* Artist name */}
-            <Form.Item label="Artist name" name="artistName" layout="vertical">
+            <Form.Item label="Artist name" name="name" layout="vertical">
               <Input placeholder="Enter singer name" required></Input>
             </Form.Item>
             <Form.Item label="Description" name="description" layout="vertical">
-              <TextArea placeholder="Enter singer name" required></TextArea>
+              <TextArea placeholder="Enter description" required></TextArea>
             </Form.Item>
+            <Form.Item label="location" name="location" layout="vertical">
+              <Input placeholder="Enter location" required></Input>
+            </Form.Item>
+            {/*Gender */}
+            <Form.Item
+              label="Gender"
+              name="gender"
+              className=""
+            // layout="vertical"
+            >
+              <Radio.Group className="flex  gap-3 mt-9 ">
+                <Radio value="male">Male</Radio>
+                <Radio value="female">Female</Radio>
+              </Radio.Group>
+            </Form.Item>
+            <Form.Item label="Singer Info	">
+            </Form.Item>
+            <Checkbox.Group
+
+              options={optionsWithDisabled}
+               defaultValue={['singer']}
+              onChange={onChange}
+            />
             <Form.Item>
               <div className="flex gap-4 mt-20">
                 <Button
