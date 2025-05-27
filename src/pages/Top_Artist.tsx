@@ -19,7 +19,10 @@ import { Checkbox } from "antd";
 import type { CheckboxOptionType, GetProp } from "antd";
 import Swal from "sweetalert2";
 
-import { useArtistGetQuery } from "../redux/dashboardFeatures/Artist/artistApiSlice";
+import {
+  useArtistDeteteMutation,
+  useArtistGetQuery,
+} from "../redux/dashboardFeatures/Artist/artistApiSlice";
 import { useArtistPostMutation } from "../redux/dashboardFeatures/Artist/artistApiSlice";
 
 const Top_Artist = () => {
@@ -30,6 +33,7 @@ const Top_Artist = () => {
   const [checkedValues, setCheckedValues] = useState({});
   const [form] = Form.useForm();
   const [file, setFile] = useState<File | null>(null);
+  const [formValue, setFormValue] = useState();
 
   const {
     data: artistData,
@@ -43,11 +47,20 @@ const Top_Artist = () => {
   const pageSize = 10;
 
   const [artistPost] = useArtistPostMutation();
+  const [artistDetete] = useArtistDeteteMutation();
 
   // delete
-  const confirm: PopconfirmProps["onConfirm"] = (e) => {
-    console.log(e);
-    message.success("Click on Yes");
+  const handleDelete: PopconfirmProps["onConfirm"] = async (id) => {
+    console.log(typeof id);
+
+    try {
+      const res = await artistDetete(id).unwrap();
+      if (res.success) {
+        message.success("Click on Yes");
+      }
+    } catch (errors) {
+      console.log(errors);
+    }
   };
 
   const cancel: PopconfirmProps["onCancel"] = (e) => {
@@ -56,8 +69,13 @@ const Top_Artist = () => {
   };
 
   // edit modal
-  const showModal = () => {
-    setIsModalOpen(true);
+  const showModal = (item: any) => {
+    if (item) {
+      setFormValue(item);
+      setIsModalOpen(true);
+    } else {
+      setIsModalOpen(true);
+    }
   };
 
   const handleOk = () => {
@@ -170,10 +188,10 @@ const Top_Artist = () => {
     {
       title: "Action",
       key: "action",
-      render: () => (
+      render: (_, record) => (
         <div className="flex gap-2">
           <svg
-            onClick={showModal}
+            onClick={() => showModal(record)}
             width="20"
             height="22"
             viewBox="0 0 20 22"
@@ -188,7 +206,7 @@ const Top_Artist = () => {
           <Popconfirm
             title="Delete the task"
             description="Are you sure to delete this task?"
-            onConfirm={confirm}
+            onConfirm={() => handleDelete(record.id)}
             onCancel={cancel}
             okText="Yes"
             cancelText="No"
@@ -220,6 +238,20 @@ const Top_Artist = () => {
     console.log("Checked values: ", checkedValues);
     setCheckedValues(checkedValues);
   };
+
+  React.useEffect(() => {
+    form.setFieldsValue({
+      file: formValue.file,
+      name: formValue.name,
+      location: formValue.location,
+      gender: formValue.gender,
+      description: formValue.description,
+      profile: formValue.profile,
+      singer: formValue.singer,
+      singer_writer: formValue.singer_writer,
+    });
+  }, []);
+
   return (
     <div>
       <div className="bg-white p-6 rounded-2xl">
@@ -274,7 +306,7 @@ const Top_Artist = () => {
           onCancel={handleCancel}
           footer={false}
         >
-          <Form onFinish={onFinish}>
+          <Form form={form} onFinish={onFinish}>
             <Form.Item className="bg-[#f5f5f5] border-dashed rounded-lg text-center py-4 my-4 flex items-center   justify-center  ">
               <Upload.Dragger
                 name="file"
