@@ -30,7 +30,6 @@ const Login: React.FC = () => {
       const token = res.data?.token;
       console.log(res);
       if (token) {
-        toast.success(res?.message);
         localStorage.setItem("admin_token", token);
         Swal.fire({
           icon: "success",
