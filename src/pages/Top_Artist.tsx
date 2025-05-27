@@ -142,11 +142,10 @@ const Top_Artist = () => {
               <Tag color="blue">{record.singer}</Tag>
               <Tag color="green">{record.singer_writer}</Tag>
             </div>
+          ) : record.singer_writer ? (
+            <Tag color="green">singer_writer</Tag>
           ) : (
-            <Tag color="green">
-              {" "}
-              {record.singer} {record.singer_writer}{" "}
-            </Tag>
+            <Tag color="blue">singer</Tag>
           )}
         </div>
       ),
