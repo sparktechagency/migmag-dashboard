@@ -249,6 +249,16 @@ const Top_Artist = () => {
       key: "gender",
     },
     {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+    },
+    {
       title: "Action",
       key: "action",
       render: () => (
