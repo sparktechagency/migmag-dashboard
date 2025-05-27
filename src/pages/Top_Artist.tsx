@@ -22,6 +22,8 @@ const Top_Artist = () => {
   const [searchValue, setSearchValue] = useState("");
   const [page, setPage] = useState(1);
   const [per_page, setPerPage] = useState(7);
+  const [form] = Form.useForm();
+  const [file, setFile] = useState<File | null>(null);
   const {
     data: artistData,
     isFetching,
@@ -205,7 +207,24 @@ const Top_Artist = () => {
   };
 
   const onFinish = (values) => {
-    console.log("Form values:", values);
+    const formData = new FormData();
+    formData.append("artistName", values.artistName);
+    formData.append("description", values.description);
+
+    if (file) {
+      formData.append("image", file);
+    }
+
+    console.log(
+      formData.forEach((value, key) => {
+        console.log(key, value);
+      })
+    );
+  };
+
+  const handleBeforeUpload = (file: File) => {
+    setFile(file);
+    return false;
   };
 
   const handleSearchChange = (e) => {
@@ -327,27 +346,17 @@ const Top_Artist = () => {
           open={isModalOpen}
           onOk={handleOk}
           onCancel={handleCancel}
-          footer={
-            <div className="flex gap-4 ">
-              <Button
-                onClick={handleCancel}
-                className="w-full  bg-[#fff5f4] text-[#FF3B30] border-none rounded-2xl p-5 font-bold font-degular text-xl"
-              >
-                Cancel
-              </Button>
-              <Button
-                htmlType="submit"
-                onClick={handleOk}
-                className="w-full bg-[#E7F056] border-none rounded-2xl p-5 font-bold font-degular text-xl"
-              >
-                Save changes
-              </Button>
-            </div>
-          }
+          footer={false}
         >
-          <Form onFinish={onFinish} style={{ paddingBottom: "100px" }}>
-            <Form.Item className="bg-[#f5f5f5]  border-dashed rounded-lg text-center py-4 ">
-              <Upload className="flex justify-center ">
+          <Form onFinish={onFinish}>
+            <Form.Item className="bg-[#f5f5f5] border-dashed rounded-lg text-center py-4 my-4 flex items-center   justify-center  ">
+              <Upload.Dragger
+                name="file"
+                beforeUpload={handleBeforeUpload}
+                className=" rounded-md"
+                showUploadList={false}
+                // fileList={fileList}
+              >
                 <Button className="flex">
                   <svg
                     width="19"
@@ -361,9 +370,9 @@ const Top_Artist = () => {
                       fill="black"
                     />
                   </svg>
+                  Upload
                 </Button>
-                Upload
-              </Upload>
+              </Upload.Dragger>
             </Form.Item>
             {/* Artist name */}
             <Form.Item label="Artist name" name="artistName" layout="vertical">
@@ -371,6 +380,23 @@ const Top_Artist = () => {
             </Form.Item>
             <Form.Item label="Description" name="description" layout="vertical">
               <TextArea placeholder="Enter singer name" required></TextArea>
+            </Form.Item>
+            <Form.Item>
+              <div className="flex gap-4 mt-20">
+                <Button
+                  onClick={handleCancel}
+                  className="w-full  bg-[#fff5f4] text-[#FF3B30] border-none rounded-2xl p-5 font-bold font-degular text-xl"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  htmlType="submit"
+                  // onClick={handleOk}
+                  className="w-full bg-[#E7F056] border-none rounded-2xl p-5 font-bold font-degular text-xl"
+                >
+                  Save changes
+                </Button>
+              </div>
             </Form.Item>
           </Form>
         </Modal>
