@@ -20,7 +20,6 @@ import Categories from "../pages/Categories";
 import Register from "../pages/register";
 
 const handleNotifications = (event: React.MouseEvent<HTMLDivElement>) => {
-  console.log("16++++++++++++++Notification clicked!");
   // Add your notification handling logic here
 };
 

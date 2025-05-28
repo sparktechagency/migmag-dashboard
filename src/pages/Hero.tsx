@@ -15,14 +15,12 @@ const Hero = () => {
       url: "",
     },
   ]);
-  console.log(fileList);
 
   const onChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
     setFileList(newFileList);
   };
   // input from functionality
   const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
   };
 
   return (

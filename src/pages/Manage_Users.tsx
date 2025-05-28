@@ -33,9 +33,7 @@ const Manage_Users = () => {
         id: selectId,
         is_banned: values.radio,
       }).unwrap();
-      console.log(res);
     } catch (errors) {
-      console.log(errors);
     }
   };
 
@@ -63,7 +61,7 @@ const Manage_Users = () => {
       key: "first_name",
       render: (name, record) => (
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <Avatar src={record.avatar} />
+          <Avatar src={`http://137.59.180.219:8008/${record.profile}`} />
           <h2>{name}</h2>
         </div>
       ),

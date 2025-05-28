@@ -41,7 +41,6 @@ const Seller_Profile = (props: Props) => {
   const [selectedValue, setSelectedValue] = useState();
   const handleSelectChange = (value: string) => {
     setSelectedValue(value);
-    console.log("Selected", value);
   };
 
   const selectOptions = [
@@ -144,13 +143,11 @@ const Seller_Profile = (props: Props) => {
   };
 
   const confirmApprove = () => {
-    console.log("Approved:", userData);
     setOpenModal(false);
     // Add approve logic here
   };
 
   const confirmDelete = () => {
-    console.log("Deleted:", userData);
     setOpenDeleteModal(false);
     // Add delete logic here
   };

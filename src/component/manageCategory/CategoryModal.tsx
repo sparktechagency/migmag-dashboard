@@ -14,9 +14,6 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
   const [form] = Form.useForm();
 
   const onFinish = (data) => {
-    console.log("====================================");
-    console.log(data);
-    console.log("====================================");
   };
 
   const handleCancel = () => {

@@ -12,24 +12,26 @@ import {
   UploadFile,
   UploadProps,
 } from "antd";
-import { Divide, Pencil, Search, Trash } from "lucide-react";
+import { Search } from "lucide-react";
 import React, { useState } from "react";
-import { DownloadOutlined, EditOutlined } from "@ant-design/icons";
 import { message, Popconfirm } from "antd";
-import { SelectCommonPlacement } from "antd/es/_util/motion";
-import ImgCrop from "antd-img-crop";
-
+import {
+  useGenreGetQuery,
+  useKeyGetQuery,
+  useLicenseGetQuery,
+  useTypeGetQuery
+} from "../redux/dashboardFeatures/catagory/catagoryApiSlice";
+import { useArtistGetQuery } from "../redux/dashboardFeatures/Artist/artistApiSlice";
 const Manage_Song = () => {
   const [form] = Form.useForm();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [audio, setAudio] = useState()
   const confirm: PopconfirmProps["onConfirm"] = (e) => {
-    console.log(e);
     message.success("Click on Yes");
   };
 
   const cancel: PopconfirmProps["onCancel"] = (e) => {
-    console.log(e);
     message.error("Click on No");
   };
 
@@ -40,13 +42,20 @@ const Manage_Song = () => {
       uid: "-1",
       name: "image.png",
       status: "done",
-      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+      url: "",
     },
   ]);
+  const [file, setFile] = useState()
 
   const onChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
     setFileList(newFileList);
   };
+
+  //  modal option 
+  const { data: genres, refetch } = useGenreGetQuery({});
+  const { data: keys } = useKeyGetQuery({});
+  const { data: licens } = useLicenseGetQuery({});
+  const { data: type } = useTypeGetQuery({ });
 
   const dataSource = [
     {
@@ -304,44 +313,27 @@ const Manage_Song = () => {
   };
 
   const onFinish = (values: any) => {
-    console.log("Form Values:", values);
+
+    const formData = new FormData();
+    formData.append("song", file as any);
+    formData.append("song_poster", file as any);
   };
+  const {
+    data: artistData,
+  } = useArtistGetQuery({});
 
-  const artistOptions = [
-    { value: "samantha_rivers", label: "Samantha Rivers" },
-    { value: "alex_jones", label: "Alex Jones" },
-    { value: "jessica_smith", label: "Jessica Smith" },
-  ];
-
-  const genreOptions = [
-    { value: "hiphop", label: "Hip-Hop" },
-    { value: "pop", label: "Pop" },
-    { value: "rock", label: "Rock" },
-  ];
-
-  const bpmOptions = [
-    { value: "60", label: "60 BPM" },
-    { value: "90", label: "90 BPM" },
-    { value: "120", label: "120 BPM" },
-  ];
-
-  const keyOptions = [
-    { value: "C", label: "C" },
-    { value: "D", label: "D" },
-    { value: "E", label: "E" },
-  ];
-
-  const typeOptions = [
-    { value: "instrumental", label: "Instrumental" },
-    { value: "vocal", label: "Vocal" },
-    { value: "remix", label: "Remix" },
-  ];
-
-  const licenseOptions = [
-    { value: "free", label: "Free" },
-    { value: "standard", label: "Standard" },
-    { value: "premium", label: "Premium" },
-  ];
+  const handleBeforeUpload = (file: File) => {
+    setFile(file);
+    return false;
+  };
+  const hendelAudioFile = (audioFile) => {
+    setAudio(audioFile)
+    const isAudio = audioFile.type.startsWith("audio/");
+    if (!isAudio) {
+      message.error("You can only upload audio files!");
+    }
+    return isAudio || Upload.LIST_IGNORE; // prevents upload if not audio
+  }
 
   return (
     <div>
@@ -398,15 +390,10 @@ const Manage_Song = () => {
           <Form form={form} onFinish={onFinish} style={{ paddingBottom: "" }}>
             <Form.Item className="bg-[#f5f5f5] border-dashed rounded-lg text-center py-4 ">
               <Upload
+                maxCount={1}
                 accept="audio/*"
                 showUploadList={true} // set to false if you don't want to show the uploaded file name
-                beforeUpload={(file) => {
-                  const isAudio = file.type.startsWith("audio/");
-                  if (!isAudio) {
-                    message.error("You can only upload audio files!");
-                  }
-                  return isAudio || Upload.LIST_IGNORE; // prevents upload if not audio
-                }}
+                beforeUpload={(audioFile) => hendelAudioFile(audioFile)}
               >
                 <Button className="flex items-center gap-2">
                   <svg
@@ -435,52 +422,44 @@ const Manage_Song = () => {
                 </p>
 
                 <div className="bg-[#f5f5f5] border border-dashed border-gray-300 rounded-lg w-full py-6 flex justify-center">
-                  <ImgCrop rotationSlider>
-                    <Upload
-                      action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
-                      listType="picture-card"
-                      fileList={fileList}
-                      onChange={onChange}
-                      maxCount={1}
-                      className="text-center"
+                  <Form.Item className="bg-[#f5f5f5] border-dashed rounded-lg text-center py-4 my-4 flex items-center w-full justify-center  ">
+                    <Upload.Dragger
+                      name="file"
+                      beforeUpload={handleBeforeUpload}
+                      className="rounded-md"
+                      showUploadList={true}
                     >
-                      {fileList.length < 1 && (
-                        <div className="flex flex-col items-center justify-center text-gray-500">
-                          <svg
-                            width="40"
-                            height="40"
-                            viewBox="0 0 54 54"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M36.3339 12.0667H40.0672M53.1339 34.4423L41.9339 23.2496L30.7339 34.4423L15.8005 15.7878L0.867188 34.4667M4.60052 0.866699H49.4005C51.4624 0.866699 53.1339 2.53817 53.1339 4.60003V49.4C53.1339 51.4619 51.4624 53.1334 49.4005 53.1334H4.60052C2.53866 53.1334 0.867188 51.4619 0.867188 49.4V4.60003C0.867188 2.53817 2.53866 0.866699 4.60052 0.866699Z"
-                              stroke="#5D5D5D"
-                            />
-                          </svg>
-                          <p className="mt-2 text-sm">
-                            Click or drag file to upload
-                          </p>
-                        </div>
-                      )}
-                    </Upload>
-                  </ImgCrop>
+                      <Button className="flex">
+                        <svg
+                          width="19"
+                          height="20"
+                          viewBox="0 0 19 20"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M5.5 6.99976V8.99976H2.5V17.9998H16.5V8.99976H13.5V6.99976H16.5C17.0304 6.99976 17.5391 7.21047 17.9142 7.58555C18.2893 7.96062 18.5 8.46933 18.5 8.99976V17.9998C18.5 18.5302 18.2893 19.0389 17.9142 19.414C17.5391 19.789 17.0304 19.9998 16.5 19.9998H2.5C1.96957 19.9998 1.46086 19.789 1.08579 19.414C0.710714 19.0389 0.5 18.5302 0.5 17.9998V8.99976C0.5 8.46933 0.710714 7.96062 1.08579 7.58555C1.46086 7.21047 1.96957 6.99976 2.5 6.99976H5.5ZM10.384 0.468761L13.743 3.82676C13.9306 4.0144 14.0361 4.2689 14.0361 4.53426C14.0361 4.79962 13.9306 5.05412 13.743 5.24176C13.5554 5.4294 13.3009 5.53482 13.0355 5.53482C12.7701 5.53482 12.5156 5.4294 12.328 5.24176L10.5 3.41276V12.9998C10.5 13.265 10.3946 13.5193 10.2071 13.7069C10.0196 13.8944 9.76522 13.9998 9.5 13.9998C9.23478 13.9998 8.98043 13.8944 8.79289 13.7069C8.60536 13.5193 8.5 13.265 8.5 12.9998V3.41276L6.672 5.24176C6.57909 5.33467 6.46879 5.40837 6.3474 5.45865C6.226 5.50894 6.0959 5.53482 5.9645 5.53482C5.83311 5.53482 5.703 5.50894 5.5816 5.45865C5.46021 5.40837 5.34991 5.33467 5.257 5.24176C5.16409 5.14885 5.09039 5.03855 5.04011 4.91716C4.98982 4.79576 4.96394 4.66566 4.96394 4.53426C4.96394 4.40287 4.98982 4.27276 5.04011 4.15136C5.09039 4.02997 5.16409 3.91967 5.257 3.82676L8.617 0.468761C8.85139 0.234575 9.16917 0.103027 9.5005 0.103027C9.83183 0.103027 10.1496 0.234575 10.384 0.468761Z"
+                            fill="black"
+                          />
+                        </svg>
+                        Upload
+                      </Button>
+                    </Upload.Dragger>
+                  </Form.Item>
                 </div>
               </div>
             </Form.Item>
-
-            {/* Artist name */}
             <Form.Item label="Artist name" name="artistName" layout="vertical">
               <Select
                 className="bg-[#f5f5f5] h-12 rounded-lg"
-                defaultValue="Samantha Rivers"
+                defaultValue={artistData?.data?.data[0]?.name}
                 style={{ width: "100%" }}
                 // popupMatchSelectWidth={false}
                 placement={"bottomLeft"}
               >
-                {artistOptions.map((item, ind) => (
-                  <Select.Option key={ind} value={item.value}>
-                    {item.label}
+                {artistData?.data?.data?.map((item, ind) => (
+                  <Select.Option key={ind} value={item.name}>
+                    {item.name}
                   </Select.Option>
                 ))}
               </Select>
@@ -495,14 +474,14 @@ const Manage_Song = () => {
               >
                 <Select
                   className="bg-[#f5f5f5] h-12 rounded-lg"
-                  defaultValue="Samantha Rivers"
+                  defaultValue={genres?.data?.[0]?.name}
                   style={{ width: "100%" }}
                   popupMatchSelectWidth={false}
                   placement={"bottomLeft"}
                 >
-                  {genreOptions.map((item, ind) => (
-                    <Select.Option key={ind} value={item.value}>
-                      {item.label}
+                  {genres?.data?.map((item, ind) => (
+                    <Select.Option key={ind} value={item.name}>
+                      {item.name}
                     </Select.Option>
                   ))}
                 </Select>
@@ -515,19 +494,7 @@ const Manage_Song = () => {
                 name="BPM"
                 layout="vertical"
               >
-                <Select
-                  className="bg-[#f5f5f5] h-12 rounded-lg"
-                  defaultValue="Samantha Rivers"
-                  style={{ width: "100%" }}
-                  popupMatchSelectWidth={false}
-                  placement={"bottomLeft"}
-                >
-                  {bpmOptions.map((item, ind) => (
-                    <Select.Option key={ind} value={item.value}>
-                      {item.label}
-                    </Select.Option>
-                  ))}
-                </Select>
+                <Input type="number" placeholder="Enter BPM " required></Input>
               </Form.Item>
             </div>
             {/* Key */}
@@ -545,9 +512,9 @@ const Manage_Song = () => {
                   popupMatchSelectWidth={false}
                   placement={"bottomLeft"}
                 >
-                  {keyOptions.map((item, ind) => (
-                    <Select.Option key={ind} value={item.value}>
-                      {item.label}
+                  {keys?.data?.map((item, ind) => (
+                    <Select.Option key={ind} value={item?.name}>
+                      {item?.name}
                     </Select.Option>
                   ))}
                 </Select>
@@ -566,9 +533,9 @@ const Manage_Song = () => {
                   popupMatchSelectWidth={false}
                   placement={"bottomLeft"}
                 >
-                  {typeOptions.map((item, ind) => (
-                    <Select.Option key={ind} value={item.value}>
-                      {item.label}
+                  {type?.data?.map((item, ind) => (
+                    <Select.Option key={ind} value={item?.name}>
+                      {item?.name}
                     </Select.Option>
                   ))}
                 </Select>
@@ -599,9 +566,9 @@ const Manage_Song = () => {
                   popupMatchSelectWidth={false}
                   placement={"bottomLeft"}
                 >
-                  {licenseOptions.map((item, ind) => (
-                    <Select.Option key={ind} value={item.value}>
-                      {item.label}
+                  {licens?.data?.map((item, ind) => (
+                    <Select.Option key={ind} value={item?.name}>
+                      {item?.name}
                     </Select.Option>
                   ))}
                 </Select>
@@ -613,7 +580,7 @@ const Manage_Song = () => {
               label="Gender"
               name="gender"
               className=""
-              // layout="vertical"
+            // layout="vertical"
             >
               <Radio.Group className="flex  gap-3 mt-9 ">
                 <Radio value="Male">Male</Radio>

@@ -1,3 +1,4 @@
+import { ITopArtis } from "../../../pages/Top_Artist";
 import { baseApi } from "../../features/baseApi";
 
 const artistApiSlice = baseApi.injectEndpoints({
@@ -29,6 +30,15 @@ const artistApiSlice = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["artist"],
     }),
+    artistUpdate: builder.mutation({
+      query: ({id, ...data}) => ({
+        url: `/delete-artist/${id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["artist"],
+    }), 
+
   }),
 });
 

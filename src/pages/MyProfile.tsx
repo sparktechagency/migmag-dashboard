@@ -35,7 +35,6 @@ const MyProfile = () => {
   };
   // input from functionality
   const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
   };
 
   return (

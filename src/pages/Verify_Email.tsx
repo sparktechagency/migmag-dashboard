@@ -26,7 +26,6 @@ const Verify_Email: React.FC = () => {
 
   // Define the `onChange` handler with the correct type
   const onChange = (text: string) => {
-    console.log("onChange:", text);
   };
 
   // const handleVerify = () => {
@@ -40,7 +39,6 @@ const Verify_Email: React.FC = () => {
   const onFinish = async (values: ForgetPasswordFormValues) => {
     try {
       const res = await VerifyEmail(values).unwrap();
-      console.log(res);
       if (res.success) {
         Swal.fire({
           icon: "success",

@@ -25,12 +25,14 @@ import {
 } from "../redux/dashboardFeatures/Artist/artistApiSlice";
 import { useArtistPostMutation } from "../redux/dashboardFeatures/Artist/artistApiSlice";
 
+
+
 const Top_Artist = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [page, setPage] = useState(1);
   const [per_page, setPerPage] = useState(7);
-  const [checkedValues, setCheckedValues] = useState({});
+  const [checkedValues, setCheckedValues] = useState<string[]>([]);
   const [form] = Form.useForm();
   const [file, setFile] = useState<File | null>(null);
   const [formValue, setFormValue] = useState();
@@ -44,14 +46,12 @@ const Top_Artist = () => {
     page: page,
     per_page: per_page,
   });
-  const pageSize = 10;
 
   const [artistPost] = useArtistPostMutation();
   const [artistDetete] = useArtistDeteteMutation();
 
   // delete
   const handleDelete: PopconfirmProps["onConfirm"] = async (id) => {
-    console.log(typeof id);
 
     try {
       const res = await artistDetete(id).unwrap();
@@ -59,19 +59,19 @@ const Top_Artist = () => {
         message.success("Click on Yes");
       }
     } catch (errors) {
-      console.log(errors);
     }
   };
 
   const cancel: PopconfirmProps["onCancel"] = (e) => {
-    console.log(e);
     message.error("Click on No");
   };
 
   // edit modal
-  const showModal = (item: any) => {
+  const showModal = async(item: any) => {
     if (item) {
       setFormValue(item);
+      const res =  await 
+
       setIsModalOpen(true);
     } else {
       setIsModalOpen(true);
@@ -87,14 +87,13 @@ const Top_Artist = () => {
   };
 
   const onFinish = async (values) => {
-    console.log(values.name, values.gender, values.description);
 
     const formData = new FormData();
-    formData.append("name", values.name);
-    formData.append("description", values.description);
-    formData.append("location", values.location);
-    formData.append("gender", values.gender);
-    formData.append("description", values.description);
+    formData.append("name", values?.name);
+    formData.append("description", values?.description);
+    formData.append("location", values?.location);
+    formData.append("gender", values?.gender);
+    formData.append("description", values?.description);
     if (checkedValues?.length > 1) {
       formData.append("singer", checkedValues[0]);
       formData.append("singer_writer", checkedValues[1]);
@@ -105,7 +104,6 @@ const Top_Artist = () => {
     }
     try {
       const res = await artistPost(formData).unwrap();
-      console.log(res);
 
       if (res.success) {
         Swal.fire({
@@ -145,7 +143,7 @@ const Top_Artist = () => {
       key: "name",
       render: (text, record) => (
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <Avatar src={record.profile} />
+          <Avatar src={`http://137.59.180.219:8008/${record.profile}` } />
           <h2>{text}</h2>
         </div>
       ),
@@ -235,20 +233,17 @@ const Top_Artist = () => {
   ];
 
   const onChange = (checkedValues) => {
-    console.log("Checked values: ", checkedValues);
     setCheckedValues(checkedValues);
   };
 
   React.useEffect(() => {
     form.setFieldsValue({
-      file: formValue.file,
-      name: formValue.name,
-      location: formValue.location,
-      gender: formValue.gender,
-      description: formValue.description,
-      profile: formValue.profile,
-      singer: formValue.singer,
-      singer_writer: formValue.singer_writer,
+      name: formValue?.location,
+      gender: formValue?.gender,
+      description: formValue?.description,
+      profile: formValue?.profile,
+      singer: formValue?.singer,
+      singer_writer: formValue?.singer_writer,
     });
   }, []);
 
@@ -333,20 +328,21 @@ const Top_Artist = () => {
             </Form.Item>
             {/* Artist name */}
             <Form.Item label="Artist name" name="name" layout="vertical">
-              <Input placeholder="Enter singer name" required></Input>
+              <Input
+               defaultValue={formValue?.name} 
+                placeholder="Enter singer name" required></Input>
             </Form.Item>
             <Form.Item label="Description" name="description" layout="vertical">
-              <TextArea placeholder="Enter description" required></TextArea>
+              <TextArea defaultValue={formValue?.description}  placeholder="Enter description" required></TextArea>
             </Form.Item>
             <Form.Item label="location" name="location" layout="vertical">
-              <Input placeholder="Enter location" required></Input>
+              <Input defaultValue={formValue?.location} placeholder="Enter location" required></Input>
             </Form.Item>
             {/*Gender */}
             <Form.Item
               label="Gender"
               name="gender"
               className=""
-              // layout="vertical"
             >
               <Radio.Group className="flex  gap-3 mt-9 ">
                 <Radio value="male">Male</Radio>

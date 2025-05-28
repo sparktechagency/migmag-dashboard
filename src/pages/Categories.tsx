@@ -62,9 +62,6 @@ const Categories: React.FC = () => {
       if (result.isConfirmed) {
         try {
           const res = await genreDelete(id);
-
-          console.log(res, "delete");
-
           if (res?.data?.success) {
             Swal.fire("Deleted!", res.data.message, "success");
             refetch(); // fetch genre list again
@@ -96,8 +93,6 @@ const Categories: React.FC = () => {
         try {
           const res = await keyDelete(id);
 
-          console.log(res, "delete");
-
           if (res?.data?.success) {
             Swal.fire("Deleted!", res.data.message, "success");
             refetch(); // fetch genre list again
@@ -128,9 +123,6 @@ const Categories: React.FC = () => {
       if (result.isConfirmed) {
         try {
           const res = await licenseDelete(id);
-
-          console.log(res, "delete");
-
           if (res?.data?.success) {
             Swal.fire("Deleted!", res.data.message, "success");
             refetch(); // fetch genre list again
@@ -161,9 +153,6 @@ const Categories: React.FC = () => {
       if (result.isConfirmed) {
         try {
           const res = await typeDelete(id);
-
-          console.log(res, "delete");
-
           if (res?.data?.success) {
             Swal.fire("Deleted!", res.data.message, "success");
             refetch(); // fetch genre list again
@@ -198,7 +187,6 @@ const Categories: React.FC = () => {
             refetch();
           }
         } catch (errors) {
-          console.log(errors);
         }
       } else if (activeTab === "Key") {
         const infoKey = {
@@ -212,7 +200,7 @@ const Categories: React.FC = () => {
             refetch();
           }
         } catch (errors) {
-          console.log(errors);
+     
         }
       } else if (activeTab === "License") {
         const infoLicense = {
@@ -226,7 +214,6 @@ const Categories: React.FC = () => {
             refetch();
           }
         } catch (errors) {
-          console.log(errors);
         }
       } else if (activeTab === "Type") {
         const infoType = {
@@ -240,7 +227,6 @@ const Categories: React.FC = () => {
             refetch();
           }
         } catch (errors) {
-          console.log(errors);
         }
       }
 

@@ -1,34 +1,23 @@
 import {
   Avatar,
-  Button,
-  Form,
-  Input,
-  Modal,
   PopconfirmProps,
-  Radio,
   Table,
-  Upload,
 } from "antd";
-import { Divide, Pencil, Search, Trash } from "lucide-react";
 import React, { useState } from "react";
-import { DownloadOutlined, EditOutlined } from "@ant-design/icons";
-import { message, Popconfirm } from "antd";
+import { message} from "antd";
+import {useTransactionGetQuery} from "../redux/dashboardFeatures/Transaction/transactionApiSlice"
 
 const Transactions = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [openModel, setOpenModel] = useState<boolean>(false);
-  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
-  const [userData, setUserData] = useState<UserAction | null>(null);
-  const [role, setRole] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const {data: transactionData, isFetching, isLoading} = useTransactionGetQuery()
+
 
   const confirm: PopconfirmProps["onConfirm"] = (e) => {
-    console.log(e);
     message.success("Click on Yes");
   };
 
   const cancel: PopconfirmProps["onCancel"] = (e) => {
-    console.log(e);
     message.error("Click on No");
   };
 
@@ -204,7 +193,7 @@ const Transactions = () => {
   };
 
   const onFinish = (e) => {
-    console.log(e);
+
   };
 
   return (
@@ -223,6 +212,7 @@ const Transactions = () => {
       </div>
       <div className="py-8">
         <Table
+         loading={isFetching || isLoading}
           dataSource={dataSource}
           columns={columns}
           pagination={{

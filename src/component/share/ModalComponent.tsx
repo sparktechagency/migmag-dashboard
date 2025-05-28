@@ -56,7 +56,6 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
   const [inputValue, setInputValue] = useState(1);
 
   const onChange = (e: RadioChangeEvent) => {
-    console.log("radio checked", e.target.value);
     setInputValue(e.target.value);
   };
 

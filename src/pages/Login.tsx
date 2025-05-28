@@ -20,7 +20,6 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
 
   const onFinish = async (values: LoginFormValues) => {
-    console.log(values, "login daty");
     const loginInfo = {
       email: values.email,
       password: values.password,
@@ -28,7 +27,6 @@ const Login: React.FC = () => {
     try {
       const res = await postLoginInfo(loginInfo).unwrap();
       const token = res.data?.token;
-      console.log(res);
       if (token) {
         localStorage.setItem("admin_token", token);
         Swal.fire({

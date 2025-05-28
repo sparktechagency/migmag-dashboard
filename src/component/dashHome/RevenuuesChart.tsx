@@ -40,8 +40,6 @@ const RevenueChart: React.FC = () => {
 
 const handleSelectChange = (value: string) => {
   setSelectedValue(value);
-  console.log('Selected', value);
-
 }
 const selectOptions =[
   { value: '1', label: 'revenue' },

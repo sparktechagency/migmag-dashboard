@@ -14,7 +14,6 @@ const Register: React.FC = () => {
   const navigate = useNavigate();
 
   const onFinish = (values: LoginFormValues) => {
-    console.log(values);
     navigate("/");
   };
 
