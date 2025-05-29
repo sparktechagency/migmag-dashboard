@@ -12,9 +12,10 @@ import {
   UploadFile,
   UploadProps,
 } from "antd";
-import { Search } from "lucide-react";
+import { Search, Vault } from "lucide-react";
 import React, { useState } from "react";
 import { message, Popconfirm } from "antd";
+import Swal from "sweetalert2";
 import {
   useGenreGetQuery,
   useKeyGetQuery,
@@ -22,6 +23,8 @@ import {
   useTypeGetQuery
 } from "../redux/dashboardFeatures/catagory/catagoryApiSlice";
 import { useArtistGetQuery } from "../redux/dashboardFeatures/Artist/artistApiSlice";
+import { useCreateNewSongMutation } from "../redux/dashboardFeatures/manage_song/songApiSlice";
+
 const Manage_Song = () => {
   const [form] = Form.useForm();
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -52,10 +55,12 @@ const Manage_Song = () => {
   };
 
   //  modal option 
-  const { data: genres, refetch } = useGenreGetQuery({});
-  const { data: keys } = useKeyGetQuery({});
-  const { data: licens } = useLicenseGetQuery({});
-  const { data: type } = useTypeGetQuery({ });
+  const { data: genres, isLoading: genresLoading } = useGenreGetQuery([]);
+  const { data: keys, isLoading: keysLoading } = useKeyGetQuery([]);
+  const { data: licens, isLoading: licensLoading } = useLicenseGetQuery([]);
+  const { data: type, isLoading: typeLoading } = useTypeGetQuery([]);
+  const [createNewSong] = useCreateNewSongMutation();
+
 
   const dataSource = [
     {
@@ -312,14 +317,58 @@ const Manage_Song = () => {
     setIsModalOpen(false);
   };
 
-  const onFinish = (values: any) => {
+  const onFinish = async (values: any) => {
 
+      if (!file || !audio) {
+    message.error("Please upload both audio and thumbnail files");
+    return;
+  }
+    console.log("gender", values.gender);
+    
+    console.log(values, file, audio);
     const formData = new FormData();
-    formData.append("song", file as any);
-    formData.append("song_poster", file as any);
+    formData.append("song", values?.song?.file.originFileObj);
+    formData.append("song_poster", values?.image?.file.originFileObj);
+    formData.append("artist_id", values.artistName);
+    formData.append("genre_id", values.genre);
+    formData.append("key_id", values.key);
+    formData.append("license_id", values.License);
+    formData.append("type_id", values.type);
+    formData.append("bpm", values.BPM);
+    formData.append("gender", values.gender);
+    formData.append("is_published", values.publishStatus);
+
+    try {
+      const res = await createNewSong(formData).unwrap();
+
+      if (res.success) {
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: res?.message,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: res?.message,
+        });
+        console.log(res?.message);
+
+      }
+    } catch (errors) {
+      console.log(errors);
+
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: errors?.message,
+      });
+    }
   };
   const {
     data: artistData,
+    isLoading: artistDataLoading
   } = useArtistGetQuery({});
 
   const handleBeforeUpload = (file: File) => {
@@ -334,6 +383,7 @@ const Manage_Song = () => {
     }
     return isAudio || Upload.LIST_IGNORE; // prevents upload if not audio
   }
+
 
   return (
     <div>
@@ -381,18 +431,19 @@ const Manage_Song = () => {
         {/* edit modal */}
         <Modal
           title="Basic Modal"
-          className="!w-[650px] "
+          className="!w-[650px] !top-10 !max-h-[90vh] overflow-y-scroll rounded-lg "
           open={isModalOpen}
           onOk={handleOk}
           onCancel={handleCancel}
           footer={false}
+
         >
-          <Form form={form} onFinish={onFinish} style={{ paddingBottom: "" }}>
-            <Form.Item className="bg-[#f5f5f5] border-dashed rounded-lg text-center py-4 ">
+          <Form form={form} onFinish={onFinish} style={{ paddingBottom: "" }} layout="vertical">
+            <Form.Item name="song" rules={[{ required: true, message: 'Upload a audio file!' }]} className="bg-[#f5f5f5] border-dashed text-center py-4 ">
               <Upload
                 maxCount={1}
                 accept="audio/*"
-                showUploadList={true} // set to false if you don't want to show the uploaded file name
+                showUploadList={true} 
                 beforeUpload={(audioFile) => hendelAudioFile(audioFile)}
               >
                 <Button className="flex items-center gap-2">
@@ -412,7 +463,7 @@ const Manage_Song = () => {
                 </Button>
               </Upload>
             </Form.Item>
-            <Form.Item className="w-full">
+            <div   className="w-full">
               <h2 className="font-degular text-base font-semibold">
                 Thumbnail
               </h2>
@@ -422,7 +473,7 @@ const Manage_Song = () => {
                 </p>
 
                 <div className="bg-[#f5f5f5] border border-dashed border-gray-300 rounded-lg w-full py-6 flex justify-center">
-                  <Form.Item className="bg-[#f5f5f5] border-dashed rounded-lg text-center py-4 my-4 flex items-center w-full justify-center  ">
+                  <Form.Item name={"image"} rules={[{ required: true, message: 'Upload a Thumbnail!' }]} className="bg-[#f5f5f5] border-dashed rounded-lg text-center py-4 my-4 flex items-center w-full justify-center  ">
                     <Upload.Dragger
                       name="file"
                       beforeUpload={handleBeforeUpload}
@@ -448,21 +499,20 @@ const Manage_Song = () => {
                   </Form.Item>
                 </div>
               </div>
-            </Form.Item>
-            <Form.Item label="Artist name" name="artistName" layout="vertical">
+            </div>
+            <Form.Item label="Artist name" name="artistName" rules={[{ required: true, message: 'Please select an artist name!' }]}>
               <Select
+                loading={artistDataLoading}
                 className="bg-[#f5f5f5] h-12 rounded-lg"
                 defaultValue={artistData?.data?.data[0]?.name}
-                style={{ width: "100%" }}
-                // popupMatchSelectWidth={false}
                 placement={"bottomLeft"}
-              >
-                {artistData?.data?.data?.map((item, ind) => (
-                  <Select.Option key={ind} value={item.name}>
-                    {item.name}
-                  </Select.Option>
-                ))}
-              </Select>
+                options={artistData?.data?.data?.map(im => {
+                  return {
+                    label: im?.name,
+                    value: im?.id
+                  }
+                })}
+              />
             </Form.Item>
             <div className="flex gap-3">
               {/* Genre */}
@@ -470,21 +520,23 @@ const Manage_Song = () => {
                 className="flex-1"
                 label="Genre"
                 name="genre"
-                layout="vertical"
+                rules={[{ required: true, message: 'Please select an Genre!' }]}
+
               >
                 <Select
+                  loading={genresLoading}
                   className="bg-[#f5f5f5] h-12 rounded-lg"
                   defaultValue={genres?.data?.[0]?.name}
                   style={{ width: "100%" }}
                   popupMatchSelectWidth={false}
                   placement={"bottomLeft"}
-                >
-                  {genres?.data?.map((item, ind) => (
-                    <Select.Option key={ind} value={item.name}>
-                      {item.name}
-                    </Select.Option>
-                  ))}
-                </Select>
+                  options={genres?.data?.map(im => {
+                    return {
+                      label: im?.name,
+                      value: im.id
+                    }
+                  })}
+                />
               </Form.Item>
 
               {/* BPM*/}
@@ -492,9 +544,11 @@ const Manage_Song = () => {
                 className="flex-1"
                 label="BPM"
                 name="BPM"
-                layout="vertical"
+              
+                rules={[{ required: true, message: 'Please input a BPM!' ,   }]}
+
               >
-                <Input type="number" placeholder="Enter BPM " required></Input>
+                <Input max={1000} maxLength={4} min={30} defaultValue={30} type="number" placeholder="Enter BPM " required></Input>
               </Form.Item>
             </div>
             {/* Key */}
@@ -503,42 +557,45 @@ const Manage_Song = () => {
                 className="flex-1"
                 label="Key"
                 name="key"
-                layout="vertical"
+                rules={[{ required: true, message: 'Please select a Key!' }]}
               >
                 <Select
+                  loading={keysLoading}
                   className="bg-[#f5f5f5] h-12 rounded-lg"
-                  defaultValue="Samantha Rivers"
+                  defaultValue={keys?.data?.[0]?.name}
                   style={{ width: "100%" }}
                   popupMatchSelectWidth={false}
                   placement={"bottomLeft"}
-                >
-                  {keys?.data?.map((item, ind) => (
-                    <Select.Option key={ind} value={item?.name}>
-                      {item?.name}
-                    </Select.Option>
-                  ))}
-                </Select>
+                  options={keys?.data?.map(im => {
+                    return {
+                      label: im?.name,
+                      value: im.id
+                    }
+                  })}
+                />
               </Form.Item>
 
               <Form.Item
                 className="flex-1"
                 label="Type"
                 name="type"
-                layout="vertical"
+                rules={[{ required: true, message: 'Please select a Type!' }]}
+
               >
                 <Select
+                  loading={licensLoading}
                   className="bg-[#f5f5f5] h-12 rounded-lg"
-                  defaultValue="Samantha Rivers"
+                  defaultValue={type?.data?.[0]?.name}
                   style={{ width: "100%" }}
                   popupMatchSelectWidth={false}
                   placement={"bottomLeft"}
-                >
-                  {type?.data?.map((item, ind) => (
-                    <Select.Option key={ind} value={item?.name}>
-                      {item?.name}
-                    </Select.Option>
-                  ))}
-                </Select>
+                  options={type?.data?.map(im => {
+                    return {
+                      label: im?.name,
+                      value: im.id
+                    }
+                  })}
+                />
               </Form.Item>
             </div>
             {/* Key */}
@@ -548,7 +605,8 @@ const Manage_Song = () => {
                 className="flex-1"
                 label="Price"
                 name="price"
-                layout="vertical"
+                rules={[{ required: true, message: 'Please select a Price!' }]}
+
               >
                 <Input placeholder="Enter price of the song" required></Input>
               </Form.Item>
@@ -557,36 +615,62 @@ const Manage_Song = () => {
                 className="flex-1"
                 label="License"
                 name="License"
-                layout="vertical"
+                rules={[{ required: true, message: 'Please select a License!' }]}
               >
                 <Select
+                  loading={typeLoading}
                   className="bg-[#f5f5f5] h-12 rounded-lg"
-                  defaultValue="Samantha Rivers"
+                  defaultValue={licens?.data?.[0]?.name}
                   style={{ width: "100%" }}
                   popupMatchSelectWidth={false}
                   placement={"bottomLeft"}
-                >
-                  {licens?.data?.map((item, ind) => (
-                    <Select.Option key={ind} value={item?.name}>
-                      {item?.name}
-                    </Select.Option>
-                  ))}
-                </Select>
+                  options={licens?.data?.map(im => {
+                    return {
+                      label: im?.name,
+                      value: im.id
+                    }
+                  })}
+                />
               </Form.Item>
             </div>
+            <div className="flex gap-3">
+              {/* Genre */}
+              <Form.Item
+                className="flex-1"
+                label="publish status"
+                name="publishStatus"
+                rules={[{ required: true, message: 'Please select an publish status!' }]}
 
-            {/*Gender */}
-            <Form.Item
-              label="Gender"
-              name="gender"
-              className=""
-            // layout="vertical"
-            >
-              <Radio.Group className="flex  gap-3 mt-9 ">
-                <Radio value="Male">Male</Radio>
-                <Radio value="Female">Female</Radio>
-              </Radio.Group>
-            </Form.Item>
+              >
+                <Select
+                  loading={genresLoading}
+                  className="bg-[#f5f5f5] h-12 rounded-lg"
+                  defaultValue="publish"
+                  style={{ width: "100%" }}
+                  popupMatchSelectWidth={false}
+                  placement={"bottomLeft"}
+                  options={[
+                    { label: 'Publish', value: '1' },
+                    { label: 'Unpublish', value: '0' },
+                  ]}
+                />
+
+              </Form.Item>
+
+              <Form.Item
+                className="flex-1"
+                label="Gender"
+                name="gender"
+                rules={[{ required: true, message: 'Please select a gender!' }]}
+              // layout="vertical"
+              >
+                <Radio.Group className="flex  gap-3 mt-3 ">
+                  <Radio value="male">Male</Radio>
+                  <Radio value="female">Female</Radio>
+                </Radio.Group>
+              </Form.Item>
+              {/*Gender */}
+            </div>
 
             {/* button  */}
             <Form.Item>
@@ -599,7 +683,6 @@ const Manage_Song = () => {
                 </Button>
                 <Button
                   htmlType="submit"
-                  onClick={handleOk}
                   className="w-full flex-1 bg-[#E7F056] border-none rounded-2xl p-5 font-bold font-degular text-xl"
                 >
                   Save changes
@@ -609,7 +692,7 @@ const Manage_Song = () => {
           </Form>
         </Modal>
       </div>
-    </div>
+    </div >
   );
 };
 

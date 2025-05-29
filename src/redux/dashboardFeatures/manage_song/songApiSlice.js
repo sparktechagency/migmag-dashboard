@@ -8,8 +8,12 @@ const songApiSlice = baseApi.injectEndpoints({
           url: "/create-song",
           method: "POST",
           body: data,
+          headers: {
+            Accept: "application/json",
+          },
         };
       },
+      invalidatesTags: ["song"]
     }),
   }),
 });

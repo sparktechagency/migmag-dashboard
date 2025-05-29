@@ -1,4 +1,3 @@
-import { ITopArtis } from "../../../pages/Top_Artist";
 import { baseApi } from "../../features/baseApi";
 
 const artistApiSlice = baseApi.injectEndpoints({
