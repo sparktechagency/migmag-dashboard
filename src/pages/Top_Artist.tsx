@@ -25,8 +25,6 @@ import {
 } from "../redux/dashboardFeatures/Artist/artistApiSlice";
 import { useArtistPostMutation } from "../redux/dashboardFeatures/Artist/artistApiSlice";
 
-
-
 const Top_Artist = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
@@ -52,14 +50,12 @@ const Top_Artist = () => {
 
   // delete
   const handleDelete: PopconfirmProps["onConfirm"] = async (id) => {
-
     try {
       const res = await artistDetete(id).unwrap();
       if (res.success) {
         message.success("Click on Yes");
       }
-    } catch (errors) {
-    }
+    } catch (errors) {}
   };
 
   const cancel: PopconfirmProps["onCancel"] = (e) => {
@@ -67,12 +63,10 @@ const Top_Artist = () => {
   };
 
   // edit modal
-  const showModal = async(item: any) => {
+  const showModal = async (item: any) => {
     if (item) {
       setFormValue(item);
-      const res =  await 
-
-      setIsModalOpen(true);
+      const res = await setIsModalOpen(true);
     } else {
       setIsModalOpen(true);
     }
@@ -87,7 +81,6 @@ const Top_Artist = () => {
   };
 
   const onFinish = async (values) => {
-
     const formData = new FormData();
     formData.append("name", values?.name);
     formData.append("description", values?.description);
@@ -143,7 +136,7 @@ const Top_Artist = () => {
       key: "name",
       render: (text, record) => (
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <Avatar src={`http://137.59.180.219:8008/${record.profile}` } />
+          <Avatar src={`http://137.59.180.219:8008/${record.profile}`} />
           <h2>{text}</h2>
         </div>
       ),
@@ -329,21 +322,27 @@ const Top_Artist = () => {
             {/* Artist name */}
             <Form.Item label="Artist name" name="name" layout="vertical">
               <Input
-               defaultValue={formValue?.name} 
-                placeholder="Enter singer name" required></Input>
+                defaultValue={formValue?.name}
+                placeholder="Enter singer name"
+                required
+              ></Input>
             </Form.Item>
             <Form.Item label="Description" name="description" layout="vertical">
-              <TextArea defaultValue={formValue?.description}  placeholder="Enter description" required></TextArea>
+              <TextArea
+                defaultValue={formValue?.description}
+                placeholder="Enter description"
+                required
+              ></TextArea>
             </Form.Item>
             <Form.Item label="location" name="location" layout="vertical">
-              <Input defaultValue={formValue?.location} placeholder="Enter location" required></Input>
+              <Input
+                defaultValue={formValue?.location}
+                placeholder="Enter location"
+                required
+              ></Input>
             </Form.Item>
             {/*Gender */}
-            <Form.Item
-              label="Gender"
-              name="gender"
-              className=""
-            >
+            <Form.Item label="Gender" name="gender" className="">
               <Radio.Group className="flex  gap-3 mt-9 ">
                 <Radio value="male">Male</Radio>
                 <Radio value="female">Female</Radio>

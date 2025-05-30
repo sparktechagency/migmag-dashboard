@@ -26,25 +26,16 @@ import { useArtistGetQuery } from "../redux/dashboardFeatures/Artist/artistApiSl
 import {
   useCreateNewSongMutation,
   useGetManageSongQuery,
+  useManageSongDeleteMutation,
 } from "../redux/dashboardFeatures/manage_song/songApiSlice";
-import { render } from "react-dom";
-
 const Manage_Song = () => {
   const [form] = Form.useForm();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [audio, setAudio] = useState();
   const [searchValue, setSearchValue] = useState();
-
-  const confirm: PopconfirmProps["onConfirm"] = (e) => {
-    message.success("Click on Yes");
-  };
-
-  const cancel: PopconfirmProps["onCancel"] = (e) => {
-    message.error("Click on No");
-  };
-
-  const pageSize = 10;
+  const [page, setPage] = useState(1);
+  const [per_page, setPerPage] = useState(7);
 
   const [fileList, setFileList] = useState<UploadFile[]>([
     {
@@ -67,155 +58,37 @@ const Manage_Song = () => {
   const { data: licens, isLoading: licensLoading } = useLicenseGetQuery([]);
   const { data: type, isLoading: typeLoading } = useTypeGetQuery([]);
   const [createNewSong] = useCreateNewSongMutation();
-  const [page, setPage] = useState(1);
-  const [per_page, setPerPage] = useState(7);
+  const [manageSongDelete] = useManageSongDeleteMutation();
 
-  const dataSource = [
-    {
-      key: "1",
-      name: "Samantha Rivers",
-      artist: "Charlie",
-      genre: "Slap house",
-      charlie: "Slap house",
-      bpm: "123",
-      keys: "C Major",
-      gender: "Male",
-      license: "Non-exclusive",
-      price: "€1,000",
-      avatar: "https://i.pravatar.cc/40?img=1",
-    },
-    {
-      key: "2",
-      name: "Marcus Thompson",
-      artist: "Charlie",
-      genre: "Slap house",
-      charlie: "Slap house",
-      bpm: "123",
-      keys: "C Major",
-      gender: "Male",
-      license: "Non-exclusive",
-      price: "€1,000",
-      avatar: "https://i.pravatar.cc/40?img=2",
-    },
-    {
-      key: "3",
-      name: "Elena Martinez",
-      artist: "Charlie",
-      genre: "Slap house",
-      charlie: "Slap house",
-      bpm: "123",
-      keys: "C Major",
-      gender: "Male",
-      license: "Non-exclusive",
-      price: "€1,000",
-      avatar: "https://i.pravatar.cc/40?img=3",
-    },
-    {
-      key: "4",
-      name: "Derek Johnson",
-      artist: "Charlie",
-      genre: "Slap house",
-      charlie: "Slap house",
-      bpm: "123",
-      keys: "C Major",
-      gender: "Male",
-      license: "Non-exclusive",
-      price: "€1,000",
-      avatar: "https://i.pravatar.cc/40?img=4",
-    },
-    {
-      key: "5",
-      name: "Tina Chen",
-      artist: "Charlie",
-      genre: "Slap house",
-      charlie: "Slap house",
-      bpm: "123",
-      keys: "C Major",
-      gender: "Male",
-      license: "Non-exclusive",
-      price: "€1,000",
-      avatar: "https://i.pravatar.cc/40?img=5",
-    },
-    {
-      key: "6",
-      name: "Oliver Brown",
-      artist: "Charlie",
-      genre: "Slap house",
-      charlie: "Slap house",
-      bpm: "123",
-      keys: "C Major",
-      gender: "Male",
-      license: "Non-exclusive",
-      price: "€1,000",
-      avatar: "https://i.pravatar.cc/40?img=6",
-    },
-    {
-      key: "7",
-      name: "Ava Patel",
-      artist: "Charlie",
-      genre: "Slap house",
-      charlie: "Slap house",
-      bpm: "123",
-      keys: "C Major",
-      gender: "Male",
-      license: "Non-exclusive",
-      price: "€1,000",
-      avatar: "https://i.pravatar.cc/40?img=7",
-    },
-    {
-      key: "8",
-      name: "Liam Smith",
-      artist: "Charlie",
-      genre: "Slap house",
-      charlie: "Slap house",
-      bpm: "123",
-      keys: "C Major",
-      gender: "Male",
-      license: "Non-exclusive",
-      price: "€1,000",
-      avatar: "https://i.pravatar.cc/40?img=8",
-    },
-    {
-      key: "9",
-      name: "Zoe Kim",
-      artist: "Charlie",
-      genre: "Slap house",
-      charlie: "Slap house",
-      bpm: "123",
-      keys: "C Major",
-      gender: "Male",
-      license: "Non-exclusive",
-      price: "€1,000",
-      avatar: "https://i.pravatar.cc/40?img=9",
-    },
-    {
-      key: "10",
-      name: "Shila",
-      artist: "Charlie",
-      genre: "Slap house",
-      charlie: "Slap house",
-      bpm: "123",
-      keys: "C Major",
-      gender: "Male",
-      license: "Non-exclusive",
-      price: "€1,000",
-      avatar: "https://i.pravatar.cc/40?img=10",
-    },
-    {
-      key: "11",
-      name: "Lorry Kim",
-      artist: "Charlie",
-      genre: "Slap house",
-      charlie: "Slap house",
-      bpm: "123",
-      keys: "C Major",
-      gender: "Male",
-      license: "Non-exclusive",
-      price: "€1,000",
-      avatar: "https://i.pravatar.cc/40?img=11",
-    },
-  ];
-
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const res = await manageSongDelete(id);
+          if (res?.data?.success) {
+            Swal.fire("Deleted!", res.data.message, "success");
+          } else {
+            Swal.fire(
+              "Error!",
+              res?.data?.message || "Failed to delete",
+              "error"
+            );
+          }
+        } catch (error) {
+          Swal.fire("Error!", "Something went wrong", "error");
+          console.error(error);
+        }
+      }
+    });
+  };
   const columns = [
     {
       title: "Users",
@@ -223,7 +96,7 @@ const Manage_Song = () => {
       key: "name",
       render: (_, record) => (
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <Avatar src={`http://137.59.180.219:8008/${record.profile}`} />
+          <Avatar src={`http://137.59.180.219:8008/${record.artist.profile}`} />
           <h2 className="font-degular text-sm font-normal">
             {record?.artist?.name}
           </h2>
@@ -289,10 +162,10 @@ const Manage_Song = () => {
     {
       title: "Action",
       key: "action",
-      render: () => (
+      render: (_, record) => (
         <div className="flex gap-2">
           <svg
-            onClick={showModal}
+            onClick={() => showModal(record)}
             width="20"
             height="22"
             viewBox="0 0 20 22"
@@ -304,27 +177,20 @@ const Manage_Song = () => {
               fill="#49ADF4"
             />
           </svg>
-          <Popconfirm
-            title="Delete the task"
-            description="Are you sure to delete this task?"
-            onConfirm={confirm}
-            onCancel={cancel}
-            okText="Yes"
-            cancelText="No"
+
+          <svg
+            onClick={() => handleDelete(record?.id)}
+            width="16"
+            height="18"
+            viewBox="0 0 16 18"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <svg
-              width="16"
-              height="18"
-              viewBox="0 0 16 18"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M3 18C2.45 18 1.97917 17.8042 1.5875 17.4125C1.19583 17.0208 1 16.55 1 16V3H0V1H5V0H11V1H16V3H15V16C15 16.55 14.8042 17.0208 14.4125 17.4125C14.0208 17.8042 13.55 18 13 18H3ZM13 3H3V16H13V3ZM5 14H7V5H5V14ZM9 14H11V5H9V14Z"
-                fill="#E53E3E"
-              />
-            </svg>
-          </Popconfirm>
+            <path
+              d="M3 18C2.45 18 1.97917 17.8042 1.5875 17.4125C1.19583 17.0208 1 16.55 1 16V3H0V1H5V0H11V1H16V3H15V16C15 16.55 14.8042 17.0208 14.4125 17.4125C14.0208 17.8042 13.55 18 13 18H3ZM13 3H3V16H13V3ZM5 14H7V5H5V14ZM9 14H11V5H9V14Z"
+              fill="#E53E3E"
+            />
+          </svg>
         </div>
       ),
     },
@@ -348,9 +214,7 @@ const Manage_Song = () => {
   };
 
   const handleSearchChange = (e) => {
-    console.log("====================================");
     setSearchValue(e.target.value);
-    console.log("====================================");
   };
 
   const onFinish = async (values: any) => {
@@ -358,7 +222,6 @@ const Manage_Song = () => {
       message.error("Please upload both audio and thumbnail files");
       return;
     }
-    console.log("gender", values);
 
     const formData = new FormData();
     formData.append("song", values?.song?.file.originFileObj);
@@ -374,7 +237,9 @@ const Manage_Song = () => {
 
     try {
       const res = await createNewSong(formData).unwrap();
-
+      console.log("=============createNewSong=======================");
+      console.log(res);
+      console.log("===============createNewSong=====================");
       if (res.success) {
         Swal.fire({
           icon: "success",
@@ -387,11 +252,8 @@ const Manage_Song = () => {
           title: "Oops...",
           text: res?.message,
         });
-        console.log(res?.message);
       }
     } catch (errors) {
-      console.log(errors);
-
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -414,9 +276,6 @@ const Manage_Song = () => {
     },
   });
 
-  console.log("==============songData======================");
-  console.log(songData);
-  console.log("==============songData======================");
   const handleBeforeUpload = (file: File) => {
     setFile(file);
     return;
@@ -469,9 +328,9 @@ const Manage_Song = () => {
           dataSource={songData?.data?.data}
           columns={columns}
           pagination={{
+            current: page,
             pageSize: per_page,
             total: songData?.data?.total,
-            current: page,
             onChange: (page) => setPage(page),
           }}
           rowClassName={() => "hover:bg-transparent"}

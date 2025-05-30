@@ -260,3 +260,7 @@ span.ant-menu-title-content {
 .react-tabs__tab--selected {
   border-bottom: #eeff00 2px solid !important;
 }
+.jodit-wysiwyg {
+  background-color: #f5f5f5 !important;
+  border-radius: 20px !important;
+}

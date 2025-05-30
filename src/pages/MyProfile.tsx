@@ -3,38 +3,52 @@ import { Button, Checkbox, Flex, Form, Input, Upload } from "antd";
 import type { GetProp, UploadFile, UploadProps } from "antd";
 import ImgCrop from "antd-img-crop";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import Item from "antd/es/list/Item";
+import { log } from "console";
+import { useUpdateProfileMutation } from "../redux/dashboardFeatures/updateProfile/updateProfileApiSlice";
+import Swal from "sweetalert2";
 
 const MyProfile = () => {
   // upload img functionality
-  const [fileList, setFileList] = useState<UploadFile[]>([
-    {
-      uid: "-1",
-      name: "image.png",
-      status: "done",
-      url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-    },
-  ]);
-
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [form] = Form.useForm();
   const onChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
     setFileList(newFileList);
   };
-
-  const onPreview = async (file: UploadFile) => {
-    let src = file.url as string;
-    if (!src) {
-      src = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file.originFileObj as FileType);
-        reader.onload = () => resolve(reader.result as string);
+  const [updateProfile] = useUpdateProfileMutation();
+  // input from functionality
+  const onFinish = async (values: any) => {
+    const formData = new FormData();
+    if (fileList.length > 0) {
+      formData.append("avatar", fileList[0].originFileObj as File);
+    }
+    formData.append("first_name", values?.First_name);
+    formData.append("last_name", values?.Last_name);
+    formData.append("contact", values?.Contact_number);
+    formData.append("location", values?.Location);
+    formData.forEach((item) => console.log(item));
+    try {
+      const res = await updateProfile(formData).unwrap();
+      if (res.success) {
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: res?.message,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: res?.message,
+        });
+      }
+    } catch (errors) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: errors?.message,
       });
     }
-    const image = new Image();
-    image.src = src;
-    const imgWindow = window.open(src);
-    imgWindow?.document.write(image.outerHTML);
-  };
-  // input from functionality
-  const onFinish = (values: any) => {
   };
 
   return (
@@ -52,45 +66,47 @@ const MyProfile = () => {
       </div>
       {/* from section */}
       <div className="bg-white p-6 rounded-2xl mt-6   ">
-        {/* upload img */}
-        <div className="flex flex-col justify-center items-center mb-14">
-          <ImgCrop rotationSlider>
-            <Upload
-              action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
-              listType="picture-card"
-              fileList={fileList}
-              onChange={onChange}
-              onPreview={onPreview}
-            >
-              {fileList.length < 1 && (
-                <svg
-                  width="54"
-                  height="54"
-                  viewBox="0 0 54 54"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M36.3339 12.0667H40.0672M53.1339 34.4423L41.9339 23.2496L30.7339 34.4423L15.8005 15.7878L0.867188 34.4667M4.60052 0.866699H49.4005C51.4624 0.866699 53.1339 2.53817 53.1339 4.60003V49.4C53.1339 51.4619 51.4624 53.1334 49.4005 53.1334H4.60052C2.53866 53.1334 0.867188 51.4619 0.867188 49.4V4.60003C0.867188 2.53817 2.53866 0.866699 4.60052 0.866699Z"
-                    stroke="#5D5D5D"
-                  />
-                </svg>
-              )}
-            </Upload>
-          </ImgCrop>
-          <h4 className="font-degular text-[24px] font-bold ">
-            Upload your photo
-          </h4>
-        </div>
         <Form
+          form={form}
           name="login"
           initialValues={{ remember: true }}
-          // style={{ maxWidth: 360 }}
           onFinish={onFinish}
         >
+          {/* upload img */}
+          <div className="flex flex-col w-full  justify-center items-center mb-14">
+            <Form.Item name={"image"}>
+              <Upload
+                listType="picture-card"
+                fileList={fileList}
+                onChange={onChange}
+                name="file"
+                className="rounded-md"
+                showUploadList={true}
+              >
+                {fileList.length < 1 && (
+                  <svg
+                    width="54"
+                    height="54"
+                    viewBox="0 0 54 54"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M36.3339 12.0667H40.0672M53.1339 34.4423L41.9339 23.2496L30.7339 34.4423L15.8005 15.7878L0.867188 34.4667M4.60052 0.866699H49.4005C51.4624 0.866699 53.1339 2.53817 53.1339 4.60003V49.4C53.1339 51.4619 51.4624 53.1334 49.4005 53.1334H4.60052C2.53866 53.1334 0.867188 51.4619 0.867188 49.4V4.60003C0.867188 2.53817 2.53866 0.866699 4.60052 0.866699Z"
+                      stroke="#5D5D5D"
+                    />
+                  </svg>
+                )}
+              </Upload>
+              {/* </ImgCrop> */}
+            </Form.Item>
+            <h4 className="font-degular   text-[24px] font-bold ">
+              Upload your photo
+            </h4>
+          </div>
           <div className="flex justify-between gap-4">
             <Form.Item
-              name="First name"
+              name="First_name"
               className="flex-1"
               rules={[
                 { required: true, message: "Please input your Username!" },
@@ -99,7 +115,7 @@ const MyProfile = () => {
               <Input prefix={<UserOutlined />} placeholder="First name" />
             </Form.Item>
             <Form.Item
-              name="Last name"
+              name="Last_name"
               className="flex-1"
               rules={[
                 { required: true, message: "Please input your Username!" },
@@ -113,7 +129,7 @@ const MyProfile = () => {
             </Form.Item>
           </div>
           <Form.Item
-            name="Contact number"
+            name="Contact_number"
             rules={[
               { required: true, message: "Please input your Contact number!" },
             ]}
@@ -133,7 +149,7 @@ const MyProfile = () => {
                   />
                 </svg>
               }
-              type="text"
+              type="number"
               placeholder="Contact number"
             />
           </Form.Item>

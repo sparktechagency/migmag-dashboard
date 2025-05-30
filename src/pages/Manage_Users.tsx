@@ -33,8 +33,7 @@ const Manage_Users = () => {
         id: selectId,
         is_banned: values.radio,
       }).unwrap();
-    } catch (errors) {
-    }
+    } catch (errors) {}
   };
 
   const showModal = (record) => {
