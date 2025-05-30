@@ -7,6 +7,7 @@ import { FcComboChart } from "react-icons/fc";
 import "./Style_dashboard.css";
 import { Avatar, Divider, Tooltip } from "antd";
 import { TiUserOutline } from "react-icons/ti";
+import { log } from "console";
 
 // import { useGetAllStatusApiQuery } from "../redux/Features/getAllStatusApi";
 
@@ -292,12 +293,14 @@ const cardData = [
   },
 ];
 
-const Status: React.FC = () => {
+const Status: React.FC = ({ data }: any) => {
   const [selectedCard, setSelectedCard] = useState<number | null>(null);
   const handleCardClick = (cardIndex: number) => {
     setSelectedCard(cardIndex);
   };
-
+  console.log("====================================");
+  console.log(data);
+  console.log("====================================");
   const selectOptions = [
     { value: "1", label: "week" },
     { value: "2", label: "Month" },

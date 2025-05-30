@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { Button, Checkbox, Flex, Form, Input, Upload } from "antd";
 import type { GetProp, UploadFile, UploadProps } from "antd";
-import ImgCrop from "antd-img-crop";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import Item from "antd/es/list/Item";
-import { log } from "console";
 import { useUpdateProfileMutation } from "../redux/dashboardFeatures/updateProfile/updateProfileApiSlice";
 import Swal from "sweetalert2";
 
