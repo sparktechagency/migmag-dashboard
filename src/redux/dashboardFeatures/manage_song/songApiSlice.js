@@ -13,9 +13,16 @@ const songApiSlice = baseApi.injectEndpoints({
           },
         };
       },
-      invalidatesTags: ["song"]
+      invalidatesTags: ["song"],
+    }),
+    getManageSong: builder.query({
+      query: ({ params }) => ({
+        url: `/song`,
+        params: params,
+      }),
+      providesTags: ["song"],
     }),
   }),
 });
 
-export const { useCreateNewSongMutation } = songApiSlice;
+export const { useCreateNewSongMutation, useGetManageSongQuery } = songApiSlice;

@@ -20,16 +20,22 @@ import {
   useGenreGetQuery,
   useKeyGetQuery,
   useLicenseGetQuery,
-  useTypeGetQuery
+  useTypeGetQuery,
 } from "../redux/dashboardFeatures/catagory/catagoryApiSlice";
 import { useArtistGetQuery } from "../redux/dashboardFeatures/Artist/artistApiSlice";
-import { useCreateNewSongMutation } from "../redux/dashboardFeatures/manage_song/songApiSlice";
+import {
+  useCreateNewSongMutation,
+  useGetManageSongQuery,
+} from "../redux/dashboardFeatures/manage_song/songApiSlice";
+import { render } from "react-dom";
 
 const Manage_Song = () => {
   const [form] = Form.useForm();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [audio, setAudio] = useState()
+  const [audio, setAudio] = useState();
+  const [searchValue, setSearchValue] = useState();
+
   const confirm: PopconfirmProps["onConfirm"] = (e) => {
     message.success("Click on Yes");
   };
@@ -48,19 +54,21 @@ const Manage_Song = () => {
       url: "",
     },
   ]);
-  const [file, setFile] = useState()
+
+  const [file, setFile] = useState();
 
   const onChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
     setFileList(newFileList);
   };
 
-  //  modal option 
+  //  modal option
   const { data: genres, isLoading: genresLoading } = useGenreGetQuery([]);
   const { data: keys, isLoading: keysLoading } = useKeyGetQuery([]);
   const { data: licens, isLoading: licensLoading } = useLicenseGetQuery([]);
   const { data: type, isLoading: typeLoading } = useTypeGetQuery([]);
   const [createNewSong] = useCreateNewSongMutation();
-
+  const [page, setPage] = useState(1);
+  const [per_page, setPerPage] = useState(7);
 
   const dataSource = [
     {
@@ -211,12 +219,14 @@ const Manage_Song = () => {
   const columns = [
     {
       title: "Users",
-      dataIndex: "name",
+      dataIndex: "artist",
       key: "name",
-      render: (text, record) => (
+      render: (_, record) => (
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <Avatar src={record.avatar} />
-          <h2>{text}</h2>
+          <Avatar src={`http://137.59.180.219:8008/${record.profile}`} />
+          <h2 className="font-degular text-sm font-normal">
+            {record?.artist?.name}
+          </h2>
         </div>
       ),
     },
@@ -225,11 +235,21 @@ const Manage_Song = () => {
       title: "Artist",
       dataIndex: "artist",
       key: "artist",
+      render: (_, record) => (
+        <h2 className="font-degular text-sm font-normal">
+          {record?.artist?.name}
+        </h2>
+      ),
     },
     {
       title: "Genre",
       dataIndex: "genre",
       key: "genre",
+      render: (_, record) => (
+        <h2 className="font-degular text-sm font-normal">
+          {record?.genre?.name}
+        </h2>
+      ),
     },
     {
       title: "BPM",
@@ -238,8 +258,13 @@ const Manage_Song = () => {
     },
     {
       title: "keys",
-      dataIndex: "keys",
+      dataIndex: "key",
       key: "keys",
+      render: (_, record) => (
+        <h2 className="font-degular text-sm font-normal">
+          {record?.key?.name}
+        </h2>
+      ),
     },
     {
       title: "Gender",
@@ -250,6 +275,11 @@ const Manage_Song = () => {
       title: "License",
       dataIndex: "license",
       key: "license",
+      render: (_, record) => (
+        <h2 className="font-degular text-sm font-normal">
+          {record?.license?.name}
+        </h2>
+      ),
     },
     {
       title: "Price",
@@ -317,15 +347,19 @@ const Manage_Song = () => {
     setIsModalOpen(false);
   };
 
-  const onFinish = async (values: any) => {
+  const handleSearchChange = (e) => {
+    console.log("====================================");
+    setSearchValue(e.target.value);
+    console.log("====================================");
+  };
 
-      if (!file || !audio) {
-    message.error("Please upload both audio and thumbnail files");
-    return;
-  }
-    console.log("gender", values.gender);
-    
-    console.log(values, file, audio);
+  const onFinish = async (values: any) => {
+    if (!file || !audio) {
+      message.error("Please upload both audio and thumbnail files");
+      return;
+    }
+    console.log("gender", values);
+
     const formData = new FormData();
     formData.append("song", values?.song?.file.originFileObj);
     formData.append("song_poster", values?.image?.file.originFileObj);
@@ -354,7 +388,6 @@ const Manage_Song = () => {
           text: res?.message,
         });
         console.log(res?.message);
-
       }
     } catch (errors) {
       console.log(errors);
@@ -366,24 +399,36 @@ const Manage_Song = () => {
       });
     }
   };
+  const { data: artistData, isLoading: artistDataLoading } = useArtistGetQuery(
+    {}
+  );
   const {
-    data: artistData,
-    isLoading: artistDataLoading
-  } = useArtistGetQuery({});
+    data: songData,
+    isLoading,
+    isFetching,
+  } = useGetManageSongQuery({
+    params: {
+      search: searchValue,
+      page: page,
+      per_page: per_page,
+    },
+  });
 
+  console.log("==============songData======================");
+  console.log(songData);
+  console.log("==============songData======================");
   const handleBeforeUpload = (file: File) => {
     setFile(file);
-    return false;
+    return;
   };
   const hendelAudioFile = (audioFile) => {
-    setAudio(audioFile)
+    setAudio(audioFile);
     const isAudio = audioFile.type.startsWith("audio/");
     if (!isAudio) {
       message.error("You can only upload audio files!");
     }
     return isAudio || Upload.LIST_IGNORE; // prevents upload if not audio
-  }
-
+  };
 
   return (
     <div>
@@ -410,6 +455,7 @@ const Manage_Song = () => {
           prefix={<Search />}
           className="w-full rounded-2xl h-12 bg-base border-0 text-primary placeholder:text-gray-200"
           placeholder="Search for Listing"
+          onChange={handleSearchChange}
           style={{
             backgroundColor: "#f0f0f0",
             color: "#333333",
@@ -418,13 +464,15 @@ const Manage_Song = () => {
       </div>
       <div className="py-8">
         <Table
-          dataSource={dataSource}
+          loading={isFetching || isLoading}
+          // dataSource={dataSource}
+          dataSource={songData?.data?.data}
           columns={columns}
           pagination={{
-            pageSize,
-            total: 50,
-            current: currentPage,
-            onChange: handlePage,
+            pageSize: per_page,
+            total: songData?.data?.total,
+            current: page,
+            onChange: (page) => setPage(page),
           }}
           rowClassName={() => "hover:bg-transparent"}
         />
@@ -436,14 +484,22 @@ const Manage_Song = () => {
           onOk={handleOk}
           onCancel={handleCancel}
           footer={false}
-
         >
-          <Form form={form} onFinish={onFinish} style={{ paddingBottom: "" }} layout="vertical">
-            <Form.Item name="song" rules={[{ required: true, message: 'Upload a audio file!' }]} className="bg-[#f5f5f5] border-dashed text-center py-4 ">
+          <Form
+            form={form}
+            onFinish={onFinish}
+            style={{ paddingBottom: "" }}
+            layout="vertical"
+          >
+            <Form.Item
+              name="song"
+              rules={[{ required: true, message: "Upload a audio file!" }]}
+              className="bg-[#f5f5f5] border-dashed text-center py-4 "
+            >
               <Upload
                 maxCount={1}
                 accept="audio/*"
-                showUploadList={true} 
+                showUploadList={true}
                 beforeUpload={(audioFile) => hendelAudioFile(audioFile)}
               >
                 <Button className="flex items-center gap-2">
@@ -463,7 +519,7 @@ const Manage_Song = () => {
                 </Button>
               </Upload>
             </Form.Item>
-            <div   className="w-full">
+            <div className="w-full">
               <h2 className="font-degular text-base font-semibold">
                 Thumbnail
               </h2>
@@ -473,7 +529,11 @@ const Manage_Song = () => {
                 </p>
 
                 <div className="bg-[#f5f5f5] border border-dashed border-gray-300 rounded-lg w-full py-6 flex justify-center">
-                  <Form.Item name={"image"} rules={[{ required: true, message: 'Upload a Thumbnail!' }]} className="bg-[#f5f5f5] border-dashed rounded-lg text-center py-4 my-4 flex items-center w-full justify-center  ">
+                  <Form.Item
+                    name={"image"}
+                    rules={[{ required: true, message: "Upload a Thumbnail!" }]}
+                    className="bg-[#f5f5f5] border-dashed rounded-lg text-center py-4 my-4 flex items-center w-full justify-center  "
+                  >
                     <Upload.Dragger
                       name="file"
                       beforeUpload={handleBeforeUpload}
@@ -500,17 +560,23 @@ const Manage_Song = () => {
                 </div>
               </div>
             </div>
-            <Form.Item label="Artist name" name="artistName" rules={[{ required: true, message: 'Please select an artist name!' }]}>
+            <Form.Item
+              label="Artist name"
+              name="artistName"
+              rules={[
+                { required: true, message: "Please select an artist name!" },
+              ]}
+            >
               <Select
                 loading={artistDataLoading}
                 className="bg-[#f5f5f5] h-12 rounded-lg"
                 defaultValue={artistData?.data?.data[0]?.name}
                 placement={"bottomLeft"}
-                options={artistData?.data?.data?.map(im => {
+                options={artistData?.data?.data?.map((im) => {
                   return {
                     label: im?.name,
-                    value: im?.id
-                  }
+                    value: im?.id,
+                  };
                 })}
               />
             </Form.Item>
@@ -520,8 +586,7 @@ const Manage_Song = () => {
                 className="flex-1"
                 label="Genre"
                 name="genre"
-                rules={[{ required: true, message: 'Please select an Genre!' }]}
-
+                rules={[{ required: true, message: "Please select an Genre!" }]}
               >
                 <Select
                   loading={genresLoading}
@@ -530,11 +595,11 @@ const Manage_Song = () => {
                   style={{ width: "100%" }}
                   popupMatchSelectWidth={false}
                   placement={"bottomLeft"}
-                  options={genres?.data?.map(im => {
+                  options={genres?.data?.map((im) => {
                     return {
                       label: im?.name,
-                      value: im.id
-                    }
+                      value: im.id,
+                    };
                   })}
                 />
               </Form.Item>
@@ -544,11 +609,17 @@ const Manage_Song = () => {
                 className="flex-1"
                 label="BPM"
                 name="BPM"
-              
-                rules={[{ required: true, message: 'Please input a BPM!' ,   }]}
-
+                rules={[{ required: true, message: "Please input a BPM!" }]}
               >
-                <Input max={1000} maxLength={4} min={30} defaultValue={30} type="number" placeholder="Enter BPM " required></Input>
+                <Input
+                  max={1000}
+                  maxLength={4}
+                  min={30}
+                  defaultValue={30}
+                  type="number"
+                  placeholder="Enter BPM "
+                  required
+                ></Input>
               </Form.Item>
             </div>
             {/* Key */}
@@ -557,7 +628,7 @@ const Manage_Song = () => {
                 className="flex-1"
                 label="Key"
                 name="key"
-                rules={[{ required: true, message: 'Please select a Key!' }]}
+                rules={[{ required: true, message: "Please select a Key!" }]}
               >
                 <Select
                   loading={keysLoading}
@@ -566,11 +637,11 @@ const Manage_Song = () => {
                   style={{ width: "100%" }}
                   popupMatchSelectWidth={false}
                   placement={"bottomLeft"}
-                  options={keys?.data?.map(im => {
+                  options={keys?.data?.map((im) => {
                     return {
                       label: im?.name,
-                      value: im.id
-                    }
+                      value: im.id,
+                    };
                   })}
                 />
               </Form.Item>
@@ -579,8 +650,7 @@ const Manage_Song = () => {
                 className="flex-1"
                 label="Type"
                 name="type"
-                rules={[{ required: true, message: 'Please select a Type!' }]}
-
+                rules={[{ required: true, message: "Please select a Type!" }]}
               >
                 <Select
                   loading={licensLoading}
@@ -589,11 +659,11 @@ const Manage_Song = () => {
                   style={{ width: "100%" }}
                   popupMatchSelectWidth={false}
                   placement={"bottomLeft"}
-                  options={type?.data?.map(im => {
+                  options={type?.data?.map((im) => {
                     return {
                       label: im?.name,
-                      value: im.id
-                    }
+                      value: im.id,
+                    };
                   })}
                 />
               </Form.Item>
@@ -605,8 +675,7 @@ const Manage_Song = () => {
                 className="flex-1"
                 label="Price"
                 name="price"
-                rules={[{ required: true, message: 'Please select a Price!' }]}
-
+                rules={[{ required: true, message: "Please select a Price!" }]}
               >
                 <Input placeholder="Enter price of the song" required></Input>
               </Form.Item>
@@ -615,7 +684,9 @@ const Manage_Song = () => {
                 className="flex-1"
                 label="License"
                 name="License"
-                rules={[{ required: true, message: 'Please select a License!' }]}
+                rules={[
+                  { required: true, message: "Please select a License!" },
+                ]}
               >
                 <Select
                   loading={typeLoading}
@@ -624,11 +695,11 @@ const Manage_Song = () => {
                   style={{ width: "100%" }}
                   popupMatchSelectWidth={false}
                   placement={"bottomLeft"}
-                  options={licens?.data?.map(im => {
+                  options={licens?.data?.map((im) => {
                     return {
                       label: im?.name,
-                      value: im.id
-                    }
+                      value: im.id,
+                    };
                   })}
                 />
               </Form.Item>
@@ -639,8 +710,12 @@ const Manage_Song = () => {
                 className="flex-1"
                 label="publish status"
                 name="publishStatus"
-                rules={[{ required: true, message: 'Please select an publish status!' }]}
-
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select an publish status!",
+                  },
+                ]}
               >
                 <Select
                   loading={genresLoading}
@@ -650,19 +725,18 @@ const Manage_Song = () => {
                   popupMatchSelectWidth={false}
                   placement={"bottomLeft"}
                   options={[
-                    { label: 'Publish', value: '1' },
-                    { label: 'Unpublish', value: '0' },
+                    { label: "Publish", value: "1" },
+                    { label: "Unpublish", value: "0" },
                   ]}
                 />
-
               </Form.Item>
 
               <Form.Item
                 className="flex-1"
                 label="Gender"
                 name="gender"
-                rules={[{ required: true, message: 'Please select a gender!' }]}
-              // layout="vertical"
+                rules={[{ required: true, message: "Please select a gender!" }]}
+                // layout="vertical"
               >
                 <Radio.Group className="flex  gap-3 mt-3 ">
                   <Radio value="male">Male</Radio>
@@ -692,7 +766,7 @@ const Manage_Song = () => {
           </Form>
         </Modal>
       </div>
-    </div >
+    </div>
   );
 };
 
