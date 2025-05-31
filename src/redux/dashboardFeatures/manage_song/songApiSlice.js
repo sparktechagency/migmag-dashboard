@@ -15,19 +15,16 @@ const songApiSlice = baseApi.injectEndpoints({
       },
       invalidatesTags: ["song"],
     }),
-    // updateSong: builder.mutation({
-    //   query: (data) => {
-    //     return {
-    //       url: `/update-song/1?_method=PUT`,
-    //       method: "PUT",
-    //       body: data,
-    //       headers: {
-    //         Accept: "application/json",
-    //       },
-    //     };
-    //   },
-    //   invalidatesTags: ["song"],
-    // }),
+    updateSong: builder.mutation({
+      query: ({ id, updateInfo }) => {
+        return {
+          url: `/update-song/${id}`,
+          method: "POST",
+          body: updateInfo,
+        };
+      },
+      invalidatesTags: ["song"],
+    }),
     getManageSong: builder.query({
       query: ({ params }) => ({
         url: `/song`,
@@ -49,4 +46,5 @@ export const {
   useCreateNewSongMutation,
   useGetManageSongQuery,
   useManageSongDeleteMutation,
+  useUpdateSongMutation,
 } = songApiSlice;

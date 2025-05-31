@@ -27,6 +27,7 @@ import {
   useCreateNewSongMutation,
   useGetManageSongQuery,
   useManageSongDeleteMutation,
+  useUpdateSongMutation,
 } from "../redux/dashboardFeatures/manage_song/songApiSlice";
 const Manage_Song = () => {
   const [form] = Form.useForm();
@@ -36,6 +37,8 @@ const Manage_Song = () => {
   const [searchValue, setSearchValue] = useState();
   const [page, setPage] = useState(1);
   const [per_page, setPerPage] = useState(7);
+  const [updatID, setUpdatID] = useState();
+  const [updatData, setUpdatData] = useState();
 
   const [fileList, setFileList] = useState<UploadFile[]>([
     {
@@ -58,6 +61,7 @@ const Manage_Song = () => {
   const { data: licens, isLoading: licensLoading } = useLicenseGetQuery([]);
   const { data: type, isLoading: typeLoading } = useTypeGetQuery([]);
   const [createNewSong] = useCreateNewSongMutation();
+  const [updateSong] = useUpdateSongMutation();
   const [manageSongDelete] = useManageSongDeleteMutation();
 
   const handleDelete = (id) => {
@@ -201,10 +205,11 @@ const Manage_Song = () => {
   };
 
   // edit modal
-  const showModal = () => {
+  const showModal = (updateData) => {
+    setUpdatData(updateData);
+    setUpdatID(updateData.id);
     setIsModalOpen(true);
   };
-
   const handleOk = () => {
     setIsModalOpen(false);
   };
@@ -218,6 +223,9 @@ const Manage_Song = () => {
   };
 
   const onFinish = async (values: any) => {
+    if (updatID) {
+      return;
+    }
     if (!file || !audio) {
       message.error("Please upload both audio and thumbnail files");
       return;
@@ -234,7 +242,6 @@ const Manage_Song = () => {
     formData.append("bpm", values.BPM);
     formData.append("gender", values.gender);
     formData.append("is_published", values.publishStatus);
-
     try {
       const res = await createNewSong(formData).unwrap();
       console.log("=============createNewSong=======================");

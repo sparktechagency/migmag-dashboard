@@ -24,7 +24,7 @@ interface Props {
 }
 
 const RevenueChart: React.FC<Props> = ({ dataChart }) => {
-  const [selectedValue, setSelectedValue] = useState<string | undefined>();
+  const [selectedValue, setSelectedValue] = useState<string | undefined>("1");
 
   const chartData =
     dataChart?.data?.monthly_revenue_this_year?.map((item) => ({

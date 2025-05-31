@@ -1,18 +1,23 @@
-import {
-  Avatar,
-  PopconfirmProps,
-  Table,
-} from "antd";
+import { Avatar, PopconfirmProps, Table, Tag } from "antd";
 import React, { useState } from "react";
-import { message} from "antd";
-import {useTransactionGetQuery} from "../redux/dashboardFeatures/Transaction/transactionApiSlice"
+import { message } from "antd";
+import { useTransactionGetQuery } from "../redux/dashboardFeatures/Transaction/transactionApiSlice";
 
 const Transactions = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const {data: transactionData, isFetching, isLoading} = useTransactionGetQuery()
+  const [page, setPage] = useState(1);
+  const [per_page, setPerPage] = useState(7);
 
+  const {
+    data: transactionData,
+    isFetching,
+    isLoading,
+  } = useTransactionGetQuery({ page: page, per_page: per_page });
 
+  console.log("====================================");
+  console.log(transactionData, "transactionData");
+  console.log("====================================");
   const confirm: PopconfirmProps["onConfirm"] = (e) => {
     message.success("Click on Yes");
   };
@@ -23,155 +28,169 @@ const Transactions = () => {
 
   const pageSize = 10;
 
-  const dataSource = [
-    {
-      key: "1",
-      name: "Samantha Rivers",
-      title: "Slap house",
-      artist: "Charlie",
-      license: "Non-exclusive",
-      price: "€1,000",
-      status: "Success",
-      avatar: "https://i.pravatar.cc/40?img=11",
-    },
-    {
-      key: "2",
-      name: "Samantha Rivers",
-      title: "Slap house",
-      artist: "Charlie",
-      license: "Non-exclusive",
-      price: "€1,000",
-      status: "Success",
-      avatar: "https://i.pravatar.cc/40?img=11",
-    },
-    {
-      key: "3",
-      name: "Samantha Rivers",
-      title: "Slap house",
-      artist: "Charlie",
-      license: "Non-exclusive",
-      price: "€1,000",
-      status: "Success",
-      avatar: "https://i.pravatar.cc/40?img=11",
-    },
-    {
-      key: "4",
-      name: "Samantha Rivers",
-      title: "Slap house",
-      artist: "Charlie",
-      license: "Non-exclusive",
-      price: "€1,000",
-      status: "Success",
-    },
-    {
-      key: "5",
-      name: "Samantha Rivers",
-      title: "Slap house",
-      artist: "Charlie",
-      license: "Non-exclusive",
-      price: "€1,000",
-      status: "Success",
-    },
-    {
-      key: "6",
-      name: "Samantha Rivers",
-      title: "Slap house",
-      artist: "Charlie",
-      license: "Non-exclusive",
-      price: "€1,000",
-      status: "Success",
-    },
-    {
-      key: "7",
-      name: "Samantha Rivers",
-      title: "Slap house",
-      artist: "Charlie",
-      license: "Non-exclusive",
-      price: "€1,000",
-      status: "Success",
-    },
-    {
-      key: "8",
-      name: "Samantha Rivers",
-      title: "Slap house",
-      artist: "Charlie",
-      license: "Non-exclusive",
-      price: "€1,000",
-      status: "Success",
-    },
-    {
-      key: "9",
-      name: "Samantha Rivers",
-      title: "Slap house",
-      artist: "Charlie",
-      license: "Non-exclusive",
-      price: "€1,000",
-      status: "Success",
-    },
-    {
-      key: "10",
-      name: "Samantha Rivers",
-      title: "Slap house",
-      artist: "Charlie",
-      license: "Non-exclusive",
-      price: "€1,000",
-      status: "Success",
-      avatar: "https://i.pravatar.cc/40?img=11",
-    },
-    {
-      key: "11",
-      name: "Samantha Rivers",
-      title: "Slap house",
-      artist: "Charlie",
-      license: "Non-exclusive",
-      price: "€1,000",
-      status: "Success",
-      avatar: "https://i.pravatar.cc/40?img=11",
-    },
-  ];
+  // const dataSource = [
+  //   {
+  //     key: "1",
+  //     name: "Samantha Rivers",
+  //     title: "Slap house",
+  //     artist: "Charlie",
+  //     license: "Non-exclusive",
+  //     price: "€1,000",
+  //     status: "Success",
+  //     avatar: "https://i.pravatar.cc/40?img=11",
+  //   },
+  //   {
+  //     key: "2",
+  //     name: "Samantha Rivers",
+  //     title: "Slap house",
+  //     artist: "Charlie",
+  //     license: "Non-exclusive",
+  //     price: "€1,000",
+  //     status: "Success",
+  //     avatar: "https://i.pravatar.cc/40?img=11",
+  //   },
+  //   {
+  //     key: "3",
+  //     name: "Samantha Rivers",
+  //     title: "Slap house",
+  //     artist: "Charlie",
+  //     license: "Non-exclusive",
+  //     price: "€1,000",
+  //     status: "Success",
+  //     avatar: "https://i.pravatar.cc/40?img=11",
+  //   },
+  //   {
+  //     key: "4",
+  //     name: "Samantha Rivers",
+  //     title: "Slap house",
+  //     artist: "Charlie",
+  //     license: "Non-exclusive",
+  //     price: "€1,000",
+  //     status: "Success",
+  //   },
+  //   {
+  //     key: "5",
+  //     name: "Samantha Rivers",
+  //     title: "Slap house",
+  //     artist: "Charlie",
+  //     license: "Non-exclusive",
+  //     price: "€1,000",
+  //     status: "Success",
+  //   },
+  //   {
+  //     key: "6",
+  //     name: "Samantha Rivers",
+  //     title: "Slap house",
+  //     artist: "Charlie",
+  //     license: "Non-exclusive",
+  //     price: "€1,000",
+  //     status: "Success",
+  //   },
+  //   {
+  //     key: "7",
+  //     name: "Samantha Rivers",
+  //     title: "Slap house",
+  //     artist: "Charlie",
+  //     license: "Non-exclusive",
+  //     price: "€1,000",
+  //     status: "Success",
+  //   },
+  //   {
+  //     key: "8",
+  //     name: "Samantha Rivers",
+  //     title: "Slap house",
+  //     artist: "Charlie",
+  //     license: "Non-exclusive",
+  //     price: "€1,000",
+  //     status: "Success",
+  //   },
+  //   {
+  //     key: "9",
+  //     name: "Samantha Rivers",
+  //     title: "Slap house",
+  //     artist: "Charlie",
+  //     license: "Non-exclusive",
+  //     price: "€1,000",
+  //     status: "Success",
+  //   },
+  //   {
+  //     key: "10",
+  //     name: "Samantha Rivers",
+  //     title: "Slap house",
+  //     artist: "Charlie",
+  //     license: "Non-exclusive",
+  //     price: "€1,000",
+  //     status: "Success",
+  //     avatar: "https://i.pravatar.cc/40?img=11",
+  //   },
+  //   {
+  //     key: "11",
+  //     name: "Samantha Rivers",
+  //     title: "Slap house",
+  //     artist: "Charlie",
+  //     license: "Non-exclusive",
+  //     price: "€1,000",
+  //     status: "Success",
+  //     avatar: "https://i.pravatar.cc/40?img=11",
+  //   },
+  // ];
 
   const columns = [
     {
       title: "Users",
       dataIndex: "name",
       key: "name",
-      render: (text, record) => (
+      render: (_, record) => (
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <Avatar src={record.avatar} />
-          <h2>{text}</h2>
+          <Avatar
+            src={`http://137.59.180.219:8008/${record?.order?.user?.avatar}`}
+          />
+          <div>
+            <h2>{record?.order?.user?.last_name}</h2>
+            <p>{record?.order?.user?.email}</p>
+          </div>
         </div>
       ),
     },
 
     {
-      title: "Title",
-      dataIndex: "title",
-      key: "title",
+      title: "Total amount",
+      dataIndex: "total_amount",
+      key: "total_amount",
+      render: (_, record) => <h2>{record?.order?.total_amount}</h2>,
     },
     {
-      title: "Artist",
-      dataIndex: "artist",
-      key: "artist",
+      title: "Location",
+      dataIndex: "location",
+      key: "location",
+      render: (_, record) => <h2>{record?.order?.user?.location}</h2>,
     },
     {
-      title: "License",
-      dataIndex: "license",
-      key: "license",
-    },
-    {
-      title: "License",
-      dataIndex: "license",
-      key: "license",
-    },
-    {
-      title: "Price",
-      dataIndex: "price",
-      key: "price",
+      title: "Created At",
+      dataIndex: "created_at",
+      key: "created_at",
+      render: (text) => {
+        const formattedDate = new Date(text).toLocaleString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        });
+        return <span>{formattedDate}</span>;
+      },
     },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
+      render: (_, record) => (
+        <Tag color="green">
+          {" "}
+          <h2>{record?.status}</h2>
+        </Tag>
+      ),
     },
   ];
 
@@ -192,9 +211,7 @@ const Transactions = () => {
     setIsModalOpen(false);
   };
 
-  const onFinish = (e) => {
-
-  };
+  const onFinish = (e) => {};
 
   return (
     <div>
@@ -212,14 +229,14 @@ const Transactions = () => {
       </div>
       <div className="py-8">
         <Table
-         loading={isFetching || isLoading}
-          dataSource={dataSource}
+          loading={isFetching || isLoading}
+          dataSource={transactionData?.data?.data}
           columns={columns}
           pagination={{
-            pageSize,
-            total: 50,
-            current: currentPage,
-            onChange: handlePage,
+            current: page,
+            pageSize: per_page,
+            total: transactionData?.data?.total,
+            onChange: (page) => setPage(page),
           }}
           rowClassName={() => "hover:bg-transparent"}
         />
