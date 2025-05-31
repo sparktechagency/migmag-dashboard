@@ -6,11 +6,15 @@ import { Skeleton } from "antd";
 type Props = {};
 
 const DasboardHome = (props: Props) => {
-  const { data, isFetching, isLoading } = useDeshboardGetQuery({});
+  const {
+    data: deshboardData,
+    isFetching,
+    isLoading,
+  } = useDeshboardGetQuery({});
   return (
     <>
-      {isLoading ? <Skeleton active /> : <Status data={data} />}
-      <RevenueChart />
+      <Status data={deshboardData} isLoading={isLoading} />
+      <RevenueChart dataChart={deshboardData} />
     </>
   );
 };
