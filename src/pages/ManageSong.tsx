@@ -16,30 +16,41 @@ import { Search, Vault } from "lucide-react";
 import React, { useState } from "react";
 import { message, Popconfirm } from "antd";
 import Swal from "sweetalert2";
+import { useForm } from "antd/es/form/Form";
 import {
   useGenreGetQuery,
   useKeyGetQuery,
   useLicenseGetQuery,
   useTypeGetQuery,
 } from "../redux/dashboardFeatures/catagory/catagoryApiSlice";
-import { useArtistGetQuery } from "../redux/dashboardFeatures/Artist/artistApiSlice";
+import {
+  useArtistGetQuery,
+  useArtistUpdateMutation,
+} from "../redux/dashboardFeatures/Artist/artistApiSlice";
 import {
   useCreateNewSongMutation,
   useGetManageSongQuery,
   useManageSongDeleteMutation,
+  useManageSongPubliseMutation,
   useUpdateSongMutation,
 } from "../redux/dashboardFeatures/manage_song/songApiSlice";
+import { log } from "console";
+import { render } from "react-dom";
+
 const Manage_Song = () => {
   const [form] = Form.useForm();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpenPublish, setIsModalOpenPublish] = useState(false);
   const [audio, setAudio] = useState();
   const [searchValue, setSearchValue] = useState();
   const [page, setPage] = useState(1);
   const [per_page, setPerPage] = useState(7);
   const [updatID, setUpdatID] = useState();
   const [updatData, setUpdatData] = useState();
-
+  const [formOne] = useForm();
+  const [publishID, setPublishID] = useState();
+  const [isPublished, setIsPublished] = useState({});
   const [fileList, setFileList] = useState<UploadFile[]>([
     {
       uid: "-1",
@@ -93,6 +104,7 @@ const Manage_Song = () => {
       }
     });
   };
+
   const columns = [
     {
       title: "Users",
@@ -163,15 +175,38 @@ const Manage_Song = () => {
       dataIndex: "price",
       key: "price",
     },
+    // {
+    //   title: "Is Publish",
+    //   dataIndex: "is_published",
+    //   key: "is_published",
+    //   render: (_, record) => (
+    //     <div>
+    //       <button >Publish</button>
+    //     </div>
+    //   ),
+    // },
     {
       title: "Action",
       key: "action",
       render: (_, record) => (
         <div className="flex gap-2">
           <svg
+            onClick={() => showModalPublish(record?.id)}
+            xmlns="http://www.w3.org/2000/svg"
+            fill="#A0C878"
+            width="20px"
+            height="20px"
+            viewBox="0 0 1920 1920"
+          >
+            <path
+              d="M960 1807.059c-467.125 0-847.059-379.934-847.059-847.059 0-467.125 379.934-847.059 847.059-847.059 467.125 0 847.059 379.934 847.059 847.059 0 467.125-379.934 847.059-847.059 847.059M960 0C430.645 0 0 430.645 0 960s430.645 960 960 960 960-430.645 960-960S1489.355 0 960 0M854.344 1157.975 583.059 886.69l-79.85 79.85 351.135 351.133L1454.4 717.617l-79.85-79.85-520.206 520.208Z"
+              fill-rule="evenodd"
+            />
+          </svg>
+          <svg
             onClick={() => showModal(record)}
             width="20"
-            height="22"
+            height="20"
             viewBox="0 0 20 22"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -184,8 +219,8 @@ const Manage_Song = () => {
 
           <svg
             onClick={() => handleDelete(record?.id)}
-            width="16"
-            height="18"
+            width="20"
+            height="20"
             viewBox="0 0 16 18"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -209,23 +244,31 @@ const Manage_Song = () => {
     setUpdatData(updateData);
     setUpdatID(updateData.id);
     setIsModalOpen(true);
+    form.resetFields();
   };
   const handleOk = () => {
     setIsModalOpen(false);
+  };
+  const handleSearchChange = (e) => {
+    setSearchValue(e.target.value);
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-
-  const handleSearchChange = (e) => {
-    setSearchValue(e.target.value);
+  // publish modal
+  const handleCancelPublish = () => {
+    setIsModalOpenPublish(false);
   };
-
+  const showModalPublish = (publishID) => {
+    setPublishID(publishID);
+    setIsModalOpenPublish(true);
+    form.resetFields();
+  };
+  const handleOkPublish = () => {
+    setIsModalOpenPublish(false);
+  };
   const onFinish = async (values: any) => {
-    if (updatID) {
-      return;
-    }
     if (!file || !audio) {
       message.error("Please upload both audio and thumbnail files");
       return;
@@ -242,32 +285,37 @@ const Manage_Song = () => {
     formData.append("bpm", values.BPM);
     formData.append("gender", values.gender);
     formData.append("is_published", values.publishStatus);
+
     try {
-      const res = await createNewSong(formData).unwrap();
-      console.log("=============createNewSong=======================");
-      console.log(res);
-      console.log("===============createNewSong=====================");
-      if (res.success) {
-        Swal.fire({
-          icon: "success",
-          title: "Success",
-          text: res?.message,
-        });
+      if (updatID) {
+        formData.append("_method", "PUT");
+        const res = await updateSong({
+          id: updatID,
+          updateInfo: formData,
+        }).unwrap();
+
+        if (res?.success) {
+          message.success("Song updated successfully");
+          setUpdatID(null);
+          setIsModalOpen(false);
+        } else {
+          message.error(res?.message || "Failed to update song");
+        }
       } else {
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: res?.message,
-        });
+        const res = await createNewSong(formData).unwrap();
+
+        if (res?.success) {
+          message.success("Song created successfully");
+          setIsModalOpen(false);
+        } else {
+          message.error(res?.message || "Failed to create song");
+        }
       }
-    } catch (errors) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: errors?.message,
-      });
+    } catch (error) {
+      message.error("Something went wrong");
     }
   };
+
   const { data: artistData, isLoading: artistDataLoading } = useArtistGetQuery(
     {}
   );
@@ -282,7 +330,7 @@ const Manage_Song = () => {
       per_page: per_page,
     },
   });
-
+  const [manageSongPublise] = useManageSongPubliseMutation();
   const handleBeforeUpload = (file: File) => {
     setFile(file);
     return;
@@ -294,6 +342,26 @@ const Manage_Song = () => {
       message.error("You can only upload audio files!");
     }
     return isAudio || Upload.LIST_IGNORE; // prevents upload if not audio
+  };
+
+  const onfinishOne = async (values) => {
+    console.log("====================================");
+    console.log(values);
+    console.log("====================================");
+    try {
+      const res = await manageSongPublise({
+        id: publishID,
+        is_publise: values.radio,
+      }).unwrap();
+
+      if (res?.success) {
+        message.success(res?.message);
+      } else {
+        message.error(res?.message || "Failed to update song");
+      }
+    } catch (errors) {
+      console.log(errors);
+    }
   };
 
   return (
@@ -632,6 +700,29 @@ const Manage_Song = () => {
           </Form>
         </Modal>
       </div>
+      <Modal
+        title="Change status"
+        className="!w-[400px] "
+        onCancel={handleCancelPublish}
+        open={isModalOpenPublish}
+        footer={false}
+      >
+        <Form form={formOne} onFinish={onfinishOne}>
+          <Form.Item name="radio">
+            <Radio.Group className="flex flex-col gap-3 mt-7">
+              <Radio value="1">Publish</Radio>
+              <Radio value="0">Unpublish</Radio>
+              <Button
+                htmlType="submit"
+                onClick={handleOkPublish}
+                className="bg-[#E7F056] mt-7 p-5 font-semibold font-degular text-xl"
+              >
+                Done
+              </Button>
+            </Radio.Group>
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 };

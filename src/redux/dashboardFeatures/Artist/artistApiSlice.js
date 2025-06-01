@@ -30,14 +30,13 @@ const artistApiSlice = baseApi.injectEndpoints({
       invalidatesTags: ["artist"],
     }),
     artistUpdate: builder.mutation({
-      query: ({id, ...data}) => ({
+      query: ({ id, artistInfo }) => ({
         url: `/delete-artist/${id}`,
         method: "PATCH",
-        body: data,
+        body: artistInfo,
       }),
       invalidatesTags: ["artist"],
-    }), 
-
+    }),
   }),
 });
 
@@ -45,4 +44,5 @@ export const {
   useArtistGetQuery,
   useArtistPostMutation,
   useArtistDeteteMutation,
+  useArtistUpdateMutation,
 } = artistApiSlice;

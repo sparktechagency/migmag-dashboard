@@ -166,6 +166,12 @@ const Transactions = () => {
       render: (_, record) => <h2>{record?.order?.user?.location}</h2>,
     },
     {
+      title: "Currency",
+      dataIndex: "currency",
+      key: "currency",
+      render: (_, record) => <h2>{record?.currency}</h2>,
+    },
+    {
       title: "Created At",
       dataIndex: "created_at",
       key: "created_at",

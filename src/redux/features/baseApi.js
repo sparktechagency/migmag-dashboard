@@ -15,7 +15,7 @@ export const baseApi = createApi({
     },
   }),
   // refresh for this tag
-  tagTypes: ["admin", "catagory", "user", "artist", "song"],
+  tagTypes: ["admin", "catagory", "user", "artist", "song", "order"],
   endpoints: () => ({}),
 });
 

@@ -18,6 +18,7 @@ import Hero from "../pages/Hero";
 import Transactions from "../pages/Transactions";
 import Categories from "../pages/Categories";
 import Register from "../pages/register";
+import Order from "../pages/Order";
 
 const handleNotifications = (event: React.MouseEvent<HTMLDivElement>) => {
   // Add your notification handling logic here
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
       {
         path: "/manage_song",
         element: <Manage_Song />,
+      },
+      {
+        path: "/order",
+        element: <Order />,
       },
       {
         path: "/top_artist",

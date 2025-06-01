@@ -115,7 +115,6 @@ const Manage_Users = () => {
       <div className="py-8">
         <Table
           loading={isFetching || isLoading}
-          // dataSource={dataSource}
           dataSource={UsersData?.data.data}
           columns={columns}
           pagination={{

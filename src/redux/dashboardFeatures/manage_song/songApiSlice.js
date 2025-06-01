@@ -27,7 +27,7 @@ const songApiSlice = baseApi.injectEndpoints({
     }),
     getManageSong: builder.query({
       query: ({ params }) => ({
-        url: `/song`,
+        url: `/publish-song`,
         params: params,
       }),
       providesTags: ["song"],
@@ -39,6 +39,13 @@ const songApiSlice = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["song"],
     }),
+    manageSongPublise: builder.mutation({
+      query: ({ id, is_publise }) => ({
+        url: `published/${id}?is_published=${is_publise}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["song"],
+    }),
   }),
 });
 
@@ -47,4 +54,5 @@ export const {
   useGetManageSongQuery,
   useManageSongDeleteMutation,
   useUpdateSongMutation,
+  useManageSongPubliseMutation,
 } = songApiSlice;
