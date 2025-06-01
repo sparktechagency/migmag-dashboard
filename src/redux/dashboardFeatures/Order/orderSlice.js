@@ -5,7 +5,7 @@ const orderSlice = baseApi.injectEndpoints({
     orderGet: builder.query({
       query: () => {
         return {
-          url: "/order",
+          url: "/orders",
           method: "GET",
         };
       },
