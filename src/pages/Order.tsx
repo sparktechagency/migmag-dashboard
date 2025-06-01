@@ -1,4 +1,4 @@
-import { Avatar, Button, Form, Input, Modal, Table } from "antd";
+import { Avatar, Button, Divider, Form, Input, Modal, Table } from "antd";
 import { Search, Vault } from "lucide-react";
 import React, { useState } from "react";
 import Swal from "sweetalert2";
@@ -27,7 +27,7 @@ const Order = () => {
       dataIndex: "first_name",
       key: "first_name",
       render: (_, record) => (
-        <h2 className="font-degular text-sm font-normal">
+        <h2 className="font-degular h3-sm font-normal">
           {record?.user?.first_name}
         </h2>
       ),
@@ -37,7 +37,7 @@ const Order = () => {
       dataIndex: "email",
       key: "email",
       render: (_, record) => (
-        <h2 className="font-degular text-sm font-normal">
+        <h2 className="font-degular h3-sm font-normal">
           {record?.user?.email}
         </h2>
       ),
@@ -51,8 +51,8 @@ const Order = () => {
       title: "Date",
       dataIndex: "created_at",
       key: "created_at",
-      render: (text) => {
-        const formattedDate = new Date(text).toLocaleString("en-US", {
+      render: (h3) => {
+        const formattedDate = new Date(h3).toLocaleString("en-US", {
           year: "numeric",
           month: "long",
           day: "numeric",
@@ -128,22 +128,70 @@ const Order = () => {
   console.log("============orderData========================");
   console.log(orderData);
   console.log("==============orderData======================");
+
+  // order details page modal data  start
+  const dataSource = [
+    {
+      key: "1",
+      description: "5.0 Master Tokens",
+      quantity: 1,
+      unitPrice: 425.0,
+      processingFee: 21.25,
+      tax: 0.0,
+      total: 446.25,
+    },
+  ];
+
+  const columnsModal = [
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+    },
+    {
+      title: "Quantity",
+      dataIndex: "quantity",
+      key: "quantity",
+    },
+    {
+      title: "Unit Price (CHF)",
+      dataIndex: "unitPrice",
+      key: "unitPrice",
+    },
+    {
+      title: "Processing Fee (5%)",
+      dataIndex: "processingFee",
+      key: "processingFee",
+    },
+    {
+      title: "Tax (8.1%)",
+      dataIndex: "tax",
+      key: "tax",
+    },
+    {
+      title: "Total (CHF)",
+      dataIndex: "total",
+      key: "total",
+    },
+  ];
+  // order details page modal create  end
+
   return (
     <div>
       <div className="bg-white p-6 rounded-2xl">
         <div className="flex justify-between">
           <div className="">
-            <h1 className="text-[#121212] text-[20px] font-semibold font-degular ">
+            <h1 className="h3-[#121212] h3-[20px] font-semibold font-degular ">
               Order List
             </h1>
-            <p className="font-degular font-normal text-sm pb-4 pt-2">
+            <p className="font-degular font-normal h3-sm pb-4 pt-2">
               For adding a new song or edit existing song.
             </p>
           </div>
         </div>
         <Input
           prefix={<Search />}
-          className="w-full rounded-2xl h-12 bg-base border-0 text-primary placeholder:text-gray-200"
+          className="w-full rounded-2xl h-12 bg-base border-0 h3-primary placeholder:h3-gray-200"
           placeholder="Search for Listing"
           onChange={handleSearchChange}
           style={{
@@ -174,7 +222,50 @@ const Order = () => {
           onOk={handleOk}
           onCancel={handleCancel}
           footer={false}
-        ></Modal>
+        >
+          <div className="max-w-2xl mx-auto p-6 text-black  rounded shadow">
+            <h2 level={4}>Md. Maksud Bhuiyan</h2>
+            <p>1230 Sector-10, Uttara, Dhaka, Bangladesh</p>
+
+            <Divider />
+
+            <Table
+              dataSource={dataSource}
+              columns={columnsModal}
+              pagination={false}
+              bordered
+              className="my-4"
+            />
+
+            <div className="h3-right space-y-2">
+              <div className="flex justify-between">
+                <h3>Subtotal:</h3>
+                <h3>CHF 425.00</h3>
+              </div>
+              <div className="flex justify-between">
+                <h3>Processing Fee (5%):</h3>
+                <h3>CHF 21.25</h3>
+              </div>
+              <div className="flex justify-between">
+                <h3>Tax (8.1% - Switzerland):</h3>
+                <h3>CHF 0.00</h3>
+              </div>
+              <Divider />
+              <div className="flex justify-between h3-lg font-semibold">
+                <h3>Total Due:</h3>
+                <h3>CHF 446.25</h3>
+              </div>
+              <Divider />
+
+              <h3 className="h3-green-600 font-semibold">Paid with: Card</h3>
+              <h3>Remaining Balance: CHF 0.00</h3>
+            </div>
+
+            <p className="h3-center mt-6 h3-gray-500 h3-sm">
+              Thank you for your business!
+            </p>
+          </div>
+        </Modal>
       </div>
     </div>
   );
