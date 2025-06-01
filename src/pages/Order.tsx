@@ -224,7 +224,7 @@ const Order = () => {
           footer={false}
         >
           <div className="max-w-2xl mx-auto p-6 text-black  rounded shadow">
-            <h2 level={4}>Md. Maksud Bhuiyan</h2>
+            <h2>Md. Maksud Bhuiyan</h2>
             <p>1230 Sector-10, Uttara, Dhaka, Bangladesh</p>
 
             <Divider />

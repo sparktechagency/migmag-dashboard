@@ -31,8 +31,8 @@ const artistApiSlice = baseApi.injectEndpoints({
     }),
     artistUpdate: builder.mutation({
       query: ({ id, artistInfo }) => ({
-        url: `/delete-artist/${id}`,
-        method: "PATCH",
+        url: `/update-artist/${id}`,
+        method: "POST",
         body: artistInfo,
       }),
       invalidatesTags: ["artist"],

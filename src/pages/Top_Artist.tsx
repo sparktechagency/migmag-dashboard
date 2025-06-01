@@ -22,6 +22,7 @@ import Swal from "sweetalert2";
 import {
   useArtistDeteteMutation,
   useArtistGetQuery,
+  useArtistUpdateMutation,
 } from "../redux/dashboardFeatures/Artist/artistApiSlice";
 import { useArtistPostMutation } from "../redux/dashboardFeatures/Artist/artistApiSlice";
 
@@ -34,6 +35,7 @@ const Top_Artist = () => {
   const [form] = Form.useForm();
   const [file, setFile] = useState<File | null>(null);
   const [formValue, setFormValue] = useState();
+  const [updateID, setUpdateID] = useState();
 
   const {
     data: artistData,
@@ -47,6 +49,7 @@ const Top_Artist = () => {
 
   const [artistPost] = useArtistPostMutation();
   const [artistDetete] = useArtistDeteteMutation();
+  const [artistUpdate] = useArtistUpdateMutation();
 
   // delete
   const handleDelete: PopconfirmProps["onConfirm"] = async (id) => {
@@ -64,9 +67,12 @@ const Top_Artist = () => {
 
   // edit modal
   const showModal = async (item: any) => {
+    form.resetFields();
     if (item) {
       setFormValue(item);
-      const res = await setIsModalOpen(true);
+      setUpdateID(item.id);
+      setIsModalOpen(true);
+      // form.resetFields();
     } else {
       setIsModalOpen(true);
     }
@@ -96,20 +102,39 @@ const Top_Artist = () => {
       formData.append("profile", file);
     }
     try {
-      const res = await artistPost(formData).unwrap();
-
-      if (res.success) {
-        Swal.fire({
-          icon: "success",
-          title: "Success",
-          text: res?.message,
-        });
+      if (updateID) {
+        formData.append("_method", "PUT");
+        const res = await artistUpdate({
+          id: updateID,
+          artistInfo: formData,
+        }).unwrap();
+        console.log("====================================");
+        console.log(res);
+        console.log("====================================");
+        if (res?.success) {
+          message.success(res?.message);
+          setUpdateID(null);
+          setIsModalOpen(false);
+        } else {
+          message.error(res?.message);
+          console.log(res.message);
+        }
       } else {
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: res?.message,
-        });
+        const res = await artistPost(formData).unwrap();
+
+        if (res.success) {
+          Swal.fire({
+            icon: "success",
+            title: "Success",
+            text: res?.message,
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: res?.message,
+          });
+        }
       }
     } catch (errors) {
       Swal.fire({
@@ -230,16 +255,20 @@ const Top_Artist = () => {
   };
 
   React.useEffect(() => {
-    form.setFieldsValue({
-      name: formValue?.location,
-      gender: formValue?.gender,
-      description: formValue?.description,
-      profile: formValue?.profile,
-      singer: formValue?.singer,
-      singer_writer: formValue?.singer_writer,
-    });
+    if (formValue) {
+      form.setFieldsValue({
+        name: formValue?.location,
+        gender: formValue?.gender,
+        description: formValue?.description,
+        profile: formValue?.profile,
+        singer: formValue?.singer,
+        singer_writer: formValue?.singer_writer,
+      });
+    }
   }, []);
-
+  console.log("===============setUpdateID=====================");
+  console.log(updateID);
+  console.log("================setUpdateID====================");
   return (
     <div>
       <div className="bg-white p-6 rounded-2xl">
@@ -301,6 +330,7 @@ const Top_Artist = () => {
                 beforeUpload={handleBeforeUpload}
                 className="rounded-md"
                 showUploadList={true}
+                maxCount={1}
               >
                 <Button className="flex">
                   <svg
@@ -364,7 +394,7 @@ const Top_Artist = () => {
                 </Button>
                 <Button
                   htmlType="submit"
-                  // onClick={handleOk}
+                  onClick={handleOk}
                   className="w-full bg-[#E7F056] border-none rounded-2xl p-5 font-bold font-degular text-xl"
                 >
                   Save changes
