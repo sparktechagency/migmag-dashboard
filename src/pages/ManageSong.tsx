@@ -8,6 +8,7 @@ import {
   Radio,
   Select,
   Table,
+  Tag,
   Upload,
   UploadFile,
   UploadProps,
@@ -17,6 +18,7 @@ import React, { useState } from "react";
 import { message, Popconfirm } from "antd";
 import Swal from "sweetalert2";
 import { useForm } from "antd/es/form/Form";
+import arrowIcon from "../assets/Images/dashboard/arrow.png";
 import {
   useGenreGetQuery,
   useKeyGetQuery,
@@ -34,8 +36,6 @@ import {
   useManageSongPubliseMutation,
   useUpdateSongMutation,
 } from "../redux/dashboardFeatures/manage_song/songApiSlice";
-import { log } from "console";
-import { render } from "react-dom";
 
 const Manage_Song = () => {
   const [form] = Form.useForm();
@@ -50,7 +50,9 @@ const Manage_Song = () => {
   const [updatData, setUpdatData] = useState();
   const [formOne] = useForm();
   const [publishID, setPublishID] = useState();
-  const [isPublished, setIsPublished] = useState({});
+  const [responsData, SetResponsData] = useState();
+  const [isPublished, setIsPublished] = useState(true);
+  const [updatedStatus, setUpdatedStatus] = useState({});
   const [fileList, setFileList] = useState<UploadFile[]>([
     {
       uid: "-1",
@@ -103,6 +105,28 @@ const Manage_Song = () => {
         }
       }
     });
+  };
+
+  const handlePublish = async (id, currentStatus) => {
+    const newStatus = currentStatus === "1" ? "0" : "1";
+    try {
+      const res = await manageSongPublise({
+        id,
+        is_publise: newStatus,
+      }).unwrap();
+
+      if (res?.success) {
+        message.success(res.message);
+        // update local state for instant UI change
+        setUpdatedStatus((prev) => ({ ...prev, [id]: newStatus }));
+        refetch(); // optional: to sync data later
+      } else {
+        message.error(res.message || "Failed to update song");
+      }
+    } catch (error) {
+      console.error(error);
+      message.error("Something went wrong.");
+    }
   };
 
   const columns = [
@@ -175,16 +199,57 @@ const Manage_Song = () => {
       dataIndex: "price",
       key: "price",
     },
-    // {
-    //   title: "Is Publish",
-    //   dataIndex: "is_published",
-    //   key: "is_published",
-    //   render: (_, record) => (
-    //     <div>
-    //       <button >Publish</button>
-    //     </div>
-    //   ),
-    // },
+    {
+      title: "Is Publish",
+      dataIndex: "is_published",
+      key: "is_published",
+      // align: "center",
+      render: (_, record) => {
+        const currentStatus = updatedStatus[record.id] ?? record.is_published;
+        return (
+          <div className="flex items-center gap-2">
+            <div
+              className="cursor-pointer bg-white hover:bg-gray-300 p-1 rounded-full"
+              onClick={() => handlePublish(record.id, currentStatus)}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                version="1.1"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                width="20"
+                height="20"
+                x="0"
+                y="0"
+                viewBox="0 0 32 32"
+                xml:space="preserve"
+                className="self-center"
+              >
+                <g>
+                  <g data-name="Layer 51">
+                    <path
+                      d="M29 7h-6v6h2V9.68c.168.239.333.48.479.73A11.007 11.007 0 0 1 10.41 25.479L9.391 27.2A13.007 13.007 0 0 0 27.2 9.4c-.079-.136-.174-.262-.259-.395H29ZM7 22.32c-.168-.239-.333-.48-.479-.73A11.007 11.007 0 0 1 21.59 6.521L22.609 4.8A13.007 13.007 0 0 0 4.8 22.605c.079.136.174.262.259.395H3v2h6v-6H7Z"
+                      fill="blue"
+                      opacity="1"
+                      data-original="blue"
+                      className=""
+                    ></path>
+                  </g>
+                </g>
+              </svg>
+            </div>
+            {record.is_published === 1 ? (
+              <Tag color="success">Publish</Tag>
+            ) : (
+              <Tag color="warning">
+                {" "}
+                <div className="flex items-center gap-2">Unpublish</div>
+              </Tag>
+            )}
+          </div>
+        );
+      },
+    },
+
     {
       title: "Action",
       key: "action",
@@ -323,6 +388,7 @@ const Manage_Song = () => {
     data: songData,
     isLoading,
     isFetching,
+    refetch,
   } = useGetManageSongQuery({
     params: {
       search: searchValue,
@@ -399,7 +465,6 @@ const Manage_Song = () => {
       <div className="py-8">
         <Table
           loading={isFetching || isLoading}
-          // dataSource={dataSource}
           dataSource={songData?.data?.data}
           columns={columns}
           pagination={{

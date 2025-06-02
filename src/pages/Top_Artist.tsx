@@ -378,7 +378,7 @@ const Top_Artist = () => {
                 <Radio value="female">Female</Radio>
               </Radio.Group>
             </Form.Item>
-            <Form.Item label="Singer Info	"></Form.Item>
+            <Form.Item label="Singer Info"></Form.Item>
             <Checkbox.Group
               options={optionsWithDisabled}
               defaultValue={["singer"]}

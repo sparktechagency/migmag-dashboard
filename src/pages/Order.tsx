@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Swal from "sweetalert2";
 import { useForm } from "antd/es/form/Form";
 import { useOrderGetQuery } from "../redux/dashboardFeatures/Order/orderSlice";
+import { render } from "react-dom";
 
 const Order = () => {
   const [form] = Form.useForm();
@@ -13,7 +14,7 @@ const Order = () => {
   const [page, setPage] = useState(1);
   const [per_page, setPerPage] = useState(7);
   const [updatID, setUpdatID] = useState();
-  const [updatData, setUpdatData] = useState();
+  const [detailsData, setDetailsData] = useState();
   const [formOne] = useForm();
 
   const columns = [
@@ -98,7 +99,8 @@ const Order = () => {
 
   // edit modal
   const showModal = (updateData) => {
-    setUpdatData(updateData);
+    setDetailsData(updateData);
+    // setUpdatData(updateData);
     setUpdatID(updateData.id);
     setIsModalOpen(true);
     form.resetFields();
@@ -125,9 +127,9 @@ const Order = () => {
       per_page: per_page,
     },
   });
-  console.log("============orderData========================");
-  console.log(orderData);
-  console.log("==============orderData======================");
+  console.log("============detailsData========================");
+  console.log(detailsData);
+  console.log("==============detailsData======================");
 
   // order details page modal data  start
   const dataSource = [
@@ -152,11 +154,14 @@ const Order = () => {
       title: "Quantity",
       dataIndex: "quantity",
       key: "quantity",
+      render: (_, record) => (
+        <h2 className="font-degular h3-sm font-normal">{record?.quantity}</h2>
+      ),
     },
     {
       title: "Unit Price (CHF)",
-      dataIndex: "unitPrice",
-      key: "unitPrice",
+      dataIndex: "price",
+      key: "price",
     },
     {
       title: "Processing Fee (5%)",
@@ -203,7 +208,6 @@ const Order = () => {
       <div className="py-8">
         <Table
           loading={isFetching || isLoading}
-          // dataSource={dataSource}
           dataSource={orderData?.data}
           columns={columns}
           pagination={{
@@ -224,13 +228,17 @@ const Order = () => {
           footer={false}
         >
           <div className="max-w-2xl mx-auto p-6 text-black  rounded shadow">
-            <h2>Md. Maksud Bhuiyan</h2>
-            <p>1230 Sector-10, Uttara, Dhaka, Bangladesh</p>
+            <h2>
+              {" "}
+              {detailsData?.user?.first_name} {detailsData?.user?.last_name}
+            </h2>
+            <p>{detailsData?.user?.location}</p>
 
             <Divider />
 
             <Table
-              dataSource={dataSource}
+              loading={isFetching || isLoading}
+              dataSource={detailsData?.order_details || []}
               columns={columnsModal}
               pagination={false}
               bordered
