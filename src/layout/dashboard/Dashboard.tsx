@@ -410,6 +410,7 @@ const Dashboard: React.FC = () => {
   const location = useLocation();
 
   const handleLogout = () => {
+    localStorage.clear();
     navigate("/auth/login");
   };
 

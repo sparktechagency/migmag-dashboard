@@ -146,9 +146,19 @@ const Order = () => {
 
   const columnsModal = [
     {
-      title: "Description",
-      dataIndex: "description",
-      key: "description",
+      title: "Song",
+      dataIndex: "song_poster",
+      key: "song_poster",
+      render: (_, record) => (
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <Avatar
+            src={`http://137.59.180.219:8008/${record?.song?.song_poster}`}
+          />
+          <h2 className="font-degular text-sm font-normal">
+            {record?.artist?.name}
+          </h2>
+        </div>
+      ),
     },
     {
       title: "Quantity",
@@ -159,28 +169,25 @@ const Order = () => {
       ),
     },
     {
+      title: "Order_number",
+      dataIndex: "order_number",
+      key: "order_number",
+      render: (_, record) => (
+        <h2 className="font-degular h3-sm font-normal">
+          {record?.order?.order_number}
+        </h2>
+      ),
+    },
+    {
       title: "Unit Price (CHF)",
       dataIndex: "price",
       key: "price",
     },
-    {
-      title: "Processing Fee (5%)",
-      dataIndex: "processingFee",
-      key: "processingFee",
-    },
-    {
-      title: "Tax (8.1%)",
-      dataIndex: "tax",
-      key: "tax",
-    },
-    {
-      title: "Total (CHF)",
-      dataIndex: "total",
-      key: "total",
-    },
   ];
   // order details page modal create  end
-
+  console.log("====================================");
+  console.log(detailsData);
+  console.log("====================================");
   return (
     <div>
       <div className="bg-white p-6 rounded-2xl">
@@ -221,7 +228,7 @@ const Order = () => {
         {/* edit modal */}
         <Modal
           title="Basic Modal"
-          className="!w-[650px] !top-10 !max-h-[90vh] overflow-y-scroll rounded-lg "
+          className="!w-[650px] !top-10 !max-h-[90vh]  rounded-lg "
           open={isModalOpen}
           onOk={handleOk}
           onCancel={handleCancel}
@@ -246,27 +253,14 @@ const Order = () => {
             />
 
             <div className="h3-right space-y-2">
-              <div className="flex justify-between">
-                <h3>Subtotal:</h3>
-                <h3>CHF 425.00</h3>
-              </div>
-              <div className="flex justify-between">
-                <h3>Processing Fee (5%):</h3>
-                <h3>CHF 21.25</h3>
-              </div>
-              <div className="flex justify-between">
-                <h3>Tax (8.1% - Switzerland):</h3>
-                <h3>CHF 0.00</h3>
-              </div>
               <Divider />
               <div className="flex justify-between h3-lg font-semibold">
                 <h3>Total Due:</h3>
-                <h3>CHF 446.25</h3>
+                <h3>{detailsData?.total_amount}</h3>
               </div>
               <Divider />
 
               <h3 className="h3-green-600 font-semibold">Paid with: Card</h3>
-              <h3>Remaining Balance: CHF 0.00</h3>
             </div>
 
             <p className="h3-center mt-6 h3-gray-500 h3-sm">
