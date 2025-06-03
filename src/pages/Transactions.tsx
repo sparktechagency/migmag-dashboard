@@ -36,7 +36,9 @@ const Transactions = () => {
       render: (_, record) => (
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <Avatar
-            src={`http://137.59.180.219:8008/${record?.order?.user?.avatar}`}
+            src={`${import.meta.env.VITE_BASE_URL}/${
+              record?.order?.user?.avatar
+            }`}
           />
           <div>
             <h2>{record?.order?.user?.last_name}</h2>

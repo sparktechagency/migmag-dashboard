@@ -133,7 +133,9 @@ const Manage_Song = () => {
       key: "name",
       render: (_, record) => (
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <Avatar src={`http://137.59.180.219:8008/${record.artist.profile}`} />
+          <Avatar
+            src={`${import.meta.env.VITE_BASE_URL}/${record.artist.profile}`}
+          />
           <h2 className="font-degular text-sm font-normal">
             {record?.artist?.name}
           </h2>

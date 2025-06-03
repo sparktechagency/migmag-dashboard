@@ -60,7 +60,7 @@ const Manage_Users = () => {
       key: "first_name",
       render: (name, record) => (
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <Avatar src={`http://137.59.180.219:8008/${record.profile}`} />
+          <Avatar src={`${import.meta.env.VITE_BASE_URL}/${record.profile}`} />
           <h2>{name}</h2>
         </div>
       ),
