@@ -2,8 +2,6 @@ import { createBrowserRouter } from "react-router-dom";
 import Dashboard from "../layout/dashboard/Dashboard";
 import React from "react";
 import DasboardHome from "../pages/DasboardHome";
-import ProductListing from "../pages/ManageSong";
-import Category_Management from "../pages/Category_Management";
 import Manage_Users from "../pages/Manage_Users";
 import Auth from "./../layout/auth/Auth";
 import Login from "../pages/Login";

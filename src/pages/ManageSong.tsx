@@ -254,7 +254,7 @@ const Manage_Song = () => {
       key: "action",
       render: (_, record) => (
         <div className="flex gap-2">
-          <svg
+          <span className=" cursor-pointer " ><svg
             onClick={() => showModal(record)}
             width="20"
             height="20"
@@ -266,21 +266,23 @@ const Manage_Song = () => {
               d="M0 22V18H20V22H0ZM4 14H5.4L13.2 6.225L11.775 4.8L4 12.6V14ZM2 16V11.75L13.2 0.575C13.3833 0.391667 13.5958 0.25 13.8375 0.15C14.0792 0.05 14.3333 0 14.6 0C14.8667 0 15.125 0.05 15.375 0.15C15.625 0.25 15.85 0.4 16.05 0.6L17.425 2C17.625 2.18333 17.7708 2.4 17.8625 2.65C17.9542 2.9 18 3.15833 18 3.425C18 3.675 17.9542 3.92083 17.8625 4.1625C17.7708 4.40417 17.625 4.625 17.425 4.825L6.25 16H2Z"
               fill="#49ADF4"
             />
-          </svg>
+          </svg></span>
 
-          <svg
-            onClick={() => handleDelete(record?.id)}
-            width="20"
-            height="20"
-            viewBox="0 0 16 18"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M3 18C2.45 18 1.97917 17.8042 1.5875 17.4125C1.19583 17.0208 1 16.55 1 16V3H0V1H5V0H11V1H16V3H15V16C15 16.55 14.8042 17.0208 14.4125 17.4125C14.0208 17.8042 13.55 18 13 18H3ZM13 3H3V16H13V3ZM5 14H7V5H5V14ZM9 14H11V5H9V14Z"
-              fill="#E53E3E"
-            />
-          </svg>
+          <span className=" cursor-pointer " >
+            <svg
+              onClick={() => handleDelete(record?.id)}
+              width="20"
+              height="20"
+              viewBox="0 0 16 18"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M3 18C2.45 18 1.97917 17.8042 1.5875 17.4125C1.19583 17.0208 1 16.55 1 16V3H0V1H5V0H11V1H16V3H15V16C15 16.55 14.8042 17.0208 14.4125 17.4125C14.0208 17.8042 13.55 18 13 18H3ZM13 3H3V16H13V3ZM5 14H7V5H5V14ZM9 14H11V5H9V14Z"
+                fill="#E53E3E"
+              />
+            </svg>
+          </span>
         </div>
       ),
     },
@@ -333,6 +335,8 @@ const Manage_Song = () => {
           updateInfo: formData,
         }).unwrap();
 
+        console.log(`response is ${res}`)
+
         if (res?.success) {
           message.success("Song updated successfully");
           setUpdatID(null);
@@ -351,6 +355,7 @@ const Manage_Song = () => {
         }
       }
     } catch (error) {
+      console.log(error)
       message.error("Something went wrong");
     }
   };
@@ -689,7 +694,7 @@ const Manage_Song = () => {
                 label="Gender"
                 name="gender"
                 rules={[{ required: true, message: "Please select a gender!" }]}
-                // layout="vertical"
+              // layout="vertical"
               >
                 <Radio.Group className="flex  gap-3 mt-3 ">
                   <Radio value="male">Male</Radio>
