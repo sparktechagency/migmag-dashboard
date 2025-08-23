@@ -20,11 +20,13 @@ const Manage_Users = () => {
     data: UsersData,
     isFetching,
     isLoading,
+    refetch
   } = useSearchUserQuery({
     search: searchValue,
     page: page,
     per_page: per_page,
   });
+  console.log("UsersData is ", UsersData)
   const [bannedPatch] = useBannedPatchMutation();
 
   const onfinishOne = async (values) => {
@@ -33,7 +35,12 @@ const Manage_Users = () => {
         id: selectId,
         is_banned: values.radio,
       }).unwrap();
-    } catch (errors) {}
+      if (res) {
+        refetch()
+      }
+    } catch (errors) {
+      console.log(" error is ", errors)
+    }
   };
 
   const showModal = (record) => {
@@ -60,7 +67,11 @@ const Manage_Users = () => {
       key: "first_name",
       render: (name, record) => (
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <Avatar src={`${import.meta.env.VITE_BASE_URL}/${record.profile}`} />
+          <img
+            src={`http://103.186.20.110:8002/${record.avatar}`}
+            alt={name}
+            style={{ width: 40, height: 40, borderRadius: "50%" }}
+          />
           <h2>{name}</h2>
         </div>
       ),
@@ -72,14 +83,25 @@ const Manage_Users = () => {
     },
     {
       title: "Profile status",
-      dataIndex: "role",
-      key: "status",
+      dataIndex: "is_banned",
+      key: "is_banned",
+      render: (is_banned) => (
+        <span
+          style={{
+            color: is_banned === true ? "red" : "green",
+            fontWeight: "bold",
+          }}
+        >
+          {is_banned === true ? "Banned" : "Active"}
+        </span>
+      ),
     },
     {
       title: "Location",
       dataIndex: "location",
       key: "location",
     },
+
     {
       title: "Action",
       key: "action",
