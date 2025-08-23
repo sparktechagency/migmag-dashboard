@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const updateProfileApi = createApi({
   reducerPath: "updateProfileApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: `http://103.186.20.110:8002/api`, // no hardcoded base URL
+    baseUrl: `${import.meta.env.VITE_BASE_URL}/api`, // no hardcoded base URL
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("admin_token"); // get token from localStorage
       if (token) {
@@ -18,10 +18,17 @@ export const updateProfileApi = createApi({
         url: "/update-profile",
         method: "POST",
         body: formData,
-        
+      }),
+    }),
+    artistUpdate: builder.mutation({
+      query: ({ id, artistInfo }) => ({
+        url: `/update-artist/${id}`,
+        method: "POST",
+        body: artistInfo,
       }),
     }),
   }),
 });
 
-export const { useUpdateProfileMutation } = updateProfileApi;
+export const { useUpdateProfileMutation, useArtistUpdateMutation } =
+  updateProfileApi;

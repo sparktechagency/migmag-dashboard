@@ -29,14 +29,14 @@ const artistApiSlice = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["artist"],
     }),
-    artistUpdate: builder.mutation({
-      query: ({ id, artistInfo }) => ({
-        url: `/update-artist/${id}`,
-        method: "POST",
-        body: artistInfo,
-      }),
-      invalidatesTags: ["artist"],
-    }),
+    // artistUpdate: builder.mutation({
+    //   query: ({ id, artistInfo }) => ({
+    //     url: `/update-artist/${id}`,
+    //     method: "POST",
+    //     body: artistInfo,
+    //   }),
+    //   invalidatesTags: ["artist"],
+    // }),
   }),
 });
 
@@ -44,5 +44,5 @@ export const {
   useArtistGetQuery,
   useArtistPostMutation,
   useArtistDeteteMutation,
-  useArtistUpdateMutation,
+  // useArtistUpdateMutation,
 } = artistApiSlice;

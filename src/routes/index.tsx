@@ -61,10 +61,7 @@ const router = createBrowserRouter([
         path: "/transactions",
         element: <PrivateRoute><Transactions /> </PrivateRoute>,
       },
-      {
-        path: "/hero",
-        element: <PrivateRoute> <Hero /> </PrivateRoute>,
-      },
+      
       {
         path: "/my_profile",
         element: <PrivateRoute> <MyProfile /> </PrivateRoute>,
