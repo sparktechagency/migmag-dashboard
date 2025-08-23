@@ -40,6 +40,14 @@ const authSlice = baseApi.injectEndpoints({
         };
       },
     }),
+
+    userProfile : builder.query({
+      query : ()=>({
+        url : "/profile",
+        method : "GET"
+      })
+    })
+
   }),
 });
 
@@ -48,4 +56,5 @@ export const {
   useVerifyEmailMutation,
   usePostOtpMutation,
   useSetNewPassMutation,
+  useUserProfileQuery
 } = authSlice;

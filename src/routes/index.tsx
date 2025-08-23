@@ -17,6 +17,8 @@ import Transactions from "../pages/Transactions";
 import Categories from "../pages/Categories";
 import Register from "../pages/register";
 import Order from "../pages/Order";
+import PrivateRoute from "../private-router/PrivateRoute";
+import NotFoundPage from "../component/not-found/NotFoundPage";
 
 const handleNotifications = (event: React.MouseEvent<HTMLDivElement>) => {
   // Add your notification handling logic here
@@ -29,43 +31,43 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <DasboardHome />,
+        element: <PrivateRoute> <DasboardHome /></PrivateRoute>,
       },
       {
         path: "/manage-users",
-        element: <Manage_Users />,
+        element: <PrivateRoute> <Manage_Users /> </PrivateRoute>,
       },
       {
         path: "/categories",
-        element: <Categories />,
+        element: <PrivateRoute> <Categories /> </PrivateRoute>,
       },
       {
         path: "/manage_song",
-        element: <Manage_Song />,
+        element: <PrivateRoute> <Manage_Song /> </PrivateRoute>,
       },
       {
         path: "/order",
-        element: <Order />,
+        element: <PrivateRoute> <Order /> </PrivateRoute>,
       },
       {
         path: "/top_artist",
-        element: <Top_Artist />,
+        element: <PrivateRoute> <Top_Artist /></PrivateRoute>,
       },
       {
         path: "/manage-users/seller-profile/:id",
-        element: <Seller_Profile />,
+        element: <PrivateRoute> <Seller_Profile /> </PrivateRoute>,
       },
       {
         path: "/transactions",
-        element: <Transactions />,
+        element: <PrivateRoute><Transactions /> </PrivateRoute>,
       },
       {
         path: "/hero",
-        element: <Hero />,
+        element: <PrivateRoute> <Hero /> </PrivateRoute>,
       },
       {
         path: "/my_profile",
-        element: <MyProfile />,
+        element: <PrivateRoute> <MyProfile /> </PrivateRoute>,
       },
     ],
   },
@@ -99,6 +101,10 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path : "*",
+    element : <NotFoundPage></NotFoundPage>
+  }
 ]);
 
 export default router;

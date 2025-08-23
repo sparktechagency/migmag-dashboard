@@ -24,29 +24,36 @@ const Login: React.FC = () => {
       email: values.email,
       password: values.password,
     };
+
     try {
       const res = await postLoginInfo(loginInfo).unwrap();
-      const token = res.data?.token;
+      const token = res?.data?.token;
+
       if (token) {
+        // token save
         localStorage.setItem("admin_token", token);
+
+        // Success alert
         Swal.fire({
           icon: "success",
           title: "Success",
-          text: res?.message,
+          text: res?.message || "Login successful",
+        }).then(() => {
+          // page redirect
+          window.location.href = "/";
         });
-        navigate("/");
       } else {
         Swal.fire({
           icon: "error",
           title: "Oops...",
-          text: res?.message,
+          text: res?.message || "Login failed",
         });
       }
-    } catch (errors) {
+    } catch (error) {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: errors?.message,
+        text: error?.data?.message || error?.message || "Something went wrong",
       });
     }
   };

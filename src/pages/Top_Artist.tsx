@@ -12,7 +12,7 @@ import {
   Upload,
 } from "antd";
 import { CloudCog, Pencil, Search, Trash } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
 import { Tag } from "antd";
 import { Checkbox } from "antd";
@@ -41,6 +41,7 @@ const Top_Artist = () => {
     data: artistData,
     isFetching,
     isLoading,
+    refetch
   } = useArtistGetQuery({
     search: searchValue,
     page: page,
@@ -58,7 +59,7 @@ const Top_Artist = () => {
       if (res.success) {
         message.success("Click on Yes");
       }
-    } catch (errors) {}
+    } catch (errors) { }
   };
 
   const cancel: PopconfirmProps["onCancel"] = (e) => {
@@ -67,23 +68,39 @@ const Top_Artist = () => {
 
   // edit modal
   const showModal = async (item: any) => {
+    // modal open করার আগে reset করো
     form.resetFields();
+    setFormValue(null);
+    setUpdateID(null);
+
+    // যদি নতুন item থাকে, তখন সেট করো
     if (item) {
       setFormValue(item);
       setUpdateID(item.id);
-      setIsModalOpen(true);
-      // form.resetFields();
-    } else {
-      setIsModalOpen(true);
     }
+
+    // Refetch async call
+    const { data } = await refetch();
+
+    // formValue update করো refetch data অনুযায়ী
+    if (item) {
+      setFormValue({ ...item, ...data });
+    } else {
+      setFormValue(data);
+    }
+
+    // এখন modal open করো
+    setIsModalOpen(true);
   };
 
-  const handleOk = () => {
+  const handleOk = async () => {
     setIsModalOpen(false);
+    await refetch(); // data refresh after modal close
   };
 
-  const handleCancel = () => {
+  const handleCancel = async () => {
     setIsModalOpen(false);
+    await refetch();
   };
 
   const onFinish = async (values) => {
@@ -137,6 +154,7 @@ const Top_Artist = () => {
         }
       }
     } catch (errors) {
+      console.log(errors)
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -206,19 +224,21 @@ const Top_Artist = () => {
       key: "action",
       render: (_, record) => (
         <div className="flex gap-2">
-          <svg
-            onClick={() => showModal(record)}
-            width="20"
-            height="22"
-            viewBox="0 0 20 22"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M0 22V18H20V22H0ZM4 14H5.4L13.2 6.225L11.775 4.8L4 12.6V14ZM2 16V11.75L13.2 0.575C13.3833 0.391667 13.5958 0.25 13.8375 0.15C14.0792 0.05 14.3333 0 14.6 0C14.8667 0 15.125 0.05 15.375 0.15C15.625 0.25 15.85 0.4 16.05 0.6L17.425 2C17.625 2.18333 17.7708 2.4 17.8625 2.65C17.9542 2.9 18 3.15833 18 3.425C18 3.675 17.9542 3.92083 17.8625 4.1625C17.7708 4.40417 17.625 4.625 17.425 4.825L6.25 16H2Z"
-              fill="#49ADF4"
-            />
-          </svg>
+          <span className=" cursor-pointer " >
+            <svg
+              onClick={() => showModal(record)}
+              width="20"
+              height="22"
+              viewBox="0 0 20 22"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M0 22V18H20V22H0ZM4 14H5.4L13.2 6.225L11.775 4.8L4 12.6V14ZM2 16V11.75L13.2 0.575C13.3833 0.391667 13.5958 0.25 13.8375 0.15C14.0792 0.05 14.3333 0 14.6 0C14.8667 0 15.125 0.05 15.375 0.15C15.625 0.25 15.85 0.4 16.05 0.6L17.425 2C17.625 2.18333 17.7708 2.4 17.8625 2.65C17.9542 2.9 18 3.15833 18 3.425C18 3.675 17.9542 3.92083 17.8625 4.1625C17.7708 4.40417 17.625 4.625 17.425 4.825L6.25 16H2Z"
+                fill="#49ADF4"
+              />
+            </svg>
+          </span>
           <Popconfirm
             title="Delete the task"
             description="Are you sure to delete this task?"
@@ -227,18 +247,20 @@ const Top_Artist = () => {
             okText="Yes"
             cancelText="No"
           >
-            <svg
-              width="16"
-              height="18"
-              viewBox="0 0 16 18"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M3 18C2.45 18 1.97917 17.8042 1.5875 17.4125C1.19583 17.0208 1 16.55 1 16V3H0V1H5V0H11V1H16V3H15V16C15 16.55 14.8042 17.0208 14.4125 17.4125C14.0208 17.8042 13.55 18 13 18H3ZM13 3H3V16H13V3ZM5 14H7V5H5V14ZM9 14H11V5H9V14Z"
-                fill="#E53E3E"
-              />
-            </svg>
+            <span className=" cursor-pointer " >
+              <svg
+                width="16"
+                height="18"
+                viewBox="0 0 16 18"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M3 18C2.45 18 1.97917 17.8042 1.5875 17.4125C1.19583 17.0208 1 16.55 1 16V3H0V1H5V0H11V1H16V3H15V16C15 16.55 14.8042 17.0208 14.4125 17.4125C14.0208 17.8042 13.55 18 13 18H3ZM13 3H3V16H13V3ZM5 14H7V5H5V14ZM9 14H11V5H9V14Z"
+                  fill="#E53E3E"
+                />
+              </svg>
+            </span>
           </Popconfirm>
         </div>
       ),
@@ -269,6 +291,31 @@ const Top_Artist = () => {
   console.log("===============setUpdateID=====================");
   console.log(updateID);
   console.log("================setUpdateID====================");
+  console.log(` =======================${formValue}======================================= `)
+
+  const [fileList, setFileList] = useState<any[]>([]);
+
+  // Modal open হলে formValue থেকে file set করা
+  useEffect(() => {
+    if (formValue?.file || formValue?.image) {
+      setFileList([
+        {
+          uid: "-1",
+          name: formValue.file?.name || "File",
+          status: "done",
+          url: formValue.file?.url || formValue.image, // file URL
+        },
+      ]);
+    } else {
+      setFileList([]);
+    }
+  }, [formValue]);
+
+
+
+
+
+
   return (
     <div>
       <div className="bg-white p-6 rounded-2xl">
@@ -317,14 +364,22 @@ const Top_Artist = () => {
         {/* modal */}
         <Modal
           title="Basic Modal"
-          className="!w-[650px] "
+          className="!w-[650px]"
           open={isModalOpen}
           onOk={handleOk}
           onCancel={handleCancel}
           footer={false}
+          maskClosable={false} // বাইরে click করলে modal বন্ধ হবে না
         >
-          <Form form={form} onFinish={onFinish}>
-            <Form.Item className="bg-[#f5f5f5] border-dashed rounded-lg text-center py-4 my-4 flex items-center   justify-center  ">
+          <Form
+            form={form}
+            onFinish={onFinish}
+            initialValues={formValue} // ✅ initialValues ব্যবহার
+            key={formValue?.id} // ✅ id change হলে form re-render হবে
+          >
+            <Form.Item
+              className="bg-[#f5f5f5] border-dashed rounded-lg text-center py-4 my-4 flex items-center justify-center"
+            >
               <Upload.Dragger
                 name="file"
                 beforeUpload={handleBeforeUpload}
@@ -333,69 +388,51 @@ const Top_Artist = () => {
                 maxCount={1}
               >
                 <Button className="flex">
-                  <svg
-                    width="19"
-                    height="20"
-                    viewBox="0 0 19 20"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M5.5 6.99976V8.99976H2.5V17.9998H16.5V8.99976H13.5V6.99976H16.5C17.0304 6.99976 17.5391 7.21047 17.9142 7.58555C18.2893 7.96062 18.5 8.46933 18.5 8.99976V17.9998C18.5 18.5302 18.2893 19.0389 17.9142 19.414C17.5391 19.789 17.0304 19.9998 16.5 19.9998H2.5C1.96957 19.9998 1.46086 19.789 1.08579 19.414C0.710714 19.0389 0.5 18.5302 0.5 17.9998V8.99976C0.5 8.46933 0.710714 7.96062 1.08579 7.58555C1.46086 7.21047 1.96957 6.99976 2.5 6.99976H5.5ZM10.384 0.468761L13.743 3.82676C13.9306 4.0144 14.0361 4.2689 14.0361 4.53426C14.0361 4.79962 13.9306 5.05412 13.743 5.24176C13.5554 5.4294 13.3009 5.53482 13.0355 5.53482C12.7701 5.53482 12.5156 5.4294 12.328 5.24176L10.5 3.41276V12.9998C10.5 13.265 10.3946 13.5193 10.2071 13.7069C10.0196 13.8944 9.76522 13.9998 9.5 13.9998C9.23478 13.9998 8.98043 13.8944 8.79289 13.7069C8.60536 13.5193 8.5 13.265 8.5 12.9998V3.41276L6.672 5.24176C6.57909 5.33467 6.46879 5.40837 6.3474 5.45865C6.226 5.50894 6.0959 5.53482 5.9645 5.53482C5.83311 5.53482 5.703 5.50894 5.5816 5.45865C5.46021 5.40837 5.34991 5.33467 5.257 5.24176C5.16409 5.14885 5.09039 5.03855 5.04011 4.91716C4.98982 4.79576 4.96394 4.66566 4.96394 4.53426C4.96394 4.40287 4.98982 4.27276 5.04011 4.15136C5.09039 4.02997 5.16409 3.91967 5.257 3.82676L8.617 0.468761C8.85139 0.234575 9.16917 0.103027 9.5005 0.103027C9.83183 0.103027 10.1496 0.234575 10.384 0.468761Z"
-                      fill="black"
-                    />
-                  </svg>
+                  {/* Upload icon */}
                   Upload
                 </Button>
               </Upload.Dragger>
             </Form.Item>
-            {/* Artist name */}
+
             <Form.Item label="Artist name" name="name" layout="vertical">
-              <Input
-                defaultValue={formValue?.name}
-                placeholder="Enter singer name"
-                required
-              ></Input>
+              <Input placeholder="Enter singer name" required />
             </Form.Item>
+
             <Form.Item label="Description" name="description" layout="vertical">
-              <TextArea
-                defaultValue={formValue?.description}
-                placeholder="Enter description"
-                required
-              ></TextArea>
+              <TextArea placeholder="Enter description" required />
             </Form.Item>
-            <Form.Item label="location" name="location" layout="vertical">
-              <Input
-                defaultValue={formValue?.location}
-                placeholder="Enter location"
-                required
-              ></Input>
+
+            <Form.Item label="Location" name="location" layout="vertical">
+              <Input placeholder="Enter location" required />
             </Form.Item>
-            {/*Gender */}
-            <Form.Item label="Gender" name="gender" className="">
-              <Radio.Group className="flex  gap-3 mt-9 ">
+
+            <Form.Item label="Gender" name="gender">
+              <Radio.Group className="flex gap-3 mt-9">
                 <Radio value="male">Male</Radio>
                 <Radio value="female">Female</Radio>
               </Radio.Group>
             </Form.Item>
-            <Form.Item label="Singer Info"></Form.Item>
-            <Checkbox.Group
-              options={optionsWithDisabled}
-              defaultValue={["singer"]}
-              onChange={onChange}
-            />
+
+            <Form.Item label="Singer Info">
+              <Checkbox.Group
+                options={optionsWithDisabled}
+                defaultValue={["singer"]}
+                onChange={onChange}
+              />
+            </Form.Item>
+
             <Form.Item>
               <div className="flex gap-4 mt-20">
                 <Button
                   onClick={handleCancel}
-                  className="w-full  bg-[#fff5f4] text-[#FF3B30] border-none rounded-2xl p-5 font-bold font-degular text-xl"
+                  className="w-full bg-[#fff5f4] text-[#FF3B30] border-none rounded-2xl p-5 font-bold text-xl"
                 >
                   Cancel
                 </Button>
                 <Button
                   htmlType="submit"
                   onClick={handleOk}
-                  className="w-full bg-[#E7F056] border-none rounded-2xl p-5 font-bold font-degular text-xl"
+                  className="w-full bg-[#E7F056] border-none rounded-2xl p-5 font-bold text-xl"
                 >
                   Save changes
                 </Button>

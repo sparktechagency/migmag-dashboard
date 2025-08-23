@@ -13,6 +13,8 @@ const Order = () => {
   const [updatID, setUpdatID] = useState<number | undefined>();
   const [detailsData, setDetailsData] = useState<any>();
 
+  console.log(`order data is ${detailsData} `)
+
   const columns = [
     {
       title: "Order number",
@@ -65,29 +67,31 @@ const Order = () => {
       key: "action",
       render: (_: any, record: any) => (
         <div className="flex gap-2">
-          <svg
-            onClick={() => showModal(record)}
-            width="22"
-            height="16"
-            viewBox="0 0 22 16"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M20.544 7.045C20.848 7.471 21 7.685 21 8C21 8.316 20.848 8.529 20.544 8.955C19.178 10.871 15.689 15 11 15C6.31 15 2.822 10.87 1.456 8.955C1.152 8.529 1 8.315 1 8C1 7.684 1.152 7.471 1.456 7.045C2.822 5.129 6.311 1 11 1C15.69 1 19.178 5.13 20.544 7.045Z"
-              stroke="#49ADF4"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M14 8C14 7.20435 13.6839 6.44129 13.1213 5.87868C12.5587 5.31607 11.7956 5 11 5C10.2044 5 9.44129 5.31607 8.87868 5.87868C8.31607 6.44129 8 7.20435 8 8C8 8.79565 8.31607 9.55871 8.87868 10.1213C9.44129 10.6839 10.2044 11 11 11C11.7956 11 12.5587 10.6839 13.1213 10.1213C13.6839 9.55871 14 8.79565 14 8Z"
-              stroke="#49ADF4"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <span className=" cursor-pointer " >
+            <svg
+              onClick={() => showModal(record)}
+              width="22"
+              height="16"
+              viewBox="0 0 22 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M20.544 7.045C20.848 7.471 21 7.685 21 8C21 8.316 20.848 8.529 20.544 8.955C19.178 10.871 15.689 15 11 15C6.31 15 2.822 10.87 1.456 8.955C1.152 8.529 1 8.315 1 8C1 7.684 1.152 7.471 1.456 7.045C2.822 5.129 6.311 1 11 1C15.69 1 19.178 5.13 20.544 7.045Z"
+                stroke="#49ADF4"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M14 8C14 7.20435 13.6839 6.44129 13.1213 5.87868C12.5587 5.31607 11.7956 5 11 5C10.2044 5 9.44129 5.31607 8.87868 5.87868C8.31607 6.44129 8 7.20435 8 8C8 8.79565 8.31607 9.55871 8.87868 10.1213C9.44129 10.6839 10.2044 11 11 11C11.7956 11 12.5587 10.6839 13.1213 10.1213C13.6839 9.55871 14 8.79565 14 8Z"
+                stroke="#49ADF4"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </span>
         </div>
       ),
     },
@@ -119,6 +123,8 @@ const Order = () => {
       per_page,
     },
   });
+
+  console.log(`order is ${orderData?.data}`)
 
   const columnsModal = [
     {
@@ -188,7 +194,7 @@ const Order = () => {
       <div className="py-8">
         <Table
           loading={isFetching || isLoading}
-          dataSource={orderData?.data?.data || []} // ✅ fixed
+          dataSource={orderData?.data?.data || []}
           columns={columns}
           pagination={{
             current: page,
@@ -197,7 +203,7 @@ const Order = () => {
             onChange: (page) => setPage(page),
           }}
           rowClassName={() => "hover:bg-transparent"}
-          rowKey={(record) => record.id} // ✅ better performance
+          rowKey={(record) => record.id}
         />
 
         {/* Details Modal */}
