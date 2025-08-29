@@ -1,4 +1,4 @@
-import { Avatar, Button, Form, Input, Modal, Radio, Table } from "antd";
+import { Avatar, Button, Form, Input, message, Modal, Radio, Table } from "antd";
 import { Pencil, Search, Trash } from "lucide-react";
 import React, { useState } from "react";
 import { EditOutlined } from "@ant-design/icons";
@@ -36,10 +36,12 @@ const Manage_Users = () => {
         is_banned: values.radio,
       }).unwrap();
       if (res) {
+        message.success("User band successfully")
         refetch()
       }
     } catch (errors) {
       console.log(" error is ", errors)
+      message.error("User band fail")
     }
   };
 
@@ -68,7 +70,7 @@ const Manage_Users = () => {
       render: (name, record) => (
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <img
-            src={`http://103.186.20.110:8002/${record.avatar}`}
+            src={`${import.meta.env.VITE_BASE_URL}/${record.avatar}`}
             alt={name}
             style={{ width: 40, height: 40, borderRadius: "50%" }}
           />

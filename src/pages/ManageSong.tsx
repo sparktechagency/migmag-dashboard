@@ -13,7 +13,7 @@ import {
   UploadFile,
   UploadProps,
 } from "antd";
-import { Search, Vault } from "lucide-react";
+import { Eye, Search, Vault } from "lucide-react";
 import React, { useState } from "react";
 import { message, Popconfirm } from "antd";
 import Swal from "sweetalert2";
@@ -33,8 +33,12 @@ import {
   useGetManageSongQuery,
   useManageSongDeleteMutation,
   useManageSongPubliseMutation,
+  useSongDetailsMutation,
   useUpdateSongMutation,
 } from "../redux/dashboardFeatures/manage_song/songApiSlice";
+import AddSong from "./AddSong";
+import SongUpdateFrom from "./SongUpdateFrom";
+import MusickPlayer from "./musick-player/MusickPlayer";
 
 const Manage_Song = () => {
   const [form] = Form.useForm();
@@ -198,9 +202,10 @@ const Manage_Song = () => {
       dataIndex: "price",
       key: "price",
     },
+
     {
       title: "Is Publish",
-      dataIndex: "is_published",
+      dataIndex: "Action",
       key: "is_published",
       // align: "center",
       render: (_, record) => {
@@ -249,13 +254,15 @@ const Manage_Song = () => {
       },
     },
 
+
+
     {
       title: "Action",
       key: "action",
       render: (_, record) => (
         <div className="flex gap-2">
           <span className=" cursor-pointer " ><svg
-            onClick={() => showModal(record)}
+            onClick={() => openSongUpdateFrom(record?.id)}
             width="20"
             height="20"
             viewBox="0 0 20 22"
@@ -267,6 +274,10 @@ const Manage_Song = () => {
               fill="#49ADF4"
             />
           </svg></span>
+
+          <span className=" cursor-pointer " >
+            <Eye onClick={() => openMusickModal(record?.id)} />
+          </span>
 
           <span className=" cursor-pointer " >
             <svg
@@ -283,6 +294,7 @@ const Manage_Song = () => {
               />
             </svg>
           </span>
+
         </div>
       ),
     },
@@ -294,11 +306,18 @@ const Manage_Song = () => {
 
   // edit modal
   const showModal = (updateData) => {
+    console.log("update data is ", updatData?.id)
     setUpdatData(updateData);
     setUpdatID(updateData.id);
     setIsModalOpen(true);
     form.resetFields();
   };
+
+
+
+
+
+
   const handleOk = () => {
     setIsModalOpen(false);
   };
@@ -316,6 +335,7 @@ const Manage_Song = () => {
     }
 
     const formData = new FormData();
+    formData.append("title", values?.title)
     formData.append("song", values?.song?.file.originFileObj);
     formData.append("song_poster", values?.image?.file.originFileObj);
     formData.append("artist_id", values.artistName);
@@ -335,7 +355,7 @@ const Manage_Song = () => {
           updateInfo: formData,
         }).unwrap();
 
-        console.log(`response is ${res}`)
+        console.log(`response is`)
 
         if (res?.success) {
           message.success("Song updated successfully");
@@ -356,7 +376,7 @@ const Manage_Song = () => {
       }
     } catch (error) {
       console.log(error)
-      message.error("Something went wrong");
+      message.error(error?.data?.message);
     }
   };
 
@@ -389,6 +409,54 @@ const Manage_Song = () => {
     return isAudio || Upload.LIST_IGNORE; // prevents upload if not audio
   };
 
+
+  const [openSongModal, setOpenSongModal] = useState(false);
+
+  const openSongUploadmModal = () => {
+    setOpenSongModal(true)
+    form.resetFields();
+  };
+
+  const closeModal = () => {
+    setOpenSongModal(false)
+  }
+
+  console.log(`updatID is ${updatID} `)
+
+  // const { data: singleSong } = useSongDetailsMutation(updatID);
+
+  // console.log("song is", singleSong?.data?.title)
+
+  const [songUpdateFrom, setSongUpdateFrom] = useState(false);
+  const [songUpdateId, setSongUpdateId] = useState()
+
+  const openSongUpdateFrom = (id) => {
+    setSongUpdateId(id)
+    setSongUpdateFrom(true);
+  }
+
+  console.log("song update id is", songUpdateId)
+  const songCloseModal = () => {
+    setSongUpdateFrom(false)
+  }
+
+
+  // musick player 
+
+  const [openMusickPlayer, setOpenMusickPlayer] = useState(false);
+  const [playerId, setPlayerId] = useState();
+
+  const openMusickModal = (id) => {
+    setPlayerId(id)
+    setOpenMusickPlayer(true)
+  };
+
+  const closeMusickPlayer = () => {
+    setOpenMusickPlayer(false)
+    setPlayerId(undefined)
+  }
+
+
   return (
     <div>
       <div className="bg-white p-6 rounded-2xl">
@@ -405,7 +473,7 @@ const Manage_Song = () => {
             type="default"
             className="bg-[#E7F056] p-4 border-none text-base text-[#3A3A3A] font-degular font-semibold"
             shape="round"
-            onClick={showModal}
+            onClick={openSongUploadmModal}
           >
             Add new song
           </Button>
@@ -438,292 +506,40 @@ const Manage_Song = () => {
         <Modal
           title="Basic Modal"
           className="!w-[650px] !top-10 !max-h-[90vh] overflow-y-scroll rounded-lg "
-          open={isModalOpen}
-          onOk={handleOk}
-          onCancel={handleCancel}
+          open={songUpdateFrom}
+          onOk={songCloseModal}
+          onCancel={songCloseModal}
           footer={false}
         >
-          <Form
-            form={form}
-            onFinish={onFinish}
-            style={{ paddingBottom: "" }}
-            layout="vertical"
-          >
-            <Form.Item
-              name="song"
-              rules={[{ required: true, message: "Upload a audio file!" }]}
-              className="bg-[#f5f5f5] border-dashed text-center py-4 "
-            >
-              <Upload
-                maxCount={1}
-                accept="audio/*"
-                showUploadList={true}
-                beforeUpload={(audioFile) => hendelAudioFile(audioFile)}
-              >
-                <Button className="flex items-center gap-2">
-                  <svg
-                    width="19"
-                    height="20"
-                    viewBox="0 0 19 20"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M5.5 6.99976V8.99976H2.5V17.9998H16.5V8.99976H13.5V6.99976H16.5C17.0304 6.99976 17.5391 7.21047 17.9142 7.58555C18.2893 7.96062 18.5 8.46933 18.5 8.99976V17.9998C18.5 18.5302 18.2893 19.0389 17.9142 19.414C17.5391 19.789 17.0304 19.9998 16.5 19.9998H2.5C1.96957 19.9998 1.46086 19.789 1.08579 19.414C0.710714 19.0389 0.5 18.5302 0.5 17.9998V8.99976C0.5 8.46933 0.710714 7.96062 1.08579 7.58555C1.46086 7.21047 1.96957 6.99976 2.5 6.99976H5.5ZM10.384 0.468761L13.743 3.82676C13.9306 4.0144 14.0361 4.2689 14.0361 4.53426C14.0361 4.79962 13.9306 5.05412 13.743 5.24176C13.5554 5.4294 13.3009 5.53482 13.0355 5.53482C12.7701 5.53482 12.5156 5.4294 12.328 5.24176L10.5 3.41276V12.9998C10.5 13.265 10.3946 13.5193 10.2071 13.7069C10.0196 13.8944 9.76522 13.9998 9.5 13.9998C9.23478 13.9998 8.98043 13.8944 8.79289 13.7069C8.60536 13.5193 8.5 13.265 8.5 12.9998V3.41276L6.672 5.24176C6.57909 5.33467 6.46879 5.40837 6.3474 5.45865C6.226 5.50894 6.0959 5.53482 5.9645 5.53482C5.83311 5.53482 5.703 5.50894 5.5816 5.45865C5.46021 5.40837 5.34991 5.33467 5.257 5.24176C5.16409 5.14885 5.09039 5.03855 5.04011 4.91716C4.98982 4.79576 4.96394 4.66566 4.96394 4.53426C4.96394 4.40287 4.98982 4.27276 5.04011 4.15136C5.09039 4.02997 5.16409 3.91967 5.257 3.82676L8.617 0.468761C8.85139 0.234575 9.16917 0.103027 9.5005 0.103027C9.83183 0.103027 10.1496 0.234575 10.384 0.468761Z"
-                      fill="black"
-                    />
-                  </svg>
-                  Upload Audio
-                </Button>
-              </Upload>
-            </Form.Item>
-            <div className="w-full">
-              <h2 className="font-degular text-base font-semibold">
-                Thumbnail
-              </h2>
-              <div className="flex flex-col items-center gap-2 w-full">
-                <p className="text-gray-600 text-sm text-center">
-                  Upload an image thumbnail for your music (1 file only)
-                </p>
+          <SongUpdateFrom setOpenSongModal={setSongUpdateFrom} songUpdateId={songUpdateId}  ></SongUpdateFrom>
 
-                <div className="bg-[#f5f5f5] border border-dashed border-gray-300 rounded-lg w-full py-6 flex justify-center">
-                  <Form.Item
-                    name={"image"}
-                    rules={[{ required: true, message: "Upload a Thumbnail!" }]}
-                    className="bg-[#f5f5f5] border-dashed rounded-lg text-center py-4 my-4 flex items-center w-full justify-center  "
-                  >
-                    <Upload.Dragger
-                      name="file"
-                      beforeUpload={handleBeforeUpload}
-                      className="rounded-md"
-                      showUploadList={true}
-                    >
-                      <Button className="flex">
-                        <svg
-                          width="19"
-                          height="20"
-                          viewBox="0 0 19 20"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M5.5 6.99976V8.99976H2.5V17.9998H16.5V8.99976H13.5V6.99976H16.5C17.0304 6.99976 17.5391 7.21047 17.9142 7.58555C18.2893 7.96062 18.5 8.46933 18.5 8.99976V17.9998C18.5 18.5302 18.2893 19.0389 17.9142 19.414C17.5391 19.789 17.0304 19.9998 16.5 19.9998H2.5C1.96957 19.9998 1.46086 19.789 1.08579 19.414C0.710714 19.0389 0.5 18.5302 0.5 17.9998V8.99976C0.5 8.46933 0.710714 7.96062 1.08579 7.58555C1.46086 7.21047 1.96957 6.99976 2.5 6.99976H5.5ZM10.384 0.468761L13.743 3.82676C13.9306 4.0144 14.0361 4.2689 14.0361 4.53426C14.0361 4.79962 13.9306 5.05412 13.743 5.24176C13.5554 5.4294 13.3009 5.53482 13.0355 5.53482C12.7701 5.53482 12.5156 5.4294 12.328 5.24176L10.5 3.41276V12.9998C10.5 13.265 10.3946 13.5193 10.2071 13.7069C10.0196 13.8944 9.76522 13.9998 9.5 13.9998C9.23478 13.9998 8.98043 13.8944 8.79289 13.7069C8.60536 13.5193 8.5 13.265 8.5 12.9998V3.41276L6.672 5.24176C6.57909 5.33467 6.46879 5.40837 6.3474 5.45865C6.226 5.50894 6.0959 5.53482 5.9645 5.53482C5.83311 5.53482 5.703 5.50894 5.5816 5.45865C5.46021 5.40837 5.34991 5.33467 5.257 5.24176C5.16409 5.14885 5.09039 5.03855 5.04011 4.91716C4.98982 4.79576 4.96394 4.66566 4.96394 4.53426C4.96394 4.40287 4.98982 4.27276 5.04011 4.15136C5.09039 4.02997 5.16409 3.91967 5.257 3.82676L8.617 0.468761C8.85139 0.234575 9.16917 0.103027 9.5005 0.103027C9.83183 0.103027 10.1496 0.234575 10.384 0.468761Z"
-                            fill="black"
-                          />
-                        </svg>
-                        Upload
-                      </Button>
-                    </Upload.Dragger>
-                  </Form.Item>
-                </div>
-              </div>
-            </div>
-            <Form.Item
-              label="Artist name"
-              name="artistName"
-              rules={[
-                { required: true, message: "Please select an artist name!" },
-              ]}
-            >
-              <Select
-                loading={artistDataLoading}
-                className="bg-[#f5f5f5] h-12 rounded-lg"
-                defaultValue={artistData?.data?.data[0]?.name}
-                placement={"bottomLeft"}
-                options={artistData?.data?.data?.map((im) => {
-                  return {
-                    label: im?.name,
-                    value: im?.id,
-                  };
-                })}
-              />
-            </Form.Item>
-            <div className="flex gap-3">
-              {/* Genre */}
-              <Form.Item
-                className="flex-1"
-                label="Genre"
-                name="genre"
-                rules={[{ required: true, message: "Please select an Genre!" }]}
-              >
-                <Select
-                  loading={genresLoading}
-                  className="bg-[#f5f5f5] h-12 rounded-lg"
-                  defaultValue={genres?.data?.[0]?.name}
-                  style={{ width: "100%" }}
-                  popupMatchSelectWidth={false}
-                  placement={"bottomLeft"}
-                  options={genres?.data?.map((im) => {
-                    return {
-                      label: im?.name,
-                      value: im.id,
-                    };
-                  })}
-                />
-              </Form.Item>
-
-              {/* BPM*/}
-              <Form.Item
-                className="flex-1"
-                label="BPM"
-                name="BPM"
-                rules={[{ required: true, message: "Please input a BPM!" }]}
-              >
-                <Input
-                  max={1000}
-                  maxLength={4}
-                  min={30}
-                  defaultValue={30}
-                  type="number"
-                  placeholder="Enter BPM "
-                  required
-                ></Input>
-              </Form.Item>
-            </div>
-            {/* Key */}
-            <div className="flex gap-3">
-              <Form.Item
-                className="flex-1"
-                label="Key"
-                name="key"
-                rules={[{ required: true, message: "Please select a Key!" }]}
-              >
-                <Select
-                  loading={keysLoading}
-                  className="bg-[#f5f5f5] h-12 rounded-lg"
-                  defaultValue={keys?.data?.[0]?.name}
-                  style={{ width: "100%" }}
-                  popupMatchSelectWidth={false}
-                  placement={"bottomLeft"}
-                  options={keys?.data?.map((im) => {
-                    return {
-                      label: im?.name,
-                      value: im.id,
-                    };
-                  })}
-                />
-              </Form.Item>
-
-              <Form.Item
-                className="flex-1"
-                label="Type"
-                name="type"
-                rules={[{ required: true, message: "Please select a Type!" }]}
-              >
-                <Select
-                  loading={licensLoading}
-                  className="bg-[#f5f5f5] h-12 rounded-lg"
-                  defaultValue={type?.data?.[0]?.name}
-                  style={{ width: "100%" }}
-                  popupMatchSelectWidth={false}
-                  placement={"bottomLeft"}
-                  options={type?.data?.map((im) => {
-                    return {
-                      label: im?.name,
-                      value: im.id,
-                    };
-                  })}
-                />
-              </Form.Item>
-            </div>
-            {/* Key */}
-            <div className="flex gap-3">
-              {/*Price */}
-              <Form.Item
-                className="flex-1"
-                label="Price"
-                name="price"
-                rules={[{ required: true, message: "Please select a Price!" }]}
-              >
-                <Input placeholder="Enter price of the song" required></Input>
-              </Form.Item>
-
-              <Form.Item
-                className="flex-1"
-                label="License"
-                name="License"
-                rules={[
-                  { required: true, message: "Please select a License!" },
-                ]}
-              >
-                <Select
-                  loading={typeLoading}
-                  className="bg-[#f5f5f5] h-12 rounded-lg"
-                  defaultValue={licens?.data?.[0]?.name}
-                  style={{ width: "100%" }}
-                  popupMatchSelectWidth={false}
-                  placement={"bottomLeft"}
-                  options={licens?.data?.map((im) => {
-                    return {
-                      label: im?.name,
-                      value: im.id,
-                    };
-                  })}
-                />
-              </Form.Item>
-            </div>
-            <div className="flex gap-3">
-              {/* Genre */}
-              <Form.Item
-                className="flex-1"
-                label="publish status"
-                name="publishStatus"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please select an publish status!",
-                  },
-                ]}
-              >
-                <Select
-                  loading={genresLoading}
-                  className="bg-[#f5f5f5] h-12 rounded-lg"
-                  defaultValue="publish"
-                  style={{ width: "100%" }}
-                  popupMatchSelectWidth={false}
-                  placement={"bottomLeft"}
-                  options={[
-                    { label: "Publish", value: "1" },
-                    { label: "Unpublish", value: "0" },
-                  ]}
-                />
-              </Form.Item>
-
-              <Form.Item
-                className="flex-1"
-                label="Gender"
-                name="gender"
-                rules={[{ required: true, message: "Please select a gender!" }]}
-              // layout="vertical"
-              >
-                <Radio.Group className="flex  gap-3 mt-3 ">
-                  <Radio value="male">Male</Radio>
-                  <Radio value="female">Female</Radio>
-                </Radio.Group>
-              </Form.Item>
-              {/*Gender */}
-            </div>
-
-            {/* button  */}
-            <Form.Item>
-              <div className="flex gap-4  w-full mt-8">
-                <Button
-                  onClick={handleCancel}
-                  className="flex-1  bg-[#fff5f4] text-[#FF3B30] border-none rounded-2xl p-5 font-bold font-degular text-xl"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  htmlType="submit"
-                  className="w-full flex-1 bg-[#E7F056] border-none rounded-2xl p-5 font-bold font-degular text-xl"
-                >
-                  Save changes
-                </Button>
-              </div>
-            </Form.Item>
-          </Form>
         </Modal>
+        {/* song add modal  */}
+        <Modal
+          title="Basic Modal"
+          className="!w-[650px] !top-10 !max-h-[90vh] overflow-y-scroll rounded-lg "
+          open={openSongModal}
+          onOk={closeModal}
+          onCancel={closeModal}
+          footer={false}
+        >
+          <AddSong setOpenSongModal={setOpenSongModal} ></AddSong>
+
+        </Modal>
+
+        {/* musick details and player  */}
+
+        {playerId && openMusickPlayer && (
+            <MusickPlayer
+              playerId={playerId}
+              isOpen={openMusickPlayer}
+              onClose = {closeMusickPlayer}
+            />
+          )}
+
+
       </div>
+
     </div>
   );
 };

@@ -19,6 +19,7 @@ import Register from "../pages/register";
 import Order from "../pages/Order";
 import PrivateRoute from "../private-router/PrivateRoute";
 import NotFoundPage from "../component/not-found/NotFoundPage";
+import Notification from "../pages/notification/Notification";
 
 const handleNotifications = (event: React.MouseEvent<HTMLDivElement>) => {
   // Add your notification handling logic here
@@ -66,6 +67,10 @@ const router = createBrowserRouter([
         path: "/my_profile",
         element: <PrivateRoute> <MyProfile /> </PrivateRoute>,
       },
+      {
+        path :"/notification",
+        element : <PrivateRoute> <Notification></Notification> </PrivateRoute>
+      }
     ],
   },
   {

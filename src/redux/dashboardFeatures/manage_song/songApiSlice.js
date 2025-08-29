@@ -2,29 +2,34 @@ import { baseApi } from "../../features/baseApi";
 
 const songApiSlice = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    // Create a new song
     createNewSong: builder.mutation({
-      query: (data) => {
-        return {
-          url: "/create-song",
-          method: "POST",
-          body: data,
-          headers: {
-            Accept: "application/json",
-          },
-        };
-      },
-      invalidatesTags: ["song"],
+      query: (data) => ({
+        url: "/create-song",
+        method: "POST",
+        body: data,
+        headers: {
+          Accept: "application/json",
+        },
+      }),
+      invalidatesTags: ["song"], // Invalidate song tag to trigger re-fetch
     }),
+
+    // Update an existing song
     updateSong: builder.mutation({
       query: ({ id, updateInfo }) => {
+        console.log("UpdateSong Payload:", updateInfo);
+
         return {
-          url: `/update-song/${id}`,
+          url: `/update-song/${id}?_method=PUT`,
           method: "POST",
-          body: updateInfo,
+          body: id,
         };
       },
       invalidatesTags: ["song"],
     }),
+
+    // Get all published songs
     getManageSong: builder.query({
       query: ({ params }) => ({
         url: `/publish-song`,
@@ -32,6 +37,8 @@ const songApiSlice = baseApi.injectEndpoints({
       }),
       providesTags: ["song"],
     }),
+
+    // Delete a song
     manageSongDelete: builder.mutation({
       query: (id) => ({
         url: `/delete-song/${id}`,
@@ -39,10 +46,21 @@ const songApiSlice = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["song"],
     }),
+
+    // Manage the publish status of a song
     manageSongPublise: builder.mutation({
-      query: ({ id, is_publise }) => ({
-        url: `published/${id}?is_published=${is_publise}`,
+      query: ({ id, is_published }) => ({
+        url: `published/${id}?is_published=${is_published}`,
         method: "PATCH",
+      }),
+      invalidatesTags: ["song"],
+    }),
+
+    // Get song details by ID
+    songDetails: builder.query({
+      query: (songUpdateId) => ({
+        url: `/song-details/${songUpdateId}`,
+        method: "GET",
       }),
       invalidatesTags: ["song"],
     }),
@@ -55,4 +73,7 @@ export const {
   useManageSongDeleteMutation,
   useUpdateSongMutation,
   useManageSongPubliseMutation,
+  useSongDetailsQuery,
 } = songApiSlice;
+
+export default songApiSlice;
