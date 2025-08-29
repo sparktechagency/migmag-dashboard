@@ -128,7 +128,7 @@ const Order = () => {
         <button
           onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
           disabled={page === 1}
-          className={`px-3 py-1 rounded ${page === 1 ? "bg-gray-300 cursor-not-allowed" : "bg-blue-500 text-white"
+          className={`px-3 py-1 rounded ${page === 1 ? "bg-gray-300 cursor-not-allowed" : "bg-[#808080] text-white"
             }`}
         >
           Prev
@@ -137,7 +137,7 @@ const Order = () => {
           <button
             key={p}
             onClick={() => setPage(p)}
-            className={`px-3 py-1 rounded ${p === page ? "bg-blue-500 text-white" : "bg-gray-200"
+            className={`px-3 py-1 rounded ${p === page ? "bg-[#808080] text-white" : "bg-gray-200"
               }`}
           >
             {p}
@@ -146,7 +146,7 @@ const Order = () => {
         <button
           onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
           disabled={page === totalPages}
-          className={`px-3 py-1 rounded ${page === totalPages ? "bg-gray-300 cursor-not-allowed" : "bg-blue-500 text-white"
+          className={`px-3 py-1 rounded ${page === totalPages ? "bg-gray-300 cursor-not-allowed" : "bg-[#808080] text-white"
             }`}
         >
           Next

@@ -5,60 +5,63 @@ import { UserOutlined, PhoneOutlined, EnvironmentOutlined } from "@ant-design/ic
 import Swal from "sweetalert2";
 import axios from "axios";
 
-const MyProfile = () => {
+const MyProfile: React.FC = () => {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [form] = Form.useForm();
+  const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState<any>(null);
 
-  // Get token from localStorage
-  const token = localStorage.getItem("admin_token");
+  const token = localStorage.getItem("admin_token"); // get token from localStorage
 
-  // Fetch User Profile
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_BASE_URL}/api/profile`,
+  const fetchProfile = async () => {
+    try {
+      const res = await axios.get(`http://103.186.20.110:8002/api/profile`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setUserData(res.data.data);
+      setLoading(false);
+
+      form.setFieldsValue({
+        full_name: res.data.data.full_name,
+        email: res.data.data.email,
+        contact: res.data.data.contact,
+        location: res.data.data.location,
+      });
+
+      if (res.data.data.avatar) {
+        const avatarUrl = `${import.meta.env.VITE_BASE_URL}/${res.data.data.avatar}`;
+        setFileList([
           {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        console.log(res?.data?.data)
-        setUserData(res.data?.data);
-
-        // set form default values
-        form.setFieldsValue({
-          full_name: res?.data?.data?.full_name,
-          email: res?.data?.data?.email,
-          contact: res?.data?.data?.contact,
-          location: res?.data?.data?.location,
-        });
-
-        // set avatar
-        if (res.data?.data?.avatar) {
-          setFileList([
-            {
-              uid: "-1",
-              name: "avatar.png",
-              status: "done",
-              url: `${import.meta.env.VITE_BASE_URL}/${res?.data?.data.avatar}`,
-            },
-          ]);
-        }
-      } catch (error) {
-        console.error(error);
+            uid: "-1",
+            name: "avatar.png",
+            status: "done",
+            url: avatarUrl,
+          },
+        ]);
+      } else {
+        setFileList([]);
       }
-    };
+    } catch (error) {
+      console.error(error);
+      Swal.fire("Error", "Failed to fetch profile", "error");
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchProfile();
-  }, [form, token]);
+  }, []);
 
-  // Upload handler
   const onChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
     setFileList(newFileList);
   };
 
-  // Submit handler
+  const onRemove = (file: UploadFile) => {
+    setFileList([]);
+  };
+
   const onFinish = async (values: any) => {
     const formData = new FormData();
 
@@ -66,28 +69,28 @@ const MyProfile = () => {
       formData.append("avatar", fileList[0].originFileObj as Blob);
     }
 
-    formData.append("full_name", values?.full_name);
-    formData.append("email", values?.email);
-    formData.append("contact", values?.contact);
-    formData.append("location", values?.location);
+    formData.append("full_name", values.full_name);
+    formData.append("email", values.email);
+    formData.append("contact", values.contact);
+    formData.append("location", values.location);
 
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/update-profile`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const res = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/update-profile`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       Swal.fire({
         icon: res.data.success ? "success" : "error",
         title: res.data.success ? "Success" : "Oops...",
-        text: res.data?.message,
+        text: res.data.message,
       });
+
+      if (res.data.success) {
+        fetchProfile(); // Refresh profile after update
+      }
     } catch (error: any) {
       console.error(error);
       Swal.fire({
@@ -98,65 +101,62 @@ const MyProfile = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <h1>Loading...</h1>
+      </div>
+    );
+  }
+
   return (
     <div className="p-6">
-      {/* Heading */}
       <div className="bg-white p-6 rounded-2xl mb-6">
         <h1 className="text-[#121212] text-[20px] font-semibold">My Profile</h1>
-        <p className="text-sm text-[#454545] pt-2">
-          You can update your profile information.
-        </p>
+        <p className="text-sm text-[#454545] pt-2">You can update your profile information.</p>
       </div>
 
-      {/* Form */}
       <div className="bg-white p-6 rounded-2xl">
         <Form form={form} layout="vertical" onFinish={onFinish}>
-          {/* Upload Image */}
           <div className="flex flex-col items-center mb-6">
-            <Form.Item name="image">
-              <Upload
-                listType="picture-card"
-                fileList={fileList}
-                onChange={onChange}
-                name="file"
-                showUploadList={{ showRemoveIcon: true }}
-              >
-                {fileList.length < 1 && <div>Upload</div>}
-              </Upload>
-            </Form.Item>
+            <Upload
+              listType="picture-card"
+              fileList={fileList}
+              onChange={onChange}
+              onRemove={onRemove}
+              name="avatar"
+              showUploadList={{ showRemoveIcon: true }}
+            >
+              {fileList.length < 1 && <div>Upload</div>}
+            </Upload>
             <h4 className="font-bold text-lg">Upload your photo</h4>
           </div>
 
-          {/* Full Name */}
           <Form.Item
             name="full_name"
-            rules={[{ required: true, message: "Please input your full name!" }]}
+            rules={[{ required: true, message: "Please enter your full name!" }]}
           >
             <Input prefix={<UserOutlined />} placeholder="Full Name" />
           </Form.Item>
 
-          {/* Email */}
           <Form.Item name="email">
             <Input disabled placeholder="Email" />
           </Form.Item>
 
-          {/* Contact */}
           <Form.Item
             name="contact"
-            rules={[{ required: true, message: "Please input your contact number!" }]}
+            rules={[{ required: true, message: "Please enter your contact number!" }]}
           >
             <Input prefix={<PhoneOutlined />} placeholder="Contact Number" />
           </Form.Item>
 
-          {/* Location */}
           <Form.Item
             name="location"
-            rules={[{ required: true, message: "Please input your location!" }]}
+            rules={[{ required: true, message: "Please enter your location!" }]}
           >
             <Input prefix={<EnvironmentOutlined />} placeholder="Location" />
           </Form.Item>
 
-          {/* Submit Button */}
           <Form.Item>
             <Button
               htmlType="submit"

@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Avatar, Badge, Button, Layout, Menu, Popover } from "antd";
-import { Bell, Lock, LogOut, User, User2Icon } from "lucide-react";
+import { Bell, ImageUp, Lock, LogOut, User, User2Icon } from "lucide-react";
 import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
 import headerHend from "../../assets/Images/dashboard/headerHend.png";
 import SubMenu from "antd/es/menu/SubMenu";
 import "./Styled_components.css";
 import { UserOutlined } from "@ant-design/icons";
+import { useUserProfileQuery } from "../../redux/dashboardFeatures/updateProfile/updateProfileApiSlice";
+import axios from "axios";
+import { useAllNotificationQuery } from "../../redux/dashboardFeatures/Order/orderSlice";
 
 const { Header, Sider, Content } = Layout;
 
@@ -266,7 +269,7 @@ const menuItems: MenuItem[] = [
       </svg>
     ),
   },
-  
+
   {
     path: "/transactions",
     title: "Transactions",
@@ -384,7 +387,7 @@ const Dashboard: React.FC = () => {
   };
 
   const handleNotifications = () => {
-    navigate("/my_profile");
+    navigate("/notification")
   };
 
   const getMenuIcon = (
@@ -394,6 +397,71 @@ const Dashboard: React.FC = () => {
   ) => {
     return isActive ? activeIcon : icon;
   };
+
+  // const [userData, setUserData] = useState("");
+  // const [isLoading, setIsLoading] = useState(true);
+
+  // useEffect(() => {
+  //   const token = localStorage.getItem("admin_token"); // token এখান থেকে নিবেন
+  //   if (!token) {
+  //     setIsLoading(false);
+  //     return;
+  //   }
+
+  //   const fetchUserData = async () => {
+  //     try {
+  //       const res = await axios.get(
+  //         `${import.meta.env.VITE_BASE_URL}/api/profile`,
+  //         {
+  //           headers: { Authorization: `Bearer ${token}` },
+  //         }
+  //       );
+  //       console.log(res?.data?.data);
+  //       setUserData(res.data?.data);
+  //     } catch (error) {
+  //       console.error("Error fetching profile:", error);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+
+  //   fetchUserData();
+  // }, []); // [] দিলে একবারই রান করবে
+
+  // console.log(`user profile is ${userData?.avatar}`)
+
+  const { data: readNotification } = useAllNotificationQuery(undefined);
+
+
+  const allNotifications = readNotification?.data?.data || [];
+
+  // 1️⃣ Define state at top-level
+  const [unRead, setUnRead] = useState(0);
+
+  // 2️⃣ Update state when notifications change
+  useEffect(() => {
+    const unreadNotifications = allNotifications.filter(n => n.read_at === null);
+    setUnRead(unreadNotifications.length);
+  }, [allNotifications]); // ✅ dependency updates count automatically
+
+  console.log("Unread notifications:", unRead);
+
+  
+
+
+  const { data, isLoading } = useUserProfileQuery(undefined);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <h1>Loading...</h1>
+      </div>
+    );
+  }
+
+
+
+
 
   return (
     <Layout>
@@ -546,12 +614,12 @@ const Dashboard: React.FC = () => {
             alignItems: "center",
           }}
         >
-          <div className="w-full flex justify-between">
+          <div className="w-full flex items-center justify-between">
             <div>
               <h1 className="text-[#333333] font-bold text-[24px]">
                 <div className="flex items-center gap-3">
                   <h4 className="text-[32px] font-bold font-degular text-[##121212]">
-                    Hi, Julian Mark
+                    Hi, {data?.data?.full_name}
                   </h4>
                   <img
                     className="object-cover h-9 w-9"
@@ -561,25 +629,61 @@ const Dashboard: React.FC = () => {
                 </div>
               </h1>
             </div>
-            <div
-              onClick={handleNotifications}
-              className="cursor-pointer flex items-center gap-4"
-              style={{ zIndex: 11 }}
-            >
-              <svg
-                width="42"
-                height="42"
-                viewBox="0 0 42 42"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+
+            <div className=" flex items-center justify-between  gap-x-5  " >
+
+              <div
+                onClick={handleNotifications}
+                className="relative cursor-pointer flex items-center gap-4"
+                style={{ zIndex: 11 }}
               >
-                <rect width="42" height="42" rx="21" fill="#E7F056" />
-                <path
-                  d="M13 28V26H15V19C15 17.6167 15.4167 16.3877 16.25 15.313C17.0833 14.2383 18.1667 13.534 19.5 13.2V12.5C19.5 12.0833 19.646 11.7293 19.938 11.438C20.23 11.1467 20.584 11.0007 21 11C21.416 10.9993 21.7703 11.1453 22.063 11.438C22.3557 11.7307 22.5013 12.0847 22.5 12.5V13.2C23.8333 13.5333 24.9167 14.2377 25.75 15.313C26.5833 16.3883 27 17.6173 27 19V26H29V28H13ZM21 31C20.45 31 19.9793 30.8043 19.588 30.413C19.1967 30.0217 19.0007 29.5507 19 29H23C23 29.55 22.8043 30.021 22.413 30.413C22.0217 30.805 21.5507 31.0007 21 31Z"
-                  fill="#121212"
-                />
-              </svg>
-              <Avatar size={42} icon={<UserOutlined />} />
+                <svg
+                  width="42"
+                  height="42"
+                  viewBox="0 0 42 42"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect width="42" height="42" rx="21" fill="#E7F056" />
+                  <path
+                    d="M13 28V26H15V19C15 17.6167 15.4167 16.3877 16.25 15.313C17.0833 14.2383 18.1667 13.534 19.5 13.2V12.5C19.5 12.0833 19.646 11.7293 19.938 11.438C20.23 11.1467 20.584 11.0007 21 11C21.416 10.9993 21.7703 11.1453 22.063 11.438C22.3557 11.7307 22.5013 12.0847 22.5 12.5V13.2C23.8333 13.5333 24.9167 14.2377 25.75 15.313C26.5833 16.3883 27 17.6173 27 19V26H29V28H13ZM21 31C20.45 31 19.9793 30.8043 19.588 30.413C19.1967 30.0217 19.0007 29.5507 19 29H23C23 29.55 22.8043 30.021 22.413 30.413C22.0217 30.805 21.5507 31.0007 21 31Z"
+                    fill="#121212"
+                  />
+                </svg>
+
+                {/* Badge */}
+
+                {/* Badge */}
+                {unRead > 0 && (
+                  <span className="absolute -top-1 -right-1 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full">
+                    {unRead}
+                  </span>
+                )}
+
+              </div>
+
+
+              <div>
+                <div>
+                  <Link to={"/my_profile"}>
+                    <img
+                      src={
+                        data?.data.avatar
+                          ? `${import.meta.env.VITE_BASE_URL}/${data?.data.avatar}`
+                          : "http://103.186.20.110:8002/storage/uploads/avatar/1756186434.png"
+                      }
+                      alt="profileImg"
+                      className=" w-16 h-16 object-fill  rounded-full "
+                    />
+                  </Link>
+                </div>
+              </div>
+
+
+
+
+
+
             </div>
           </div>
         </Header>

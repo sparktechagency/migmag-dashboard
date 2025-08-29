@@ -241,7 +241,7 @@ const Top_Artist = () => {
         prefix={<Search />}
         value={searchValue}
         onChange={handleSearchChange}
-        className="mb-4 rounded-2xl"
+        className="mb-4 py-2  rounded-2xl"
       />
 
       <Table

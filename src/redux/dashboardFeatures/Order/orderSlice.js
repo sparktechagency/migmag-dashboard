@@ -6,7 +6,7 @@ const orderSlice = baseApi.injectEndpoints({
       query: (params) => ({
         url: "/orders",
         method: "GET",
-        params, 
+        params,
       }),
     }),
     orderDetails: builder.query({
@@ -15,7 +15,34 @@ const orderSlice = baseApi.injectEndpoints({
         method: "GET",
       }),
     }),
+    allNotification: builder.query({
+      query: () => ({
+        url: `/notifications`,
+        method: "GET",
+      }),
+      providesTags: ["Notifications"],
+    }),
+    notificationRead: builder.mutation({
+      query: (id) => ({
+        url: `/notifications-read/${id}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Notifications"],
+    }),
+    allNotificationRead: builder.mutation({
+      query: () => ({
+        url: `/notifications-read-all`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Notifications"],
+    }),
   }),
 });
 
-export const { useOrderGetQuery, useOrderDetailsQuery } = orderSlice;
+export const {
+  useOrderGetQuery,
+  useOrderDetailsQuery,
+  useAllNotificationQuery,
+  useNotificationReadMutation,
+  useAllNotificationReadMutation,
+} = orderSlice;
