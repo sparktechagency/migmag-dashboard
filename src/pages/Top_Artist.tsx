@@ -20,10 +20,11 @@ import Swal from "sweetalert2";
 import {
   useArtistDeteteMutation,
   useArtistGetQuery,
-  
+
   useArtistPostMutation,
 } from "../redux/dashboardFeatures/Artist/artistApiSlice";
 import { useArtistUpdateMutation } from "../redux/dashboardFeatures/updateProfile/updateProfileApiSlice";
+import ArtistUpdate from "./ArtistUpdate";
 
 const Top_Artist = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -135,6 +136,12 @@ const Top_Artist = () => {
     formData.append("location", values.location);
     formData.append("gender", values.gender);
 
+    if (values.cover_song && values.cover_song[0]?.originFileObj) {
+      formData.append("cover_song", values.cover_song[0].originFileObj);
+
+      console.log("----------------- values.cover_song[0].originFileObj----------------------------", values.cover_song[0].originFileObj)
+    }
+
     if (values.singer_info?.includes("singer")) formData.append("singer", "singer");
     if (values.singer_info?.includes("singer_writer")) formData.append("singer_writer", "singer_writer");
     if (file) formData.append("profile", file);
@@ -161,14 +168,33 @@ const Top_Artist = () => {
         }
       }
     } catch (err: any) {
-      console.log(err)
-      Swal.fire("Error", err?.data.message );
+      console.log(err);
+      Swal.fire("Error", err?.data.message);
     }
   };
-
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
   };
+
+  const [artistFrom] = Form.useForm();
+
+  const [id, setId] = useState();
+
+  const [artistModal, setArtistModal] = useState(false);
+  const [artistSlug, setArtistSlug] = useState();
+
+  const handleArtistModal = (slug, artistId) => {
+    setArtistSlug(slug)
+    setId(artistId)
+    setArtistModal(true)
+  }
+
+  const artistModalClose = () => {
+    setArtistModal(false)
+  }
+
+
+
 
   const columns = [
     {
@@ -193,14 +219,19 @@ const Top_Artist = () => {
       ),
     },
     { title: "Gender", dataIndex: "gender", key: "gender" },
-    { title: "Description", dataIndex: "description", key: "description" },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      render: (text) => text?.slice(0, 30) + (text?.length > 30 ? "..." : ""),
+    },
     { title: "Location", dataIndex: "location", key: "location" },
     {
       title: "Action",
       key: "action",
       render: (_: any, record: any) => (
         <div className="flex gap-2">
-          <Button onClick={() => showModal(record)} type="link">
+          <Button onClick={() => handleArtistModal(record.slug, record.id)} type="link">
             Edit
           </Button>
           <Popconfirm
@@ -218,6 +249,12 @@ const Top_Artist = () => {
       ),
     },
   ];
+
+
+
+
+
+
 
   return (
     <div className="p-6">
@@ -283,6 +320,22 @@ const Top_Artist = () => {
             <Input placeholder="Enter singer name" />
           </Form.Item>
 
+          <Form.Item
+            label="Cover Song"
+            name="cover_song"
+            valuePropName="fileList"
+            getValueFromEvent={(e) => (Array.isArray(e) ? e : e && e.fileList)}
+            rules={[{ required: true, message: "Please upload a cover song!" }]}
+          >
+            <Upload
+              beforeUpload={() => false} // prevent auto upload
+              accept="audio/*"
+              maxCount={1} // only 1 file allowed
+            >
+              <Button >Upload Audio</Button>
+            </Upload>
+          </Form.Item>
+
           <Form.Item label="Description" name="description" rules={[{ required: true }]}>
             <TextArea placeholder="Enter description" />
           </Form.Item>
@@ -320,6 +373,20 @@ const Top_Artist = () => {
           </Form.Item>
         </Form>
       </Modal>
+
+      <Modal
+        title={"Edit Artist"}
+        open={artistModal}
+        onCancel={artistModalClose}
+        footer={null}
+        width={650}
+        maskClosable={false}
+      >
+        <ArtistUpdate artistFrom={artistFrom} setArtistModal={setArtistModal} slug={artistSlug} artistId={id} ></ArtistUpdate>
+      </Modal>
+
+
+
     </div>
   );
 };

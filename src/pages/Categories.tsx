@@ -34,19 +34,19 @@ const Categories: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>("Genre");
   // genre
   const [genrePost] = useGenrePostMutation();
-  const { data: genres, refetch } = useGenreGetQuery();
+  const { data: genres, refetch } = useGenreGetQuery({});
   const [genreDelete] = useGenreDeleteMutation();
   // key
   const [keyPost] = useKeyPostMutation();
-  const { data: keys } = useKeyGetQuery();
+  const { data: keys } = useKeyGetQuery({});
   const [keyDelete] = useKeyDeleteMutation();
   // key
   const [licensePost] = useLicensePostMutation();
-  const { data: licens } = useLicenseGetQuery();
+  const { data: licens } = useLicenseGetQuery({});
   const [licenseDelete] = useLicenseDeleteMutation();
 
   const [typePost] = useTypePostMutation();
-  const { data: type } = useTypeGetQuery();
+  const { data: type } = useTypeGetQuery({});
   const [typeDelete] = useTypeDeleteMutation();
 
   const handleDeleteGenres = (id: number) => {
@@ -176,17 +176,18 @@ const Categories: React.FC = () => {
 
     const onFinish = async (values: any) => {
       if (activeTab === "Genre") {
-        const infoGenre = {
-          name: values.name,
-        };
 
+        console.log('values', values)
         try {
-          const res = await genrePost(infoGenre).unwrap();
+          const res = await genrePost({ name: values?.name }).unwrap();
+          console.log('response ', res)
           if (res?.success === true) {
             toast.success(res.message);
             refetch();
           }
         } catch (errors) {
+          alert(errors)
+          console.log("category error is", errors)
         }
       } else if (activeTab === "Key") {
         const infoKey = {
@@ -200,7 +201,7 @@ const Categories: React.FC = () => {
             refetch();
           }
         } catch (errors) {
-     
+
         }
       } else if (activeTab === "License") {
         const infoLicense = {

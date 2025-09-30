@@ -26,14 +26,12 @@ import {
 } from "../redux/dashboardFeatures/catagory/catagoryApiSlice";
 import {
   useArtistGetQuery,
-  useArtistUpdateMutation,
 } from "../redux/dashboardFeatures/Artist/artistApiSlice";
 import {
   useCreateNewSongMutation,
   useGetManageSongQuery,
   useManageSongDeleteMutation,
   useManageSongPubliseMutation,
-  useSongDetailsMutation,
   useUpdateSongMutation,
 } from "../redux/dashboardFeatures/manage_song/songApiSlice";
 import AddSong from "./AddSong";
@@ -109,11 +107,13 @@ const Manage_Song = () => {
   };
 
   const handlePublish = async (id, currentStatus) => {
+    console.log(`new status is`, currentStatus)
     const newStatus = currentStatus === "1" ? "0" : "1";
+
     try {
       const res = await manageSongPublise({
         id,
-        is_publise: newStatus,
+        is_published: newStatus,
       }).unwrap();
 
       if (res?.success) {
@@ -530,12 +530,12 @@ const Manage_Song = () => {
         {/* musick details and player  */}
 
         {playerId && openMusickPlayer && (
-            <MusickPlayer
-              playerId={playerId}
-              isOpen={openMusickPlayer}
-              onClose = {closeMusickPlayer}
-            />
-          )}
+          <MusickPlayer
+            playerId={playerId}
+            isOpen={openMusickPlayer}
+            onClose={closeMusickPlayer}
+          />
+        )}
 
 
       </div>

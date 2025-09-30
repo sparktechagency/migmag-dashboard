@@ -20,6 +20,7 @@ import Order from "../pages/Order";
 import PrivateRoute from "../private-router/PrivateRoute";
 import NotFoundPage from "../component/not-found/NotFoundPage";
 import Notification from "../pages/notification/Notification";
+import TopTenVocal from "../pages/top-ten-vocal/TopTenVocal";
 
 const handleNotifications = (event: React.MouseEvent<HTMLDivElement>) => {
   // Add your notification handling logic here
@@ -70,6 +71,10 @@ const router = createBrowserRouter([
       {
         path :"/notification",
         element : <PrivateRoute> <Notification></Notification> </PrivateRoute>
+      },
+      {
+        path :"/top-ten-vocal",
+        element : <PrivateRoute> <TopTenVocal></TopTenVocal> </PrivateRoute>
       }
     ],
   },

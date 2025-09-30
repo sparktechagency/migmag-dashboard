@@ -41,6 +41,8 @@ const Order = () => {
     per_page,
   });
 
+  console.log("Order data is", orderData)
+
   const totalOrders = orderData?.data?.total || 0;
   const totalPages = Math.ceil(totalOrders / per_page);
 
@@ -110,12 +112,14 @@ const Order = () => {
                   })}
                 </td>
                 <td className="px-4 py-3">
-                  <button
-                    className="text-blue-500 hover:underline"
-                    onClick={() => openModal(order?.id)}
-                  >
-                    View
-                  </button>
+                  {
+                    order?.order_type == "Normal" ? <> <button
+                      className="text-blue-500 hover:underline"
+                      onClick={() => openModal(order?.id)}
+                    >
+                      View
+                    </button> </> : ""
+                  }
                 </td>
               </tr>
             ))}

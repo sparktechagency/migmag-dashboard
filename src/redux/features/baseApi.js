@@ -6,7 +6,7 @@ export const baseApi = createApi({
     baseUrl: `${import.meta.env.VITE_BASE_URL}/api`,
     prepareHeaders: (headers, { getState }) => {
       const adminToken = localStorage.getItem("admin_token");
-      console.log(adminToken);
+
       if (adminToken) {
         headers.set("Authorization", `Bearer ${adminToken}`);
         headers.set("acceppt", "application/json");
@@ -15,7 +15,15 @@ export const baseApi = createApi({
     },
   }),
   // refresh for this tag
-  tagTypes: ["admin", "catagory", "user", "artist", "song", "order","Notifications"],
+  tagTypes: [
+    "admin",
+    "catagory",
+    "user",
+    "artist",
+    "song",
+    "order",
+    "Notifications",
+  ],
   endpoints: () => ({}),
 });
 
