@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Music, Play, Pause } from "lucide-react";
-import { Modal, Button } from "antd";
+import { Music } from "lucide-react";
+import { Modal } from "antd";
 import { useSongDetailsQuery } from "../../redux/dashboardFeatures/manage_song/songApiSlice";
 import { imgUrl } from "../../utils/imgUrl";
+import AudioPlayer from "react-h5-audio-player";
+import "react-h5-audio-player/lib/styles.css";
 
 interface MusickPlayerProps {
     playerId: number;
@@ -22,51 +24,20 @@ export default function MusickPlayer({
     const { data, isLoading } = useSongDetailsQuery(playerId);
     const songUrl = data?.data?.song ? `${imgUrl}/${data?.data?.song}` : "";
 
-    const audioRef = useRef<HTMLAudioElement>(null);
+    const playerRef = useRef<AudioPlayer>(null);
     const [isPlaying, setIsPlaying] = useState(false);
-    const [played, setPlayed] = useState(0); // 0-1
-    const [duration, setDuration] = useState(0);
-    const [isSeeking, setIsSeeking] = useState(false);
 
     // Stop audio when modal closes
     useEffect(() => {
-        const audioEl = audioRef.current;
-        if (!isOpen && audioEl) {
-            audioEl.pause();
-            audioEl.currentTime = 0;
+        if (!isOpen && playerRef.current) {
+            const audioEl = playerRef.current.audio.current;
+            if (audioEl) {
+                audioEl.pause();
+                audioEl.currentTime = 0;
+            }
             setIsPlaying(false);
-            setPlayed(0);
         }
     }, [isOpen]);
-
-    const togglePlay = () => {
-        const audioEl = audioRef.current;
-        if (!audioEl) return;
-        if (isPlaying) audioEl.pause();
-        else audioEl.play();
-        setIsPlaying(!isPlaying);
-    };
-
-    const handleTimeUpdate = () => {
-        const audioEl = audioRef.current;
-        if (!audioEl) return;
-        if (!isSeeking) {
-            setPlayed(audioEl.currentTime / audioEl.duration);
-        }
-        setDuration(audioEl.duration);
-    };
-
-    const handleSeekStart = () => {
-        setIsSeeking(true);
-    };
-
-    const handleSeekEnd = (value: number) => {
-        const audioEl = audioRef.current;
-        if (!audioEl) return;
-        audioEl.currentTime = (value / 100) * audioEl.duration;
-        setPlayed(value / 100);
-        setIsSeeking(false);
-    };
 
     return (
         <Modal
@@ -101,68 +72,25 @@ export default function MusickPlayer({
                         </div>
                     </div>
 
-                    {/* Audio Element */}
-                    <audio
-                        ref={audioRef}
-                        src={songUrl}
-                        loop={loop}
-                        onTimeUpdate={handleTimeUpdate}
-                        onEnded={() => setIsPlaying(false)}
-                    />
-
-                    {/* Play Button */}
-                    <div className="flex items-center gap-4 mt-4">
-                        <Button
-                            type="primary"
-                            shape="circle"
-                            size="large"
-                            onClick={togglePlay}
-                        >
-                            {isPlaying ? <Pause /> : <Play />}
-                        </Button>
-                    </div>
-
-                    {/* Progress Slider */}
-                    <input
-                        type="range"
-                        min={0}
-                        max={100}
-                        step={0.1}
-                        value={played * 100}
-                        onMouseDown={handleSeekStart}
-                        onTouchStart={handleSeekStart}
-                        onChange={(e) => handleSeekEnd(Number(e.target.value))}
-                        className="w-full mt-4"
-                    />
-
-                    <div className="flex justify-between text-sm text-gray-500">
-                        <span>{formatTime(played * duration)}</span>
-                        <span>{formatTime(duration)}</span>
-                    </div>
-
-                    {/* Waveform */}
-                    <div className="mt-6 mb-4 flex h-24 items-center gap-0.5">
-                        {Array.from({ length: 60 }).map((_, idx) => {
-                            const barHeight = Math.random() * 24 + 8;
-                            const progress = played * 60;
-                            return (
-                                <div
-                                    key={idx}
-                                    className="w-1 rounded bg-yellow-400 transition-all"
-                                    style={{ height: idx <= progress ? barHeight : barHeight / 3 }}
-                                />
-                            );
-                        })}
+                    {/* React H5 Audio Player */}
+                    <div className="mt-6">
+                        <AudioPlayer
+                            ref={playerRef}
+                            src={songUrl}
+                            loop={loop}
+                            autoPlay={false}
+                            showJumpControls={false}
+                            onPlay={() => setIsPlaying(true)}
+                            onPause={() => setIsPlaying(false)}
+                            onEnded={() => setIsPlaying(false)}
+                            customAdditionalControls={[]} // remove extra controls
+                            customVolumeControls={[]} // remove volume
+                            layout="horizontal"
+                            className="rounded-md shadow-none bg-black text-white"
+                        />
                     </div>
                 </div>
             )}
         </Modal>
     );
-}
-
-function formatTime(seconds: number) {
-    if (!seconds || isNaN(seconds)) return "0:00";
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
 }

@@ -1,16 +1,18 @@
 import { baseApi } from "../../features/baseApi";
 
-
-
 const catagoryApiSlice = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // genre
     genrePost: builder.mutation({
-      query: (data) => {
+      query: (body) => {
+        console.log("------------infoGenre-------", body);
         return {
           url: "/create-genre",
           method: "POST",
-          body: data,
+          body,
+          headers: {
+            Accept: "application/json",
+          },
         };
       },
       invalidatesTags: ["catagory"],
