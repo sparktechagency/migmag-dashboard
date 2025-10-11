@@ -278,7 +278,7 @@ const Status: React.FC = ({ data, isLoading }: any) => {
           </defs>
         </svg>
       ),
-      value: `${data?.data?.total_revenue} Gmp`,
+      value: `${data?.data?.total_revenue}$`,
       title: "Total Profit",
       description: "1.5k Increased than last 7 days",
     },
@@ -311,47 +311,47 @@ const Status: React.FC = ({ data, isLoading }: any) => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {isLoading
           ? Array.from({ length: 4 }).map((_, index) => (
-              <Skeleton.Input
-                key={index}
-                active
-                style={{
-                  height: 117,
-                  width: "100%",
-                  borderRadius: "16px",
-                }}
-                block
-              />
-            ))
+            <Skeleton.Input
+              key={index}
+              active
+              style={{
+                height: 117,
+                width: "100%",
+                borderRadius: "16px",
+              }}
+              block
+            />
+          ))
           : cardData.map((card, index) => (
-              <div
-                key={card.id}
-                className="w-[325px]p-4 bg-[#eef8ff]  lg:h-[117px] px-[20px] py-[32px] flex justify-between items-center rounded-2xl cursor-pointer "
-              >
-                <div className="">
-                  {/* Total Users */}
-                  <div className="flex justify-between gap-4 items-center w-full ">
-                    {/* left side icon and title */}
-                    <div className="flex justify-between gap-2 items-center">
-                      {card.icon}
-                      <p className="font-degular font-medium text-[20px] ">
-                        {card.title}
-                      </p>
-                    </div>
-                    <div className="">
-                      <Avatar.Group>
-                        <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=1" />
-                        <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=1" />
-                        <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=1" />
-                        <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=1" />
-                      </Avatar.Group>
-                    </div>
+            <div
+              key={card.id}
+              className="w-[325px]p-4 bg-[#eef8ff]  lg:h-[117px] px-[20px] py-[32px] flex justify-between items-center rounded-2xl cursor-pointer "
+            >
+              <div className="">
+                {/* Total Users */}
+                <div className="flex justify-between gap-4 items-center w-full ">
+                  {/* left side icon and title */}
+                  <div className="flex justify-between gap-2 items-center">
+                    {card.icon}
+                    <p className="font-degular font-medium text-[20px] ">
+                      {card.title}
+                    </p>
                   </div>
-                  <h3 className="text-[#121212] font-bold font-degular text-[32px] pt-4">
-                    {card.value}
-                  </h3>
+                  <div className="">
+                    <Avatar.Group>
+                      <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=1" />
+                      <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=1" />
+                      <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=1" />
+                      <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=1" />
+                    </Avatar.Group>
+                  </div>
                 </div>
+                <h3 className="text-[#121212] font-bold font-degular text-[32px] pt-4">
+                  {card.value}
+                </h3>
               </div>
-            ))}
+            </div>
+          ))}
       </div>
     </div>
   );

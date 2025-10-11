@@ -39,7 +39,9 @@ const Verify_Email: React.FC = () => {
   const onFinish = async (values: ForgetPasswordFormValues) => {
     try {
       const res = await VerifyEmail(values).unwrap();
+      console.log(res)
       if (res.success) {
+        localStorage.setItem("forgetToken", res?.token)
         Swal.fire({
           icon: "success",
           title: "Success",
@@ -57,7 +59,7 @@ const Verify_Email: React.FC = () => {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: errors?.message,
+        text: errors?.data?.message,
       });
     }
 
@@ -65,7 +67,7 @@ const Verify_Email: React.FC = () => {
   };
 
   return (
-    <div className="h-dvh grid grid-cols-2 border border-gray-700  ">
+    <div className="h-dvh grid grid-cols-2  ">
       {/* image  */}
       <div className="flex items-center p-3  justify-center ">
         <div

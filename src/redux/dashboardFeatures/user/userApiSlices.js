@@ -8,6 +8,9 @@ const authSlice = baseApi.injectEndpoints({
           url: "/login",
           method: "POST",
           body: data,
+          headers: {
+            "Content-Type": "application/json",
+          },
         };
       },
       invalidatesTags: ["admin"],
@@ -40,9 +43,6 @@ const authSlice = baseApi.injectEndpoints({
         };
       },
     }),
-
-    
-
   }),
 });
 

@@ -28,7 +28,7 @@ const SetNewPassword: React.FC = () => {
           title: "Success",
           text: res?.message,
         });
-        navigate(`/auth/forget-password?email=${res.data.email}`);
+        navigate(`/auth`);
       } else {
         Swal.fire({
           icon: "error",
@@ -37,17 +37,18 @@ const SetNewPassword: React.FC = () => {
         });
       }
     } catch (errors) {
+      console.log(`error is`, errors)
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: errors?.message,
+        text: errors?.data?.message,
       });
     }
 
-    navigate("/auth/login");
+
   };
   return (
-    <div className="h-dvh grid grid-cols-2 border border-gray-700  ">
+    <div className="h-dvh grid grid-cols-2   ">
       {/* image  */}
       <div className="flex items-center p-3  justify-center ">
         <div
@@ -67,7 +68,7 @@ const SetNewPassword: React.FC = () => {
         <div className="h-[60vh] bg-white w-[536px]  shadow-[_0px_30px_30px_30px_rgba(249,_250,_229,_20)] p-16 rounded-2xl">
           <div className="text-center pb-16">
             <h1 className="font-semibold text-3xl font-degular text-[40px] mb-6">
-              Verify Email
+              Set New Password
             </h1>
             <p className="font-degular font-normal text-[#3A3A3A]">
               You have to verify your email to get code.
