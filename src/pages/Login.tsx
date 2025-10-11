@@ -42,18 +42,13 @@ const Login: React.FC = () => {
           // page redirect
           window.location.href = "/";
         });
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: res?.message || "Login failed",
-        });
       }
     } catch (error) {
+      console.log("error is", error)
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: error?.data?.message || error?.message || "Something went wrong",
+        text: error?.data?.message || "Something went wrong",
       });
     }
   };
@@ -214,15 +209,7 @@ const Login: React.FC = () => {
               </Button>
             </Form.Item>
           </Form>
-          <p className="font-degular font-normal text-sm text-center">
-            Don’t have an account?{" "}
-            <Link
-              to={"/auth/register"}
-              className="font-degular text-base font-bold"
-            >
-              Register
-            </Link>
-          </p>
+
         </AuthWrapper>
       </div>
     </div>

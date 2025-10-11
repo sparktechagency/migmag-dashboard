@@ -31,6 +31,7 @@ const ForgetPassword: React.FC = () => {
     try {
       const res = await postOtp(otpInfo).unwrap();
       if (res?.success) {
+        localStorage.setItem("forgetToken", res?.data?.token)
         Swal.fire({
           icon: "success",
           title: "Success",
@@ -53,13 +54,13 @@ const ForgetPassword: React.FC = () => {
     }
   };
 
-  const handleVerify = () => {};
+  const handleVerify = () => { };
   const handleVerifyBack = () => {
     navigate("/auth/verify-email");
   };
 
   return (
-    <div className="h-dvh grid grid-cols-2 border border-gray-700  ">
+    <div className="h-dvh grid grid-cols-2  ">
       {/* image  */}
       <div className="flex items-center p-3  justify-center ">
         <div
@@ -94,7 +95,7 @@ const ForgetPassword: React.FC = () => {
                   style={{ width: "100%", height: "5px" }}
                   length={6}
                   formatter={(str: string) => str.toUpperCase()}
-                  // onChange={onChange}
+                // onChange={onChange}
                 />
               </Form.Item>
               {/* <Form.Item> */}

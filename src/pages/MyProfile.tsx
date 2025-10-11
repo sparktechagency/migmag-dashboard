@@ -4,34 +4,28 @@ import type { UploadFile, UploadProps } from "antd";
 import { UserOutlined, PhoneOutlined, EnvironmentOutlined } from "@ant-design/icons";
 import Swal from "sweetalert2";
 import axios from "axios";
+import { useUpdateProfileMutation, useUserProfileQuery } from "../redux/dashboardFeatures/updateProfile/updateProfileApiSlice";
 
 const MyProfile: React.FC = () => {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [form] = Form.useForm();
-  const [loading, setLoading] = useState(true);
-  const [userData, setUserData] = useState<any>(null);
 
-  const token = localStorage.getItem("admin_token"); // get token from localStorage
+  const { data: userData, isLoading, refetch } = useUserProfileQuery({});
+  const [updateProfile, { isLoading: updating }] = useUpdateProfileMutation();
 
-  const fetchProfile = async () => {
-    try {
-      const res = await axios.get(`http://103.186.20.110:8002/api/profile`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setUserData(res.data.data);
-      setLoading(false);
 
+
+  useEffect(() => {
+    if (userData) {
       form.setFieldsValue({
-        full_name: res.data.data.full_name,
-        email: res.data.data.email,
-        contact: res.data.data.contact,
-        location: res.data.data.location,
+        full_name: userData?.data.full_name,
+        email: userData?.data.email,
+        contact: userData?.data.contact,
+        location: userData?.data.location,
       });
 
-      if (res.data.data.avatar) {
-        const avatarUrl = `${import.meta.env.VITE_BASE_URL}/${res.data.data.avatar}`;
+      if (userData?.data.avatar) {
+        const avatarUrl = `${import.meta.env.VITE_BASE_URL}/${userData?.data?.avatar}`;
         setFileList([
           {
             uid: "-1",
@@ -43,22 +37,14 @@ const MyProfile: React.FC = () => {
       } else {
         setFileList([]);
       }
-    } catch (error) {
-      console.error(error);
-      Swal.fire("Error", "Failed to fetch profile", "error");
-      setLoading(false);
     }
-  };
-
-  useEffect(() => {
-    fetchProfile();
-  }, []);
+  }, [userData]);
 
   const onChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
     setFileList(newFileList);
   };
 
-  const onRemove = (file: UploadFile) => {
+  const onRemove = () => {
     setFileList([]);
   };
 
@@ -75,39 +61,40 @@ const MyProfile: React.FC = () => {
     formData.append("location", values.location);
 
     try {
-      const res = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/update-profile`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res: any = await updateProfile(formData).unwrap();
 
       Swal.fire({
-        icon: res.data.success ? "success" : "error",
-        title: res.data.success ? "Success" : "Oops...",
-        text: res.data.message,
+        icon: res.success ? "success" : "error",
+        title: res.success ? "Success" : "Oops...",
+        text: res.message,
       });
 
-      if (res.data.success) {
-        fetchProfile(); // Refresh profile after update
+      if (res.success) {
+        refetch(); // refresh profile data
       }
     } catch (error: any) {
-      console.error(error);
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: error?.response?.data?.message || "Something went wrong!",
+        text: error?.data?.message || "Something went wrong!",
       });
     }
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <h1>Loading...</h1>
       </div>
     );
   }
+
+
+
+
+
+
+
 
   return (
     <div className="p-6">
@@ -140,7 +127,7 @@ const MyProfile: React.FC = () => {
           </Form.Item>
 
           <Form.Item name="email">
-            <Input disabled placeholder="Email" />
+            <Input placeholder="Email" />
           </Form.Item>
 
           <Form.Item
