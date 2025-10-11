@@ -12,10 +12,8 @@ import Top_Artist from "../pages/Top_Artist";
 import MyProfile from "../pages/MyProfile";
 import Verify_Email from "../pages/Verify_Email";
 import ForgetPassword from "../pages/ForgetPassword";
-import Hero from "../pages/Hero";
 import Transactions from "../pages/Transactions";
 import Categories from "../pages/Categories";
-import Register from "../pages/register";
 import Order from "../pages/Order";
 import PrivateRoute from "../private-router/PrivateRoute";
 import NotFoundPage from "../component/not-found/NotFoundPage";
@@ -63,18 +61,18 @@ const router = createBrowserRouter([
         path: "/transactions",
         element: <PrivateRoute><Transactions /> </PrivateRoute>,
       },
-      
+
       {
         path: "/my_profile",
         element: <PrivateRoute> <MyProfile /> </PrivateRoute>,
       },
       {
-        path :"/notification",
-        element : <PrivateRoute> <Notification></Notification> </PrivateRoute>
+        path: "/notification",
+        element: <PrivateRoute> <Notification></Notification> </PrivateRoute>
       },
       {
-        path :"/top-ten-vocal",
-        element : <PrivateRoute> <TopTenVocal></TopTenVocal> </PrivateRoute>
+        path: "/top-ten-vocal",
+        element: <PrivateRoute> <TopTenVocal></TopTenVocal> </PrivateRoute>
       }
     ],
   },
@@ -86,10 +84,7 @@ const router = createBrowserRouter([
         path: "/auth",
         element: <Login />,
       },
-      {
-        path: "/auth/register",
-        element: <Register />,
-      },
+
       {
         path: "/auth/login",
         element: <Login />,
@@ -109,8 +104,8 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path : "*",
-    element : <NotFoundPage></NotFoundPage>
+    path: "*",
+    element: <NotFoundPage></NotFoundPage>
   }
 ]);
 
