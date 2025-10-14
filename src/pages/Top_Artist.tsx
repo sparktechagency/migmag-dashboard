@@ -81,7 +81,7 @@ const Top_Artist = () => {
         url: URL.createObjectURL(file),
       },
     ]);
-    return false;
+    return false; // Prevent auto upload
   };
 
   const showModal = (item?: any) => {
@@ -112,15 +112,6 @@ const Top_Artist = () => {
             : DEFAULT_PROFILE,
         },
       ]);
-    } else {
-      setFileList([
-        {
-          uid: "-1",
-          name: "profile.png",
-          status: "done",
-          url: DEFAULT_PROFILE,
-        },
-      ]);
     }
 
     setIsModalOpen(true);
@@ -130,16 +121,21 @@ const Top_Artist = () => {
   const handleCancel = () => setIsModalOpen(false);
 
   const onFinish = async (values: any) => {
+    console.log("name", values.name);
+    console.log("gender", values.gender);
+
     const formData = new FormData();
-    formData.append("name", values.name);
+    if (values?.name) {
+      formData.append("name", values?.name);
+    }
     formData.append("description", values.description);
     formData.append("location", values.location);
-    formData.append("gender", values.gender);
+    if (values?.gender) {
+      formData.append("gender", values?.gender);
+    }
 
     if (values.cover_song && values.cover_song[0]?.originFileObj) {
       formData.append("cover_song", values.cover_song[0].originFileObj);
-
-      console.log("----------------- values.cover_song[0].originFileObj----------------------------", values.cover_song[0].originFileObj)
     }
 
     if (values.singer_info?.includes("singer")) formData.append("singer", "singer");
@@ -160,6 +156,7 @@ const Top_Artist = () => {
       } else {
         const res = await artistPost(formData).unwrap();
         if (res.success) {
+          form.resetFields();
           Swal.fire("Success", res.message, "success");
           setIsModalOpen(false);
           await refetch();
@@ -172,6 +169,9 @@ const Top_Artist = () => {
       Swal.fire("Error", err?.data.message);
     }
   };
+
+
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
   };

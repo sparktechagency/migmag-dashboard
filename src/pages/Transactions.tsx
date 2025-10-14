@@ -36,9 +36,8 @@ const Transactions = () => {
       render: (_, record) => (
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <Avatar
-            src={`${import.meta.env.VITE_BASE_URL}/${
-              record?.order?.user?.avatar
-            }`}
+            src={`${import.meta.env.VITE_BASE_URL}/${record?.order?.user?.avatar
+              }`}
           />
           <div>
             <h2>{record?.order?.user?.last_name}</h2>
@@ -112,7 +111,7 @@ const Transactions = () => {
     setIsModalOpen(false);
   };
 
-  const onFinish = (e) => {};
+  const onFinish = (e) => { };
 
   return (
     <div>

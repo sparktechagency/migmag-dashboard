@@ -5,8 +5,8 @@ export const baseApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `${import.meta.env.VITE_BASE_URL}/api`, // <- points to backend
     prepareHeaders: (headers) => {
-      headers.set("Accept", "application/json");
-      headers.set("Content-Type", "application/json");
+      // headers.set("Accept", "application/json");
+      // headers.set("Content-Type", "application/json");
 
       const adminToken = localStorage.getItem("admin_token");
       const forgetToken = localStorage.getItem("forgetToken");

@@ -46,7 +46,7 @@ const Login: React.FC = () => {
     } catch (error) {
       console.log("error is", error)
       Swal.fire({
-        icon: "error",
+        icon: "warning",
         title: "Oops...",
         text: error?.data?.message || "Something went wrong",
       });

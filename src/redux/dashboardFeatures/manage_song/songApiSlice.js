@@ -4,28 +4,11 @@ const songApiSlice = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // Create a new song
     createNewSong: builder.mutation({
-      query: (data) => ({
+      query: (formData) => ({
         url: "/create-song",
         method: "POST",
-        body: data,
-        headers: {
-          Accept: "application/json",
-        },
+        body: formData,
       }),
-      invalidatesTags: ["song"], // Invalidate song tag to trigger re-fetch
-    }),
-
-    // Update an existing song
-    updateSong: builder.mutation({
-      query: ({ id, updateInfo }) => {
-        console.log("UpdateSong Payload:", updateInfo);
-
-        return {
-          url: `/update-song/${id}?_method=PUT`,
-          method: "POST",
-          body: id,
-        };
-      },
       invalidatesTags: ["song"],
     }),
 
@@ -64,6 +47,14 @@ const songApiSlice = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["song"],
     }),
+    songUpdate: builder.mutation({
+      query: (id, updateInfo) => ({
+        url: `/update-song/${id}?_method=PUT`,
+        method: "POST",
+        body: updateInfo,
+      }),
+      invalidatesTags: ["song"],
+    }),
   }),
 });
 
@@ -71,9 +62,9 @@ export const {
   useCreateNewSongMutation,
   useGetManageSongQuery,
   useManageSongDeleteMutation,
-  useUpdateSongMutation,
   useManageSongPubliseMutation,
   useSongDetailsQuery,
+  useSongUpdateMutation,
 } = songApiSlice;
 
 export default songApiSlice;

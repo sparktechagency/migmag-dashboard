@@ -32,7 +32,6 @@ import {
   useGetManageSongQuery,
   useManageSongDeleteMutation,
   useManageSongPubliseMutation,
-  useUpdateSongMutation,
 } from "../redux/dashboardFeatures/manage_song/songApiSlice";
 import AddSong from "./AddSong";
 import SongUpdateFrom from "./SongUpdateFrom";
@@ -67,13 +66,8 @@ const Manage_Song = () => {
     setFileList(newFileList);
   };
 
-  //  modal option
-  const { data: genres, isLoading: genresLoading } = useGenreGetQuery([]);
-  const { data: keys, isLoading: keysLoading } = useKeyGetQuery([]);
-  const { data: licens, isLoading: licensLoading } = useLicenseGetQuery([]);
-  const { data: type, isLoading: typeLoading } = useTypeGetQuery([]);
+
   const [createNewSong] = useCreateNewSongMutation();
-  const [updateSong] = useUpdateSongMutation();
   const [manageSongDelete] = useManageSongDeleteMutation();
 
   const handleDelete = (id) => {
@@ -300,18 +294,7 @@ const Manage_Song = () => {
     },
   ];
 
-  const handlePage = (page: number) => {
-    setCurrentPage(page);
-  };
 
-  // edit modal
-  const showModal = (updateData) => {
-    console.log("update data is ", updatData?.id)
-    setUpdatData(updateData);
-    setUpdatID(updateData.id);
-    setIsModalOpen(true);
-    form.resetFields();
-  };
 
 
 
@@ -328,61 +311,8 @@ const Manage_Song = () => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  const onFinish = async (values: any) => {
-    if (!file || !audio) {
-      message.error("Please upload both audio and thumbnail files");
-      return;
-    }
 
-    const formData = new FormData();
-    formData.append("title", values?.title)
-    formData.append("song", values?.song?.file.originFileObj);
-    formData.append("song_poster", values?.image?.file.originFileObj);
-    formData.append("artist_id", values.artistName);
-    formData.append("genre_id", values.genre);
-    formData.append("key_id", values.key);
-    formData.append("license_id", values.License);
-    formData.append("type_id", values.type);
-    formData.append("bpm", values.BPM);
-    formData.append("gender", values.gender);
-    formData.append("is_published", values.publishStatus);
 
-    try {
-      if (updatID) {
-        formData.append("_method", "PUT");
-        const res = await updateSong({
-          id: updatID,
-          updateInfo: formData,
-        }).unwrap();
-
-        console.log(`response is`)
-
-        if (res?.success) {
-          message.success("Song updated successfully");
-          setUpdatID(null);
-          setIsModalOpen(false);
-        } else {
-          message.error(res?.message || "Failed to update song");
-        }
-      } else {
-        const res = await createNewSong(formData).unwrap();
-
-        if (res?.success) {
-          message.success("Song created successfully");
-          setIsModalOpen(false);
-        } else {
-          message.error(res?.message || "Failed to create song");
-        }
-      }
-    } catch (error) {
-      console.log(error)
-      message.error(error?.data?.message);
-    }
-  };
-
-  const { data: artistData, isLoading: artistDataLoading } = useArtistGetQuery(
-    {}
-  );
   const {
     data: songData,
     isLoading,
@@ -396,18 +326,8 @@ const Manage_Song = () => {
     },
   });
   const [manageSongPublise] = useManageSongPubliseMutation();
-  const handleBeforeUpload = (file: File) => {
-    setFile(file);
-    return;
-  };
-  const hendelAudioFile = (audioFile) => {
-    setAudio(audioFile);
-    const isAudio = audioFile.type.startsWith("audio/");
-    if (!isAudio) {
-      message.error("You can only upload audio files!");
-    }
-    return isAudio || Upload.LIST_IGNORE; // prevents upload if not audio
-  };
+
+
 
 
   const [openSongModal, setOpenSongModal] = useState(false);
@@ -423,9 +343,7 @@ const Manage_Song = () => {
 
   console.log(`updatID is ${updatID} `)
 
-  // const { data: singleSong } = useSongDetailsMutation(updatID);
 
-  // console.log("song is", singleSong?.data?.title)
 
   const [songUpdateFrom, setSongUpdateFrom] = useState(false);
   const [songUpdateId, setSongUpdateId] = useState()

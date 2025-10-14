@@ -17,27 +17,33 @@ const AddSong = ({ setOpenSongModal }) => {
 
     const onFinish = async (values: any) => {
         const formData = new FormData();
-        formData.append('title', values?.title);
-        formData.append('song', values?.song[0].originFileObj);
-        formData.append('song_poster', values?.image[0].originFileObj);
-        formData.append('artist_id', values.artistName);
-        formData.append('price', values.price);
-        formData.append('genre_id', values.genre);
-        formData.append('key_id', values.key);
-        formData.append('license_id', values.License);
-        formData.append('type_id', values.type);
-        formData.append('bpm', values.BPM);
-        formData.append('gender', values.gender);
-        formData.append('is_published', values.publishStatus);
+        formData.append('title', values?.title || '');
+
+        if (values?.song?.[0]?.originFileObj) formData.append('song', values.song[0].originFileObj);
+        if (values?.image?.[0]?.originFileObj) formData.append('song_poster', values.image[0].originFileObj);
+
+        formData.append('artist_id', values.artistName || '');
+        formData.append('price', values.price || '0');
+        formData.append('genre_id', values.genre || '');
+        formData.append('key_id', values.key || '');
+        formData.append('license_id', values.License || '');
+        formData.append('type_id', values.type || '');
+        formData.append('bpm', values.BPM || '');
+        formData.append('gender', values.gender || '');
+        formData.append('is_published', values.publishStatus ? '1' : '0');
+
+        // 🔍 Optional: Log FormData
+        for (let [key, value] of formData.entries()) {
+            console.log(key, value);
+        }
 
         try {
             const res = await createNewSong(formData).unwrap();
-
             if (res) {
                 message.success('Song created successfully');
                 form.resetFields();
                 setImagePreview(null);
-                setOpenSongModal(false)
+                setOpenSongModal(false);
             }
         } catch (error: any) {
             message.error(error?.data?.message || 'Something went wrong');

@@ -70,10 +70,10 @@ const router = createBrowserRouter([
         path: "/notification",
         element: <PrivateRoute> <Notification></Notification> </PrivateRoute>
       },
-      {
-        path: "/top-ten-vocal",
-        element: <PrivateRoute> <TopTenVocal></TopTenVocal> </PrivateRoute>
-      }
+      // {
+      //   path: "/top-ten-vocal",
+      //   element: <PrivateRoute> <TopTenVocal></TopTenVocal> </PrivateRoute>
+      // }
     ],
   },
   {
