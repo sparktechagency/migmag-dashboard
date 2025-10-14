@@ -37,7 +37,7 @@ const artistApiSlice = baseApi.injectEndpoints({
     }),
     artistUpdate: builder.mutation({
       query: ({ artistId, formData }) => ({
-        url: `/update-artist/${artistId}`,
+        url: `/update-artist/${artistId}?_method=PUT`,
         method: "POST",
         body: formData,
       }),
