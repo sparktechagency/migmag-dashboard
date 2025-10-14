@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Form, Button, Upload, message, Radio, Select, Input } from 'antd';
 import { useArtistGetQuery } from '../redux/dashboardFeatures/Artist/artistApiSlice';
 import { useGenreGetQuery, useKeyGetQuery, useLicenseGetQuery, useTypeGetQuery } from '../redux/dashboardFeatures/catagory/catagoryApiSlice';
-import { useCreateNewSongMutation, useUpdateSongMutation, useSongDetailsQuery } from '../redux/dashboardFeatures/manage_song/songApiSlice';
+import { useCreateNewSongMutation, useSongDetailsQuery, useSongUpdateMutation } from '../redux/dashboardFeatures/manage_song/songApiSlice';
 import { imgUrl } from './../utils/imgUrl';
 import axios from 'axios';
 import { UploadCloud } from 'lucide-react';
 import Dragger from 'antd/es/upload/Dragger';
+import { updateAlert } from '../utils/updateAlert';
 
 const SongUpdateForm = ({ setOpenSongModal, songUpdateId }) => {
     console.log(`song update id is ${songUpdateId}`);
@@ -20,7 +21,6 @@ const SongUpdateForm = ({ setOpenSongModal, songUpdateId }) => {
     const { data: type } = useTypeGetQuery([]);
     const { data: licens } = useLicenseGetQuery([]);
     const [createNewSong, { isLoading }] = useCreateNewSongMutation();
-    const [updateSong, { isLoading: isUpdating }] = useUpdateSongMutation();
 
     // Fetch song details using the songUpdateId
     const { data: singleSong, isLoading: songLoading, error } = useSongDetailsQuery(songUpdateId);
@@ -109,6 +109,10 @@ const SongUpdateForm = ({ setOpenSongModal, songUpdateId }) => {
         setMp3FileList(fileList);
     };
 
+    const [songUpdate] = useSongUpdateMutation();
+
+
+    const id = songUpdateId;
 
 
 
@@ -116,80 +120,77 @@ const SongUpdateForm = ({ setOpenSongModal, songUpdateId }) => {
     const onFinish = async (values) => {
         const formData = new FormData();
 
-        // Handle song file
-        // const songFile = values?.song?.[0]?.originFileObj || songDetails?.song; // Use default if not provided
-        // formData.append('song', songFile);
-
-        // Handle song poster (image)
-        // const songPoster = values?.image?.[0]?.originFileObj || songDetails?.song_poster;
-        // formData.append('song_poster', songPoster);
-
-        if (imagePreview[0]?.originFileObj) {
+        // Song Poster (Image)
+        if (imagePreview?.[0]?.originFileObj) {
             formData.append("song_poster", imagePreview[0].originFileObj);
         }
 
+        // New MP3 File
         const newMp3File = values?.mp3File?.[0]?.originFileObj;
-
         if (newMp3File) {
-            // new mp3 file uploaded
             formData.append("song", newMp3File);
         }
 
+        // Append other fields
+        formData.append("title", values?.title || songDetails?.title);
+        formData.append("artist_id", values?.artistName || songDetails?.artist_id);
+        formData.append("price", values?.price || songDetails?.price);
+        formData.append("genre_id", values?.genre || songDetails?.genre_id);
+        formData.append("key_id", values?.key || songDetails?.key_id);
+        formData.append("license_id", values?.License || songDetails?.license_id);
+        formData.append("type_id", values?.type || songDetails?.type_id);
+        formData.append("bpm", values?.BPM || songDetails?.bpm);
+        formData.append("gender", values?.gender || songDetails?.gender);
+        formData.append("is_published", values?.publishStatus ? "1" : "0");
 
-        // Append other form data
-        formData.append('title', values?.title || songDetails?.title);
-        formData.append('artist_id', values?.artistName || songDetails?.artist_id);
-        formData.append('price', values?.price || songDetails?.price);
-        formData.append('genre_id', values?.genre || songDetails?.genre_id);
-        formData.append('key_id', values?.key || songDetails?.key_id);
-        formData.append('license_id', values?.License || songDetails?.license_id);
-        formData.append('type_id', values?.type || songDetails?.type_id);
-        formData.append('bpm', values?.BPM || songDetails?.bpm);
-        formData.append('gender', values?.gender || songDetails?.gender);
-        formData.append('is_published', values?.publishStatus || songDetails?.is_published.toString());
-
-        // Log the form data to verify it's being sent
-        // for (let [key, value] of formData.entries()) {
-        //     console.log(`key: ${key}, value: ${value}`);
-        // }
-
-
+        // Laravel PUT method override
+        formData.append("_method", "PUT");
 
         try {
-            if (songUpdateId) {
-                const token = localStorage.getItem("admin_token");
-                const res = await axios.post(
-                    `http://103.186.20.110:8002/api/update-song/${songUpdateId}?_method=PUT`,
-                    formData,
-                    {
-                        headers: {
-                            'Content-Type': 'multipart/form-data',
-                            'Authorization': `Bearer ${token}`,
-                        },
-                    }
-                );
-                if (res) {
-                    message.success('Song updated successfully');
-                    setOpenSongModal(false);
-                    form.resetFields();
+            const confirm = await updateAlert(); // SweetAlert confirmation
+            if (!confirm.isConfirmed) return;
+
+            // 🔑 Get token from localStorage or cookies
+            const token = localStorage.getItem("admin_token"); // replace with your storage
+
+            const { data } = await axios.post(
+                `${import.meta.env.VITE_BASE_URL}/api/update-song/${songUpdateId}`,
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                        Authorization: `Bearer ${token}`, // ✅ Token set here
+                    },
                 }
+            );
+
+            if (data) {
+                setOpenSongModal(false)
+                message.success("Song Updated Successfully");
+                console.log("Response:", data);
+
+                // ✅ Real-time update in songs state
+                // setSongs((prevSongs) =>
+                //     prevSongs.map((song) =>
+                //         song.id === songUpdateId
+                //             ? { ...song, ...data.updatedSong } // backend should return updated song object
+                //             : song
+                //     )
+                // );
+
+                // Optional: reset form or image preview
+                form.resetFields();
+                setImagePreview(null);
             }
         } catch (error: any) {
             console.log(error);
-            message.error(error?.data?.message || 'Something went wrong');
+            message.error(error?.response?.data?.message || "Something went wrong");
         }
     };
 
 
-    const defaultImage = `${imgUrl}/${songDetails?.song_poster}`
 
-    // console.log(`single song is `, singleSong?.data);
-    // console.log(`single song_poster is `, singleSong?.data?.song_poster);
-    // console.log(`single song image is `, singleSong?.data?.song);
-    const songPoster = singleSong?.data?.song_poste;
-    const songM3 = singleSong?.data?.song
 
-    console.log(`image imagePreview is`, imagePreview)
 
     if (songLoading) {
         return (
@@ -496,7 +497,7 @@ const SongUpdateForm = ({ setOpenSongModal, songUpdateId }) => {
                                 Cancel
                             </Button>
                             <Button
-                                loading={isUpdating}
+                                loading={isLoading}
                                 htmlType="submit"
                                 className="w-full flex-1 bg-[#E7F056] border-none rounded-2xl p-5 font-bold font-degular text-xl"
                             >

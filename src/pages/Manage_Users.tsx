@@ -65,16 +65,16 @@ const Manage_Users = () => {
   const columns = [
     {
       title: "Users",
-      dataIndex: "first_name",
-      key: "first_name",
-      render: (name, record) => (
+      dataIndex: "full_name",
+      key: "full_name",
+      render: (full_name, record) => (
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <img
             src={`${import.meta.env.VITE_BASE_URL}/${record.avatar}`}
-            alt={name}
+            alt={full_name}
             style={{ width: 40, height: 40, borderRadius: "50%" }}
           />
-          <h2>{name}</h2>
+          <h2>{full_name}</h2>
         </div>
       ),
     },
