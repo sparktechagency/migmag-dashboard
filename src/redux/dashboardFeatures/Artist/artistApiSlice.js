@@ -35,11 +35,20 @@ const artistApiSlice = baseApi.injectEndpoints({
         method: "GET",
       }),
     }),
+
     artistUpdate: builder.mutation({
       query: ({ artistId, formData }) => ({
         url: `/update-artist/${artistId}?_method=PUT`,
         method: "POST",
         body: formData,
+      }),
+      invalidatesTags: ["artist"],
+    }),
+
+    topArtistSelect: builder.mutation({
+      query: (id) => ({
+        url: `/top-artist/${id}?_method=PUT`,
+        method: "POST",
       }),
       invalidatesTags: ["artist"],
     }),
@@ -52,4 +61,5 @@ export const {
   useArtistDeteteMutation,
   useSingleArtistQuery,
   useArtistUpdateMutation,
+  useTopArtistSelectMutation
 } = artistApiSlice;

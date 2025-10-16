@@ -11,6 +11,8 @@ const ArtistUpdate: React.FC = ({ slug, artistId, artistFrom, setArtistModal }) 
     const { data, isLoading } = useSingleArtistQuery(slug);
     const [artistUpdate] = useArtistUpdateMutation();
 
+    console.log("artist data is", data);
+
     const [artist, setArtist] = useState({
         name: "",
         location: "",
