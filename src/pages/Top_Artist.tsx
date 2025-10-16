@@ -22,9 +22,11 @@ import {
   useArtistGetQuery,
 
   useArtistPostMutation,
+  useTopArtistSelectMutation,
 } from "../redux/dashboardFeatures/Artist/artistApiSlice";
 import { useArtistUpdateMutation } from "../redux/dashboardFeatures/updateProfile/updateProfileApiSlice";
 import ArtistUpdate from "./ArtistUpdate";
+import { topArtistAlert } from "../utils/topArtistAlert";
 
 const Top_Artist = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -193,6 +195,29 @@ const Top_Artist = () => {
     setArtistModal(false)
   }
 
+  const [topArtistSelect] = useTopArtistSelectMutation();
+
+
+  const handleSelectTopArtist = async (id) => {
+    try {
+      const res = await topArtistAlert();
+      if (res.isConfirmed) {
+        const res = await topArtistSelect(id).unwrap();
+        if (res) {
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: res?.message,
+            showConfirmButton: false,
+            timer: 1500
+          });
+        }
+      }
+    } catch (error) {
+
+    }
+  }
+
 
 
 
@@ -226,6 +251,32 @@ const Top_Artist = () => {
       render: (text) => text?.slice(0, 30) + (text?.length > 30 ? "..." : ""),
     },
     { title: "Location", dataIndex: "location", key: "location" },
+
+    {
+      title: "Top Artist",
+      dataIndex: "is_topartist",
+      key: "is_topartist",
+      render: (value) => (value === 1 ? "Top Artist" : "Not Top Artist")
+    },
+
+    {
+      title: "Select Top Artist",
+      key: "action",
+      render: (_: any, record: any) => (
+        <div className="flex gap-2">
+          {record.is_topartist === 1 ? (
+            <Button onClick={() => handleSelectTopArtist(record.id)} type="link" danger>
+              Remove Top Artist
+            </Button>
+          ) : (
+            <Button onClick={() => handleSelectTopArtist(record.id)} type="link">
+              Select Top Artist
+            </Button>
+          )}
+        </div>
+      ),
+    },
+
     {
       title: "Action",
       key: "action",
@@ -335,6 +386,13 @@ const Top_Artist = () => {
               <Button >Upload Audio</Button>
             </Upload>
           </Form.Item>
+
+
+          <Form.Item label="Price" name="price" rules={[{ required: true }]}>
+            <Input placeholder="Enter price" />
+          </Form.Item>
+
+
 
           <Form.Item label="Description" name="description" rules={[{ required: true }]}>
             <TextArea placeholder="Enter description" />
