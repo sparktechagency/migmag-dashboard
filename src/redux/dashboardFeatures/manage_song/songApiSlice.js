@@ -55,6 +55,13 @@ const songApiSlice = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["song"],
     }),
+    selectTopSong: builder.mutation({
+      query: (id) => ({
+        url: `/top-song/${id}?_method=PUT`,
+        method: "POST",
+      }),
+      invalidatesTags: ["song"],
+    }),
   }),
 });
 
@@ -65,6 +72,7 @@ export const {
   useManageSongPubliseMutation,
   useSongDetailsQuery,
   useSongUpdateMutation,
+  useSelectTopSongMutation,
 } = songApiSlice;
 
 export default songApiSlice;
