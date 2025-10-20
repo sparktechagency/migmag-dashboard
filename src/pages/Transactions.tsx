@@ -36,6 +36,7 @@ const Transactions = () => {
       render: (_, record) => (
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <Avatar
+            className=" "
             src={`${import.meta.env.VITE_BASE_URL}/${record?.order?.user?.avatar
               }`}
           />

@@ -32,10 +32,12 @@ import {
   useGetManageSongQuery,
   useManageSongDeleteMutation,
   useManageSongPubliseMutation,
+  useSelectTopSongMutation,
 } from "../redux/dashboardFeatures/manage_song/songApiSlice";
 import AddSong from "./AddSong";
 import SongUpdateFrom from "./SongUpdateFrom";
 import MusickPlayer from "./musick-player/MusickPlayer";
+import { topSongAlert } from "../utils/topSongAlert";
 
 const Manage_Song = () => {
   const [form] = Form.useForm();
@@ -123,6 +125,23 @@ const Manage_Song = () => {
       message.error("Something went wrong.");
     }
   };
+
+  const [selectTopSong] = useSelectTopSongMutation()
+
+
+  const handleTopSong = async (id: number) => {
+    try {
+      const res = await topSongAlert();
+      if (res.isConfirmed) {
+        const res = await selectTopSong(id).unwrap();
+        if (res) {
+          message.success(res?.message);
+        }
+      }
+    } catch (error) {
+      message.error("Something went wrong.");
+    }
+  }
 
   const columns = [
     {
@@ -248,6 +267,20 @@ const Manage_Song = () => {
       },
     },
 
+    {
+      title: "Top Song",
+      dataIndex: "top_song",
+      key: "top_song",
+      render: (_, record) => (
+        <button
+          onClick={() => handleTopSong(record.id)}
+          className={`px-3 py-1 rounded text-black ${record.top_song ? "" : ""
+            }`}
+        >
+          {record.is_topsong ? "Remove Top Song" : "Make Top Song"}
+        </button>
+      ),
+    },
 
 
     {
